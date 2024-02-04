@@ -1,0 +1,129 @@
+@font-face {
+    font-family: 'MedfontOne';
+    src: local('SONGER Grotesque Bold'), local('SONGERGrotesque-Bold'),
+        url('../public/fonts/Songergrotesquebold.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+body {
+    padding: 0;
+    margin: 0;
+    font-family: "MedfontOne", Arial, sans-serif;
+}
+
+.wrapper {
+    max-width: 1368px;
+    margin: 0 auto;
+}
+
+
+/* HEADER */
+
+header {
+    width: 100vw;
+    background-color: var(--main-dark);
+}
+
+header h1 {
+    position: absolute;
+    top: -500px;
+}
+
+header>.wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo img {
+    width: 75px;
+    aspect-ratio: 1 / 1;
+}
+
+header nav {
+    display: flex;
+    gap: 32px;
+}
+
+header nav a {
+    color: #ffffff;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 120%;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+header nav a::before {
+    content: '';
+    width: 8px;
+    aspect-ratio: 1 / 1;
+    display: block;
+    border-radius: 50%;
+    background-color: var(--orange);
+}
+
+header nav a:hover {
+    color: var(--orange);
+}
+
+/* FIRST SCREEN */
+
+.first_screen {
+    background-color: var(--light-orange);
+    padding: 60px 0;
+}
+
+.first_screen .wrapper {
+    display: grid;
+    grid-template-columns: 40% 60%;
+}
+
+.first_screen .content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+}
+
+.first_screen .content h2,
+.first_screen .content p {
+    margin: 0;
+    color: var(--main-dark);
+}
+
+.first_screen .content h2 {
+    font-size: 32px;
+}
+
+.first_screen .content p {
+    font-size: 24px;
+    text-align: center;
+}
+
+
+/* FOOTER */
+
+footer {
+    width: 100vw;
+    background-color: var(--main-dark);
+    color: var(--text-gray);
+    padding: 24px 0;
+}
+
+.social {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.social img {
+    width: 32px;
+    aspect-ratio: 1 / 1;
+}
