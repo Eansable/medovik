@@ -54,7 +54,7 @@ header nav a {
     font-weight: 700;
     font-size: 20px;
     line-height: 120%;
-    transition: all 0.3s ease;
+    transition: color 0.3s ease;
     display: flex;
     align-items: center;
     gap: 6px;
@@ -104,6 +104,43 @@ header nav a:hover {
 
 .first_screen .content p {
     font-size: 24px;
+    text-align: center;
+}
+
+.carusel_wrapper {
+    display: grid;
+    grid-template-columns: 50px auto 50px;
+}
+
+.carusel_wrapper>button {
+    border: none;
+    padding: 12px;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.carusel_wrapper>button img {
+    width: 15px;
+    aspect-ratio: 1 / 1;
+}
+.carusel_wrapper>button#carusel_next {
+    transform: rotate(180deg);
+}
+
+.carusel_slice {
+    display: flex;
+    width: 100%;
+    transition: margin ease 0.3s;
+}
+
+.carusel {
+    display: flex;
+    overflow: hidden;
+}
+
+.carusel .item {
+    width: 100%;
+    flex-shrink: 0;
     text-align: center;
 }
 
