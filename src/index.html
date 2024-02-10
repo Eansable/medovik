@@ -10,7 +10,7 @@
 </head>
 
 <body>
-    <header>
+    <header class="header">
         <div class="wrapper">
             <div class="logo">
                 <picture>
@@ -33,7 +33,17 @@
                     <h2>Супермедовики</h2>
                     <p>С выпечкой только собственного производства</p>
                 </div>
-                <div class="carusel"></div>
+                <div class="carusel_wrapper">
+                    <button id="carusel_prev">
+                        <img src="../public/arrow.svg" alt="">
+                    </button>
+                    <div class="carusel" id="first_screen_carusel">
+
+                    </div>
+                    <button id="carusel_next">
+                        <img src="../public/arrow.svg" alt="">
+                    </button>
+                </div>
 
             </div>
         </section>
@@ -44,7 +54,27 @@
         </section>
         <section class="about">
             <div class="wrapper">
-                <div class="about_cafe"></div>
+                <div class="about_cafe">
+                    <header>
+                        <div class="door_wrapper">
+                            <button>
+                                <img src="../public/arrowDoor.svg" alt="prev cafe" id="prev_door">
+                            </button>
+                            <div class="about_cafe_door">
+
+                            </div>
+                            <button>
+                                <img src="../public/arrowDoor.svg" alt="next cafe" id="next_door">
+                            </button>
+                        </div>
+                        <h2 id="cafe_name"></h2>
+                    </header>
+                    <div class="about_cafe_content">
+                        <p class="title">О кафе</p>
+                        <p class="text" id="cafe_about_text"></p>
+                    </div>
+                    <div class="about_cafe_foto"></div>
+                </div>
                 <div class="maps"></div>
             </div>
         </section>

@@ -6,6 +6,14 @@
     font-style: normal;
     font-display: swap;
 }
+@font-face {
+    font-family: 'MedfontTwo';
+    src: local('SONGER Grotesque Bold'), local('SONGERGrotesque-Bold'),
+        url('../public/fonts/NeutralFaceRegular.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
 
 body {
     padding: 0;
@@ -21,17 +29,17 @@ body {
 
 /* HEADER */
 
-header {
+.header {
     width: 100vw;
     background-color: var(--main-dark);
 }
 
-header h1 {
+.header h1 {
     position: absolute;
     top: -500px;
 }
 
-header>.wrapper {
+.header>.wrapper {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -42,25 +50,25 @@ header>.wrapper {
     aspect-ratio: 1 / 1;
 }
 
-header nav {
+.header nav {
     display: flex;
     gap: 32px;
 }
 
-header nav a {
+.header nav a {
     color: #ffffff;
     text-decoration: none;
     text-transform: uppercase;
     font-weight: 700;
     font-size: 20px;
     line-height: 120%;
-    transition: all 0.3s ease;
+    transition: color 0.3s ease;
     display: flex;
     align-items: center;
     gap: 6px;
 }
 
-header nav a::before {
+.header nav a::before {
     content: '';
     width: 8px;
     aspect-ratio: 1 / 1;
@@ -69,7 +77,7 @@ header nav a::before {
     background-color: var(--orange);
 }
 
-header nav a:hover {
+.header nav a:hover {
     color: var(--orange);
 }
 
@@ -107,6 +115,139 @@ header nav a:hover {
     text-align: center;
 }
 
+.carusel_wrapper {
+    display: grid;
+    grid-template-columns: 50px auto 50px;
+}
+
+.carusel_wrapper>button {
+    border: none;
+    padding: 12px;
+    background-color: transparent;
+    cursor: pointer;
+}
+
+.carusel_wrapper>button img {
+    width: 15px;
+    aspect-ratio: 1 / 1;
+}
+
+.carusel_wrapper>button#carusel_next {
+    transform: rotate(180deg);
+}
+
+.carusel_slice {
+    display: flex;
+    width: 100%;
+    transition: margin ease 0.3s;
+}
+
+.carusel {
+    display: flex;
+    overflow: hidden;
+}
+
+.carusel .item {
+    width: 100%;
+    flex-shrink: 0;
+    text-align: center;
+}
+
+.order {
+    background-color: #ffffff;
+    padding: 32px;
+}
+
+/* ABOUT CAFES */
+
+
+.about {
+    background-color: var(--main-dark);
+    padding: 48px 0;
+    color: #ffffff;
+}
+
+.about_cafe {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    row-gap: 32px;
+    column-gap: 54px;
+    transition: opacity 0.3s ease;
+}
+
+.about_cafe_hidden {
+    opacity: 0;
+}
+
+.about header {
+    display: grid;
+    grid-template-columns: 20% 80%;
+    gap: 54px;
+    color: #ffffff;
+    justify-content: space-around;
+    align-items: center;
+    grid-column-start: 1;
+    grid-column-end: 3;
+}
+
+.about .door_wrapper {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+}
+
+.about .door_wrapper button {
+    background-color: transparent;
+    border: none;
+    padding: 16px;
+    cursor: pointer;
+}
+
+.about_cafe_door {
+    width: 50px;
+    height: 75px;
+    border: 1px solid var(--text-gray);
+    border-radius: 4px;
+}
+
+#prev_door {
+    transform: rotate(90deg);
+}
+
+#next_door {
+    transform: rotate(-90deg);
+}
+
+.about header h2 {
+    text-align: center;
+    margin: 0;
+    font-size: 24px;
+}
+
+.about_cafe_content {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+.about_cafe_content .title {
+    margin: 0;
+    font-size: 18px;
+    text-align: center;
+}
+
+.about_cafe_content .text {
+    margin: 0;
+    font-size: 14px;
+    font-family: "MedfontTwo", Arial, sans-serif;
+}
+
+/* FAQ */
+
+.FAQ {
+    background-color: #ffffff;
+    padding: 48px;
+}
 
 /* FOOTER */
 

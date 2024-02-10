@@ -1,14 +1,16 @@
-const menuItems = {
-    napoleons: {
+const menuItems = [
+    {
         name: "Наполеоны",
         items: []
     },
-    honeycakes: {
+    {
         name: "Медовики",
         items: []
     },
-    cheesecakes: {
+    {
         name: "Чизкейки",
         items: []
     }
-}
+]
+
+export default menuItems
