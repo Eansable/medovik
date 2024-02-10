@@ -121,9 +121,16 @@ footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--text-gray);
+}
+
+.social p {
+    margin: 0;
 }
 
 .social img {
     width: 32px;
     aspect-ratio: 1 / 1;
+    cursor: pointer;
 }
