@@ -17,19 +17,19 @@ const menuItems = [
         items: [
             {
                 itemName: "Классический",
-                fotoUrl: "../public/images/med1.webp"
+                fotoUrl: "./public/images/med1.webp"
             },
             {
                 itemName: "Лимонный",
-                fotoUrl: "../public/images/med1.webp"
+                fotoUrl: "./public/images/med1.webp"
             },
             {
                 itemName: "Черничный",
-                fotoUrl: "../public/images/med1.webp"
+                fotoUrl: "./public/images/med1.webp"
             },
             {
                 itemName: "Кофейный",
-                fotoUrl: "../public/images/med1.webp"
+                fotoUrl: "./public/images/med1.webp"
             },
         ]
     },
@@ -38,7 +38,7 @@ const menuItems = [
         items: [
             {
                 itemName: "Классический",
-                fotoUrl: "../public/images/nap1.webp"
+                fotoUrl: "./public/images/cheese1.webp"
             },
         ]
     }

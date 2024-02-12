@@ -18,32 +18,40 @@ class SubCarusel {
         this.element.classList.add('sub_carusel')
         this.items = items
         this.nextButton = document.createElement("button")
-        nextButton.addEventListener('click', this.nextPage)
+        this.nextButton.addEventListener('click', () => {
+            this.nextPage()
+        }
+        )
         this.prevButton = document.createElement("button")
-        prevButton.addEventListener('click', this.prevPage)
+        this.prevButton.addEventListener('click', () => {
+            this.prevPage()
+        })
         this.image = document.createElement("img")
         this.renderItem()
     }
     nextPage() {
-        this.page + 1 > this.items.length ? this.page = 0 : this.page += 1
+        this.page === this.items.length ? this.page = 1 : this.page += 1
         this.renderItem()
     }
     prevPage() {
-        this.page - 1 === 0 ? this.page = items.length : this.page -= 1
+        this.page  === 1 ? this.page = this.items.length : this.page -= 1
         this.renderItem()
     }
     renderItem() {
+        const item = this.items[page - 1]
+        console.log(item);
         this.element.innerHTML = ''
         this.element.appendChild(this.prevButton)
         this.prevButton.disabled = page === 1
-        this.image.src = this.items[page - 1].fotoUrl
+        this.image.src = item.fotoUrl
         this.element.appendChild(this.image)
+        this.element.innerHTML += `<p>${item.itemName}</p>`
         this.element.appendChild(this.nextButton)
         this.nextButton.disabled = page === this.items.length
     }
 }
 
-const nextPage = (event) => {
+const nextMainPage = (event) => {
     if (page === menuItems.length)
         page = 1
     else
@@ -51,7 +59,7 @@ const nextPage = (event) => {
     caruselItems.style.marginLeft = `-${(page - 1) * caruselItems.offsetWidth}px`
 }
 
-const prevPage = (event) => {
+const prevMainPage = (event) => {
     if (page === 1)
         page = menuItems.length
     else
@@ -64,8 +72,8 @@ const fsCarusel = document.getElementById('first_screen_carusel');
 const nextButton = document.getElementById('carusel_next');
 const prevButton = document.getElementById('carusel_prev');
 
-nextButton.addEventListener('click', nextPage)
-prevButton.addEventListener('click', prevPage)
+nextButton.addEventListener('click', nextMainPage)
+prevButton.addEventListener('click', prevMainPage)
 
 const caruselItems = document.createElement('div')
 caruselItems.classList.add("carusel_slice")

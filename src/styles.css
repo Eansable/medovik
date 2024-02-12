@@ -30,7 +30,7 @@ body {
 /* HEADER */
 
 .header {
-    width: 100vw;
+    width: 100%;
     background-color: var(--main-dark);
 }
 
@@ -158,6 +158,10 @@ body {
     padding: 32px;
 }
 
+.sub_carusel img {
+    width: 100%;
+}
+
 /* ABOUT CAFES */
 
 
@@ -252,7 +256,7 @@ body {
 /* FOOTER */
 
 footer {
-    width: 100vw;
+    width: 100%;
     background-color: var(--main-dark);
     color: var(--text-gray);
     padding: 24px 0;
