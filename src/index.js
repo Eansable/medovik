@@ -3,6 +3,46 @@ import './styles.css'
 import './variables.css'
 import cafes from './cafes';
 
+
+// FIrst screen carusel
+class SubCarusel {
+    page
+    element
+    items
+    nextButton
+    prevButton
+    image
+    constructor(items) {
+        this.page = 1
+        this.element = document.createElement("div")
+        this.element.classList.add('sub_carusel')
+        this.items = items
+        this.nextButton = document.createElement("button")
+        nextButton.addEventListener('click', this.nextPage)
+        this.prevButton = document.createElement("button")
+        prevButton.addEventListener('click', this.prevPage)
+        this.image = document.createElement("img")
+        this.renderItem()
+    }
+    nextPage() {
+        this.page + 1 > this.items.length ? this.page = 0 : this.page += 1
+        this.renderItem()
+    }
+    prevPage() {
+        this.page - 1 === 0 ? this.page = items.length : this.page -= 1
+        this.renderItem()
+    }
+    renderItem() {
+        this.element.innerHTML = ''
+        this.element.appendChild(this.prevButton)
+        this.prevButton.disabled = page === 1
+        this.image.src = this.items[page - 1].fotoUrl
+        this.element.appendChild(this.image)
+        this.element.appendChild(this.nextButton)
+        this.nextButton.disabled = page === this.items.length
+    }
+}
+
 const nextPage = (event) => {
     if (page === menuItems.length)
         page = 1
@@ -16,7 +56,6 @@ const prevPage = (event) => {
         page = menuItems.length
     else
         page -= 1
-    console.log(page);
     caruselItems.style.marginLeft = `-${(page - 1) * caruselItems.offsetWidth}px`
 }
 
@@ -36,11 +75,16 @@ menuItems.forEach((item, index) => {
     const caruselItem = document.createElement('div')
     caruselItem.classList.add("item")
     caruselItem.innerHTML = `<p>${item.name}</p>`
+    const subCarusel = new SubCarusel(item.items)
+    caruselItem.appendChild(subCarusel.element)
     caruselItems.appendChild(caruselItem)
 })
 
 fsCarusel.appendChild(caruselItems)
 
+
+
+// Doors
 const nextDoor = document.getElementById('next_door')
 nextDoor.addEventListener('click', () => {
     document.querySelector('.about_cafe').classList.add('about_cafe_hidden')

@@ -275,3 +275,25 @@ footer {
     aspect-ratio: 1 / 1;
     cursor: pointer;
 }
+
+.aside_social {
+    position: fixed;
+    top: 50%;
+    right: 0;
+    padding: 16px;
+    display: flex;
+    flex-direction: column; 
+    align-items: center;
+    background-color: var(--main-dark); 
+    gap: 16px;
+    border-radius: 4px;
+}
+
+.aside_social .social_item {
+    cursor: pointer;
+}
+
+.aside_social .social_item img{
+    width: 30px;
+    aspect-ratio: 1 / 1;
+}
