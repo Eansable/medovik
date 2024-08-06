@@ -6,8 +6,14 @@ body {
 
 @font-face {
     font-family: 'TTNorms';
-    src: url("./fonts/TTNorms-Medium.otf");
+    src: url("./fonts/TTNorms-Regular.ttf");
     font-weight: 400;
+}
+
+@font-face {
+    font-family: 'TTNorms';
+    src: url("./fonts/TTNorms-Medium.ttf");
+    font-weight: 500;
 }
 
 :root {
@@ -39,7 +45,7 @@ body {
     list-style: none;
 }
 
-.header_wrapper .menu ul li a{
+.header_wrapper .menu ul li a {
     color: #ffffff;
     text-decoration: none;
 }
@@ -50,6 +56,12 @@ body {
     padding: 12px 32px;
     font-family: "TTNorms", sans-serif;
     cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.order:hover {
+    background-color: #F9D426;
 }
 
 /* FIRST SCREEN */
@@ -112,18 +124,127 @@ section.coffee {
 .coffee_card {
     display: flex;
     background-color: #ffffff;
-    aspect-ratio: 1/1 ;
+    aspect-ratio: 1/1;
     position: relative;
     padding: 22px 35px 101px 32px;
+    box-sizing: border-box;
 }
 
 .coffee_card .card_content {
     background-color: var(--gray);
     width: 100%;
     height: 100%;
+    color: #ffffff;
+    padding: 36px 26px 0 26px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.coffee_card .card_content h3 {
+    font-size: 60px;
+    font-weight: 400;
+    line-height: 71px;
+    margin: 0;
+    margin-bottom: 22px;
+}
+
+.coffee_card .card_content p {
+    font-size: 16px;
+    line-height: 19px;
+    margin: 0;
 }
 
 .coffee_card .logo {
     position: absolute;
     bottom: 23px;
+}
+
+.coffee_image {
+    background-image: url("./img/coffee.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    height: 500px;
+    width: 500px;
+    position: absolute;
+    right: -200px;
+    top: -190px;
+    z-index: 2;
+    transform: rotate(-2deg);
+}
+
+.card_bg {
+    background-image: url("./img/coffee_cup.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+/* ABOUT */
+
+.about {
+    background-color: var(--gray);
+    background-image: url("./img/about-bg.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    padding: 110px 0;
+}
+
+.about_content {
+    background-color: #0C0505;
+    color: #ffffff;
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 64px 80px 80px 80px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 54px;
+}
+
+.about_content h2 {
+    font-size: 60px;
+    font-weight: 400;
+    line-height: 71px;
+    margin: 0;
+    text-align: center;
+}
+
+.about_card_wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    row-gap: 42px;
+    column-gap: 52px;
+    width: calc(100% - 50px);
+    margin: 0 auto;
+}
+
+.about_card {
+    padding: 24px;
+    background-color: #2B2123;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    position: relative;
+    min-height: 122px;
+}
+
+.about_card h3 {
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 21px;
+    margin: 0;
+}
+
+.about_card p {
+    font-size: 14px;
+    line-height: 17px;
+    margin: 0;
+}
+
+.about_card img {
+    width: 80px;
+    aspect-ratio: 1 / 1;
+    position: absolute;
+    top: -22px;
+    right: -16px;
 }
