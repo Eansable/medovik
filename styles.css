@@ -1,0 +1,129 @@
+body {
+    padding: 0;
+    margin: 0;
+    font-family: "TTNorms", sans-serif;
+}
+
+@font-face {
+    font-family: 'TTNorms';
+    src: url("./fonts/TTNorms-Medium.otf");
+    font-weight: 400;
+}
+
+:root {
+    --gray: #1C1F22
+}
+
+/* HEADER */
+
+.header {
+    background-color: #0C0505;
+    color: #ffffff;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    padding: 0 25px;
+}
+
+.header_wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+
+}
+
+.header_wrapper .menu ul {
+    display: flex;
+    gap: 36px;
+    list-style: none;
+}
+
+.header_wrapper .menu ul li a{
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.order {
+    border: none;
+    background-color: #F9CD00;
+    padding: 12px 32px;
+    font-family: "TTNorms", sans-serif;
+    cursor: pointer;
+}
+
+/* FIRST SCREEN */
+
+.first_screen {
+    background-color: var(--gray);
+    color: #ffffff;
+    background-image: url(./img/first-screen.png);
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: calc(100vh - 80px);
+    display: flex;
+    align-items: center;
+    padding-left: 42px;
+}
+
+.first_screen .content {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: flex-start;
+}
+
+.first_screen .content .title {
+    font-size: 80px;
+    line-height: 95px;
+}
+
+.first_screen .content .text {
+    font-size: 16px;
+    line-height: 20px;
+    max-width: 512px;
+}
+
+/* MENU */
+
+section.menu {
+    height: calc(100vh - 80px);
+    background-image: url("./img/menu.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-color: var(--gray);
+}
+
+/* COFFEE */
+
+section.coffee {
+    background-color: var(--gray);
+    padding: 180px 0;
+}
+
+.coffee_wrapper {
+    margin: 0 auto;
+    width: calc(100vw - 200px);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 118px;
+}
+
+.coffee_card {
+    display: flex;
+    background-color: #ffffff;
+    aspect-ratio: 1/1 ;
+    position: relative;
+    padding: 22px 35px 101px 32px;
+}
+
+.coffee_card .card_content {
+    background-color: var(--gray);
+    width: 100%;
+    height: 100%;
+}
+
+.coffee_card .logo {
+    position: absolute;
+    bottom: 23px;
+}
