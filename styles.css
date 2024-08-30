@@ -29,6 +29,9 @@ body {
     display: flex;
     align-items: center;
     padding: 0 25px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
 }
 
 .header_wrapper {
@@ -104,6 +107,181 @@ section.menu {
     background-size: cover;
     background-repeat: no-repeat;
     background-color: var(--gray);
+    background-position: bottom ;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+}
+
+.menu_wrapper {
+    width: calc(100vw - 50px);
+    margin: 0 auto;
+    padding: 80px 0;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    position: relative;
+    height: calc(100vh - 240px);
+}
+
+/* .menu_wrapper div {
+    position: relative;
+} */
+
+.menu_wrapper .menu_item {
+    border: none;
+    background-color: #ffffff;
+    padding: 24px 40px;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-size: 16px;
+    line-height: 19px;
+    font-family: "TTNorms", sans-serif;
+    position: absolute;
+    width: max-content;
+}
+
+.menu_wrapper .menu_item.active {
+    color: #ffffff;
+}
+
+.menu_item.coffee {
+    bottom: 180px;
+    right: 0;
+}
+.menu_item.coffee:hover {
+    background-color: #FAE9D4;
+}
+.menu_item.coffee.active {
+    background-color: #C1894A;
+}
+
+.menu_item.salty {
+    right: 0;
+    top: 525px;
+}
+.menu_item.salty:hover {
+    background-color: #FFF3DA;
+}
+.menu_item.salty.active {
+    background-color: #FFDF97;
+}
+
+.menu_item.lemon {
+    right: 75px;
+    top: 400px;
+}
+.menu_item.lemon:hover {
+    background-color: #FFF7D3;
+}
+.menu_item.lemon.active {
+    background-color: #F9D426;
+}
+
+.menu_item.nut {
+    right: 135px;
+    top: 270px;
+}
+.menu_item.nut:hover {
+    background-color: #F9E9CE;
+}
+.menu_item.nut.active {
+    background-color: #704E12;
+}
+
+.menu_item.blueberry {
+    right: 295px;
+    top: 170px;
+}
+.menu_item.blueberry:hover {
+    background-color: #E2CCF6;
+}
+.menu_item.blueberry.active {
+    background-color: #6322A0;
+}
+
+.menu_item.cheese {
+    top: 80px;
+    right: 470px;
+}
+.menu_item.cheese:hover {
+    background-color: #FFF3D7;
+}
+.menu_item.cheese.active {
+    background-color: #FFDF97;
+}
+
+.menu_item.classic {
+    top: 80px;
+    left: 520px
+}
+.menu_item.classic:hover {
+    background-color: #F5DABB;
+}
+.menu_item.classic.active {
+    background-color: #C1894A;
+}
+
+.menu_item.coconut {
+    top: 170px;
+    left: 360px;
+}
+.menu_item.coconut:hover {
+    background-color: #FFF6EB;
+}
+.menu_item.coconut.active {
+    background-color: #FFEFDA;
+}
+
+.menu_item.raspberry {
+    top: 270px;
+    left: 200px;
+}
+.menu_item.raspberry:hover {
+    background-color: #E39DBB;
+}
+.menu_item.raspberry.active {
+    background-color: #A40148;
+}
+
+.menu_item.cherry {
+    left: 100px;
+    top: 400px;
+}
+.menu_item.cherry:hover {
+    background-color: #E6B0BA;
+}
+.menu_item.cherry.active {
+    background-color: #852234;
+}
+
+.menu_item.napoleon {
+    left: 79px;
+    top: 525px;
+}
+.menu_item.napoleon:hover {
+    background-color: #FBE5C7;
+}
+.menu_item.napoleon.active {
+    background-color: #D8A86A;
+}
+
+.menu_item.napoleon_salty {
+    left: 0;
+    bottom: 180px;
+}
+.menu_item.napoleon_salty:hover {
+    background-color: #F1D2BD;
+}
+.menu_item.napoleon_salty.active {
+    background-color: #834216;
+}
+
+@media (max-width: 1440px) {
+    .menu_item.cheese {
+        right: 400px;
+    }
 }
 
 /* COFFEE */
