@@ -141,5 +141,13 @@ buttons.forEach(button => {
 modalButton.addEventListener("click", sendForm)
 
 
-// MENU
+// HAMBURGER MENU
 
+
+const hamburger = document.querySelector(".hamburger_menu")
+
+hamburger.addEventListener("click", () => {
+    hamburger.classList.toggle("open")
+    const menu = document.querySelector(".menu")
+    menu.classList.toggle("open")
+})
