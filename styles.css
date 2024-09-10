@@ -203,20 +203,21 @@ section.menu {
     background-repeat: no-repeat;
     background-color: var(--gray);
     background-position: bottom;
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
+    padding-top: 80px;
 }
 
 .menu_wrapper {
     width: calc(100vw - 50px);
     margin: 0 auto;
-    padding: 80px 0;
     display: flex;
     align-items: flex-end;
     justify-content: center;
     position: relative;
     height: calc(100vh - 240px);
+    background-image: url("./img/MenuLine.svg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: top center;
 }
 
 .menu_wrapper .menu_item {
@@ -244,7 +245,7 @@ section.menu {
 }
 
 .menu_item.coffee {
-    bottom: 180px;
+    top: 630px;
     right: 0;
 }
 
@@ -388,7 +389,7 @@ section.menu {
 
 .menu_item.napoleon_salty {
     left: 0;
-    bottom: 180px;
+    top: 630px;
 }
 
 .menu_item.napoleon_salty:hover {
@@ -408,6 +409,7 @@ section.menu {
 @media (max-width: 1370px) {
     .menu_item {
         display: none;
+        width: 300px;
     }
 
     section.menu {
@@ -418,7 +420,7 @@ section.menu {
         align-items: center;
         height: auto;
         gap: 10px;
-
+        background-image: none;
     }
 
     .menu .menu_wrapper .menu_item.active {
@@ -565,6 +567,23 @@ section.coffee {
         gap: 36px;
         grid-template-columns: 1fr;
         width: 380px;
+    }
+}
+
+
+@media (max-width: 450px) {
+    .coffee_wrapper {
+        width: 350px;
+    }
+
+    .coffee_card .card_content {
+        padding: 28px 20px 0 20px;
+        gap: 14px;
+
+    }
+
+    .coffee_card {
+        padding: 15px 19px 57px 17px;
     }
 }
 
