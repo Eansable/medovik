@@ -20,6 +20,17 @@ body {
     --gray: #1C1F22
 }
 
+.visible_content {
+    position: absolute;
+    left: -1000px;
+    overflow: hidden;
+    display: none;
+}
+
+[class*="copyrights-pane"] {
+    display: none !important;
+}
+
 /* HEADER */
 
 .header {

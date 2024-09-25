@@ -5,6 +5,38 @@ const modalButton = document.querySelector(".modal_order")
 const form = document.getElementById("order_form")
 const menuWrapper = document.querySelector(".menu_wrapper")
 
+// MAPS
+
+const markerSetting = {
+    iconLayout: 'default#image',
+    iconImageHref: "./img/marker.png"
+}
+
+const initMap = () => {
+    const map = new ymaps.Map("contacts_map", {
+        center: [53.923118, 27.589986],
+        zoom: 16
+    })
+
+    let kolas = new ymaps.Placemark([53.923118, 27.589986], {}, markerSetting)
+    let lojin = new ymaps.Placemark([53.951694, 27.682236], {}, markerSetting)
+    let globo = new ymaps.Placemark([53.875219, 27.498267], {}, markerSetting)
+
+    map.controls.remove('geolocationControl'); // удаляем геолокацию
+    map.controls.remove('searchControl'); // удаляем поиск
+    map.controls.remove('trafficControl'); // удаляем контроль трафика
+    map.controls.remove('typeSelector'); // удаляем тип
+    map.controls.remove('fullscreenControl'); // удаляем кнопку перехода в полноэкранный режим
+    map.controls.remove('zoomControl'); // удаляем контрол зуммирования
+    map.controls.remove('rulerControl'); // удаляем контрол правил
+
+    map.geoObjects.add(kolas)
+    map.geoObjects.add(lojin)
+    map.geoObjects.add(globo)
+}
+
+ymaps.ready(initMap)
+
 
 // MODAL AND TELEGRAM
 
