@@ -198,7 +198,6 @@ body {
 
 section.menu {
     height: calc(100vh - 80px);
-    background-image: url("./img/menu.png");
     background-size: cover;
     background-repeat: no-repeat;
     background-color: var(--gray);
@@ -898,6 +897,7 @@ section.coffee {
     display: flex;
     justify-content: flex-end;
     padding: 0 54px;
+    box-sizing: border-box;
 }
 
 .modal_form {
@@ -938,4 +938,64 @@ section.coffee {
 .modal_order {
     min-width: 430px;
     margin-top: 16px;
+}
+
+@media (max-width: 940px) {
+    .modal {
+        width: 700px;
+        aspect-ratio: initial;
+        height: 400px;
+        left: calc((100vw - 700px) / 2);
+        top: calc((100vh - 400px) / 2);
+    }
+
+    .modal_form {
+        max-width: 400px;
+        padding-top: 40px;
+    }
+
+    .modal_order {
+        margin-top: 8px;
+    }
+}
+
+@media (max-width: 720px) {
+    .modal {
+        background-image: none;
+        justify-content: center;
+        width: 330px;
+        aspect-ratio: 1 / 1;
+        left: calc((100vw - 330px) / 2);
+        top: calc((100vh - 330px) / 2);
+    }
+
+    .modal_form {
+        width: 100%;
+        padding-top: 32px;
+        gap: 24px;
+        align-items: flex-start;
+    }
+
+    .modal_order {
+        width: 100%;
+        margin-top: 0;
+        min-width: auto;
+    }
+
+    .modal_form h2 {
+        font-size: 20px;
+        line-height: 24px;
+    }
+
+    .modal_form p {
+        margin: 0;
+        font-size: 14px;
+        line-height: 17px;
+    }
+
+    .modal_form input {
+        min-width: auto;
+        width: 100%;
+        box-sizing: border-box;
+    }
 }

@@ -1,93 +1,3 @@
-const menu = [
-    {
-        name: "Медовик-кофе",
-        activeColor: "coffee",
-        photo: "",
-        top: "calc(100% - 180px)",
-        left: "500px",
-    },
-    {
-        name: "Медовик - соленая карамель",
-        activeColor: "salty",
-        photo: "",
-        top: "calc(100% - 300px)",
-        left: "500px",
-    },
-    {
-        name: "Медовик-лимон",
-        activeColor: "lemon",
-        photo: "",
-        top: "400px",
-        left: "1140px",
-    },
-    {
-        name: "Медовик - шоколадно-ореховый",
-        activeColor: "nut",
-        photo: "",
-        top: "285px",
-        left: "964px",
-    },
-    {
-        name: "Медовик-черника",
-        activeColor: "blueberry",
-        photo: "",
-        top: "175px",
-        left: "910px",
-    },
-    {
-        name: "Чизкейк",
-        activeColor: "cheese",
-        photo: "",
-        top: "80px",
-        left: "810px",
-    },
-    {
-        name: "Медовик классический",
-        activeColor: "classic",
-        photo: "",
-        top: "80px",
-        left: "520px",
-    },
-    {
-        name: "Медовик-кокос",
-        activeColor: "coconut",
-        photo: "",
-        top: "calc(100% - 685px)",
-        left: "360px",
-    },
-    {
-        name: "Медовик-малина",
-        activeColor: "raspberry",
-        photo: "",
-        top: "calc(100% - 595px)",
-        left: "200px",
-    },
-    {
-        name: "Медовик-вишня",
-        activeColor: "cherry",
-        photo: "",
-        top: "calc(100% - 465px)",
-        left: "100px",
-    },
-    {
-        name: "Наполеон",
-        activeColor: "napoleon",
-        photo: "",
-        top: "calc(100% - 360px)",
-        left: "79px",
-    },
-    {
-        name: "Наполеон - солёная карамель",
-        activeColor: "napoleon_salty",
-        photo: "",
-        top: "calc(100% - 240px)",
-        left: "0px",
-    },
-
-
-]
-
-
 const overlayModal = document.querySelector(".modal_overlay")
 const modal = document.querySelector(".modal")
 const buttons = document.querySelectorAll(".order")
@@ -158,13 +68,23 @@ hamburger.addEventListener("click", () => {
 const menuItems = document.querySelectorAll(".menu_item")
 const arrowRight = document.querySelector(".right")
 const arrowLeft = document.querySelector(".left")
+const menuBg = document.getElementById("menu")
 let page
+
+const firstImage = document.querySelector(".active")
+
+const setBackground = (source) => {
+    menuBg.style.backgroundImage = `url(./img/menu/${source}.webp)`
+}
+
+setBackground(firstImage.dataset.source)
 
 const changeActiveClass = (newPage) => {
     menuItems.forEach(item => {
         item.classList.remove("active")
     })
     menuItems[newPage].classList.add("active")
+    setBackground(menuItems[newPage].dataset.source)
 }
 
 const nextPage = () => {
@@ -204,6 +124,7 @@ menuItems.forEach((item, index) => {
         page = index
         clearTimeout(carusel)
         carusel = setTimeout(nextPage, 5000)
+        setBackground(item.dataset.source)
     })
 })
 
