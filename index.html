@@ -219,7 +219,7 @@
                 </div>
                 <div class="contacts_phones">
                     <h3>Контакты:</h3>
-                    <p>+375291112233</p>
+                    <a href="tel:+375291167992">+375291167992</a>
                 </div>
             </div>
             <div class="contacts_map" id="contacts_map">
@@ -253,7 +253,24 @@
                 <button class="order modal_order">Оформить заказ</button>
             </form>
         </div>
+
     </section>
+    <div class="status_overlay open">
+        <div class="status_request  err">
+            <div class="request">
+                <div class="spin"></div>
+                <p>Отправляем заявку</p>
+            </div>
+            <div class="success">
+                <img src="./img/success.svg" alt="Request success. Want call.">
+                <p>Ждите звонка!</p>
+            </div>
+            <div class="failure">
+                <img src="./img/error.svg" alt="Ops... some error. Please try again.">
+                <p>Попробуйте еще раз</p>
+            </div>
+        </div>
+    </div>
     <script src="https://api-maps.yandex.ru/2.1/?apikey=585fa203-087c-49d7-9089-45dab79ef4e3&lang=ru_RU">
     </script>
     <script src="./index.js"></script>

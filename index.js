@@ -43,19 +43,36 @@ ymaps.ready(initMap)
 const token = "7402101933:AAG8R-TlNh9UvQiMCm0S97m5CQ_-5nvQsDI"
 const chatId = "-1002231985778"
 const api = `https://api.telegram.org/bot${token}/sendMessage`
+const statusRequest = document.querySelector(".status_request")
+const statusOverlay = document.querySelector(".status_overlay")
+
+const closeStatus = (event) => {
+    statusOverlay.classList.remove("open")
+    statusRequest.classList.remove("req")
+    statusRequest.classList.remove("suc")
+    statusRequest.classList.remove("err")
+}
 
 const handleClickOverlay = () => {
     overlayModal.classList.remove("open")
+    closeStatus()
+    modal.classList.remove("open")
+    console.log("handleClickOverlay");
+
 }
 
 const openModal = (event) => {
     event.preventDefault()
     overlayModal.classList.add("open")
+    modal.classList.add("open")
 }
 
 const sendForm = async (event) => {
     const fd = new FormData(form)
     try {
+        statusRequest.classList.add("req")
+        statusOverlay.classList.add("open")
+        modalButton.setAttribute("disabled", true)
         const response = await fetch(api, {
             method: 'POST',
             headers: {
@@ -63,11 +80,24 @@ const sendForm = async (event) => {
             },
             body: JSON.stringify({
                 chat_id: chatId,
-                text: `Заказ с сайта. \n Имя: ${fd.get("name")} \n Телефон: ${fd.get("phone")}`
+                // text: `Заказ с сайта. \n Имя: ${fd.get("name")} \n Телефон: ${fd.get("phone")}`
+                text: `Anton! It's test. Don't worry!`
             })
         })
-    } catch {
 
+        if (response.ok) {
+            statusRequest.classList.remove("req")
+            statusRequest.classList.add("suc")
+            modalButton.removeAttribute("disabled")
+            modal.classList.remove("open")
+        } else {
+            throw new Error(response.statusText)
+        }
+    } catch {
+        statusRequest.classList.remove("req")
+        statusRequest.classList.add("err")
+        statusOverlay.classList.add("open")
+        modalButton.removeAttribute("disabled")
     }
 }
 
@@ -79,6 +109,8 @@ modal.addEventListener("click", (event) => {
 buttons.forEach(button => {
     button.addEventListener("click", openModal)
 })
+
+statusOverlay.addEventListener("click", closeStatus)
 
 modalButton.addEventListener("click", sendForm)
 
