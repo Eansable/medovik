@@ -25,7 +25,7 @@ const initMap = () => {
     let kolas = new ymaps.Placemark([53.923118, 27.589986], {}, markerSetting)
     let lojin = new ymaps.Placemark([53.951694, 27.682236], {}, markerSetting)
     let globo = new ymaps.Placemark([53.875219, 27.498267], {}, markerSetting)
-
+    let independent = new ymaps.Placemark([53.927709, 27.629284], {}, markerSetting)
     map.controls.remove('geolocationControl'); // удаляем геолокацию
     map.controls.remove('searchControl'); // удаляем поиск
     map.controls.remove('trafficControl'); // удаляем контроль трафика
@@ -37,6 +37,7 @@ const initMap = () => {
     map.geoObjects.add(kolas)
     map.geoObjects.add(lojin)
     map.geoObjects.add(globo)
+    map.geoObjects.add(independent)
 }
 
 ymaps.ready(initMap)

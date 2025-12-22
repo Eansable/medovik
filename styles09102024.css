@@ -790,6 +790,11 @@ section.coffee {
     gap: 30px;
 }
 
+.contacts_phones a {
+    color: #ffffff;
+    text-decoration: none;
+}
+
 @media (max-width: 1250px) {
     section.contacts {
         padding: 50px 60px;
@@ -845,6 +850,10 @@ section.coffee {
     .contacts_info h3 {
         font-size: 28px;
         line-height: 33px;
+    }
+
+    .contacts_map {
+        height:  300px;
     }
 }
 
