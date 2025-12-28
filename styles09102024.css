@@ -74,6 +74,102 @@ body {
     aspect-ratio: 1 / 1;
 }
 
+.home {
+    padding: 20px;
+    box-sizing: border-box;
+    display: grid;
+    position: relative;
+    min-height: 100vh;
+}
+.home header {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-bottom: 48px;
+}
+.home p {
+    font-size: 16px;
+    margin: 0;
+    color: #ffffff;
+}
+
+.home aside {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    position: absolute;
+    bottom: 130px;
+    right: 0px;
+    padding: 12px;
+    background-color: #ffffff40;
+    border-radius: 12px;
+    border-radius: 0;
+}
+.home aside img {
+    width: 24px;
+    height: 24px;
+}
+
+.medoviki_list {
+    background-image: url(./img/mobile/medovikiBackground.svg);
+    min-height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.medoviki_list h2 {
+    margin: 0;
+    color: #a85101;
+    font-size: 36px;
+    line-height: auto;
+    font-weight: 400;
+}
+
+.your_choice {
+    background-color: #1c1f22;
+    min-height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.your_choice h2 {
+    margin: 0;
+    color: #ffffff;
+    font-size: 36px;
+    line-height: auto;
+    font-weight: 400;
+}
+
+.bucket {
+    background-color: #1c1f22;
+    min-height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.bucket h2 {
+    margin: 0;
+    color: #ffffff;
+    font-size: 36px;
+    line-height: auto;
+    font-weight: 400;
+}
+
+.mobile_contacts {
+    background-color: #1c1f22;
+    min-height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.mobile_contacts h2 {
+    margin: 0;
+    color: #a85101;
+    font-size: 36px;
+    line-height: auto;
+    font-weight: 400;
+}
+
 /* HEADER */
 
 .header {
