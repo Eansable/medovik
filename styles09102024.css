@@ -46,6 +46,14 @@ body {
 
 /*MOBILE STYLES*/
 
+.button_mobile {
+    background-color: #f9cd00;
+    color: #0c0505;
+    border: none;
+    padding: 18px 30px;
+    cursor: pointer;
+}
+
 .content_mobile {
     background-image: url("./img/mobile/FSC.webp");
     min-height: 100vh;
@@ -77,15 +85,21 @@ body {
 .home {
     padding: 20px;
     box-sizing: border-box;
-    display: grid;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
     position: relative;
     min-height: 100vh;
+    align-items: flex-start;
 }
 .home header {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    margin-bottom: 48px;
+    margin-bottom: 28px;
+}
+.home .logo_mobile {
+    margin-bottom: -20px;
 }
 .home p {
     font-size: 16px;
@@ -110,8 +124,17 @@ body {
     height: 24px;
 }
 
+.home .eco {
+    float: right;
+}
+
+.home .eco_text {
+    margin-left: 40px;
+    margin-bottom: 20px;
+}
+
 .medoviki_list {
-    background-image: url(./img/mobile/medovikiBackground.svg);
+    background-image: url(./img/mobile/medovikiBackground.webp);
     min-height: 100vh;
     padding: 20px;
     box-sizing: border-box;
