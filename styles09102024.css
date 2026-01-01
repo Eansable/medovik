@@ -138,6 +138,15 @@ body {
     min-height: 100vh;
     padding: 20px;
     box-sizing: border-box;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    row-gap: 16px;
+    column-gap: 8px;
+}
+
+.medoviki_list header {
+    grid-column-start: 1;
+    grid-column-end: 3;
 }
 
 .medoviki_list h2 {
