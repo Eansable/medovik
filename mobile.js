@@ -1,34 +1,18 @@
-const medoviki = [
-  {
-    id: 1,
-    name: "Кофейный",
-    price: 50,
-    image: "./img/mobile/cakes/coffee.webp",
-  },
-];
+class Element {
+  element;
+  constructor(block = "div", classList = [], innerHTML = "") {
+    const newElement = document.createElement(block);
 
-const content = document.querySelector(".content_mobile");
+    newElement.classList.add(classList);
+    newElement.innerHTML = innerHTML;
+    this.element = newElement;
+  }
+  restoreHTML() {
+    this.element.innerHTML = "";
+  }
+}
 
-const menu = document.createElement("div");
-menu.classList.add("mobile_menu");
-
-const page = document.createElement("div");
-page.classList.add("page");
-
-const changePage = (child) => {
-  return () => {
-    page.innerText = "";
-    page.appendChild(child);
-  };
-};
-
-const medovikiList = document.createElement("div");
-medovikiList.classList.add("medoviki_list");
-medovikiList.innerHTML = "<h2>MEDOVIKI:<h2>";
-
-const home = document.createElement("div");
-home.classList.add("home");
-home.innerHTML = `
+const homeHTML = `
 <header>
   <img src="./img/mobile/logo-with-map.svg" class="logo_mobile">
   <div>
@@ -53,58 +37,195 @@ home.innerHTML = `
 <p class="eco_text">Благодаря использованию исключительно натуральных ингредиентов,
 мы абсолютно уверены в качестве наших десертов</p>
 </div>`;
-const takeOrder = document.createElement("button");
-takeOrder.classList.add("button_mobile");
-takeOrder.innerHTML = "Оформить заказ";
-takeOrder.addEventListener("click", changePage(medovikiList));
-home.appendChild(takeOrder);
 
-const yourChoice = document.createElement("div");
-yourChoice.classList.add("your_choice");
-yourChoice.innerHTML = "<h2>YOU LOVE:<h2>";
+const loveCake = (medovik) => (event) => {
+  const cakesElements = document.querySelectorAll(".medovik")
+  let cake;
+  cakesElements.forEach((elem) => {
+    if (+elem.dataset.id === medovik.id) cake = elem
+  })
+  const savedMedoviksStr = localStorage.getItem("favoritesCake");
+  if (savedMedoviksStr) {
+    const savedMedoviks = JSON.parse(savedMedoviksStr);
+    if (savedMedoviks.some((item) => item.id === medovik.id)) {
+      localStorage.setItem(
+        "favoritesCake",
+        JSON.stringify(savedMedoviks.filter((item) => item.id !== medovik.id)),
+      );
+      cake.classList.remove("liked")
+    } else {
+      savedMedoviks.push(medovik);
+      localStorage.setItem("favoritesCake", JSON.stringify(savedMedoviks));
+      cake.classList.add("liked")
+    }
+  } else {
+    localStorage.setItem("favoritesCake", JSON.stringify([medovik]));
+    cake.classList.add("liked")
+  }
+  
+};
 
-const bucket = document.createElement("div");
-bucket.classList.add("bucket");
-bucket.innerHTML = "<h2>YOUR CHOICE:<h2>";
+const hasLikedMedovik = (medovikId) => {
+  const savedMedoviksStr = localStorage.getItem("favoritesCake");
+  if (savedMedoviksStr) {
+    const savedMedoviks = JSON.parse(savedMedoviksStr);
+    return savedMedoviks.some((item) => item.id === medovikId);
+  }
+};
 
-const contacts = document.createElement("div");
-contacts.classList.add("mobile_contacts");
-contacts.innerHTML = "<h2>WE ARE HERE:<h2>";
+const medoviki = [
+  {
+    id: 1,
+    name: "Кофейный",
+    price: 50,
+    image: "./img/mobile/cakes/coffee.webp",
+    color: "#453628",
+  },
+  {
+    id: 12,
+    name: "Карамель",
+    price: 50,
+    image: "./img/mobile/cakes/caramel.webp",
+    color: "#A85101",
+  },
+  {
+    id: 3,
+    name: "Черничный",
+    price: 50,
+    image: "./img/mobile/cakes/blueberry.webp",
+    color: "#3F4974",
+  },
+  {
+    id: 4,
+    name: "Кокос",
+    price: 50,
+    image: "./img/mobile/cakes/coconut.webp",
+    color: "#F6F2DA",
+    isLight: true,
+  },
+  {
+    id: 5,
+    name: "Малиновый",
+    price: 50,
+    image: "./img/mobile/cakes/raspberry.webp",
+    color: "#ED6698",
+  },
+  {
+    id: 6,
+    name: "Вишнёвый",
+    price: 50,
+    image: "./img/mobile/cakes/cherry.webp",
+    color: "#7F092E",
+  },
+  {
+    id: 7,
+    name: "Чизкейк",
+    price: 50,
+    image: "./img/mobile/cakes/cheese.webp",
+    color: "#E7BF7B",
+  },
+  {
+    id: 8,
+    name: "Солёная карамель",
+    price: 50,
+    image: "./img/mobile/cakes/salt-caramel.webp",
+    color: "#9A4A00",
+  },
+];
+
+const content = document.querySelector(".content_mobile");
+
+const menu = new Element("div", ["mobile_menu"]);
+
+const page = new Element("div", ["page"]);
+
+const changePage = (child) => {
+  return () => {
+    page.restoreHTML();
+    page.element.appendChild(child);
+  };
+};
+
+const medovikiList = new Element(
+  "div",
+  ["medoviki_list"],
+  "<header><h2>MEDOVIKI:</h2></header>",
+);
+medoviki.forEach((item) => {
+  const itemHTML = `
+    <img src="${item.image}" alt="${item.name}">
+    <div class="medovik_info">
+      <div>
+        <p>${item.name}</p>
+        <p>${item.price} byn</p>
+      </div>
+    </div>
+  `;
+  const heartButton = new Element(
+    "button",
+    ["heart_button"],
+    `<img src="./img/mobile/heart.svg"><img src="./img/mobile/yellowHeart.svg">`,
+  );
+  heartButton.element.addEventListener("click", loveCake(item));
+
+  const medovik = new Element("div", ["medovik"], itemHTML);
+  medovik.element.style.backgroundColor = item.color;
+  medovik.element.dataset.id = item.id;
+  medovik.element.appendChild(heartButton.element);
+  medovikiList.element.appendChild(medovik.element);
+  if (hasLikedMedovik(item.id)) {
+    medovik.element.classList.add("liked");
+  }
+});
+
+const home = new Element("div", ["home"], homeHTML);
+const takeOrder = new Element("button", ["button_mobile"], "Оформить заказ");
+takeOrder.element.addEventListener("click", changePage(medovikiList.element));
+home.element.appendChild(takeOrder.element);
+
+const yourChoice = new Element("div", ["your_choice"], "<h2>YOU<img src='./img/mobile/yellowHeart.svg' alt=''>:<h2>");
+
+const bucket = new Element("div", ["bucket"], "<h2>YOUR CHOICE:<h2>");
+
+const contacts = new Element(
+  "div",
+  ["mobile_contacts"],
+  "<h2>WE ARE HERE:<h2>",
+);
 
 const menuItems = [
   {
     icon: "./img/mobile/home.svg",
-    function: changePage(home),
+    function: changePage(home.element),
   },
   {
     icon: "./img/mobile/heart.svg",
-    function: changePage(yourChoice),
+    function: changePage(yourChoice.element),
   },
   {
     icon: "./img/mobile/shopping-cart.svg",
-    function: changePage(bucket),
+    function: changePage(bucket.element),
   },
   {
     icon: "./img/mobile/cake.svg",
-    function: changePage(medovikiList),
+    function: changePage(medovikiList.element),
   },
   {
     icon: "./img/mobile/marker.svg",
-    function: changePage(contacts),
+    function: changePage(contacts.element),
   },
 ];
 
 menuItems.forEach((item) => {
-  const menuItem = document.createElement("button");
-  menuItem.classList.add("mobile_menu_item");
-  menuItem.innerHTML = `
+  const itemHTML = `
     <img src="${item.icon}" alt="Icon">
   `;
-  menuItem.addEventListener("click", item.function);
-  menu.appendChild(menuItem);
+  const menuItem = new Element("button", ["mobile_menu_item"], itemHTML);
+  menuItem.element.addEventListener("click", item.function);
+  menu.element.appendChild(menuItem.element);
 });
 
-page.appendChild(home);
+page.element.appendChild(medovikiList.element);
 
-content.appendChild(menu);
-content.appendChild(page);
+content.appendChild(menu.element);
+content.appendChild(page.element);
