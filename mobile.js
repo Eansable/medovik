@@ -38,6 +38,24 @@ const homeHTML = `
 мы абсолютно уверены в качестве наших десертов</p>
 </div>`;
 
+const loveCake = (medovik) => (event) => {
+  const savedMedoviksStr = localStorage.getItem("favoritesCake");
+  if (savedMedoviksStr) {
+    const savedMedoviks = JSON.parse(savedMedoviksStr);
+    if (savedMedoviks.some((item) => item.id === medovik.id)) {
+      localStorage.setItem(
+        "favoritesCake",
+        JSON.stringify(savedMedoviks.filter((item) => item.id !== medovik.id)),
+      );
+    } else {
+      savedMedoviks.push(medovik);
+      localStorage.setItem("favoritesCake", JSON.stringify(savedMedoviks));
+    }
+  } else {
+    localStorage.setItem("favoritesCake", JSON.stringify([medovik]));
+  }
+};
+
 const medoviki = [
   {
     id: 1,
@@ -51,49 +69,50 @@ const medoviki = [
     name: "Карамель",
     price: 50,
     image: "./img/mobile/cakes/caramel.webp",
-    color: "#453628",
+    color: "#A85101",
   },
   {
     id: 3,
     name: "Черничный",
     price: 50,
     image: "./img/mobile/cakes/blueberry.webp",
-    color: "#453628",
+    color: "#3F4974",
   },
   {
     id: 4,
     name: "Кокос",
     price: 50,
     image: "./img/mobile/cakes/coconut.webp",
-    color: "#453628",
+    color: "#F6F2DA",
+    isLight: true,
   },
   {
     id: 5,
     name: "Малиновый",
     price: 50,
     image: "./img/mobile/cakes/raspberry.webp",
-    color: "#453628",
+    color: "#ED6698",
   },
   {
     id: 6,
     name: "Вишнёвый",
     price: 50,
     image: "./img/mobile/cakes/cherry.webp",
-    color: "#453628",
+    color: "#7F092E",
   },
   {
     id: 7,
     name: "Чизкейк",
     price: 50,
     image: "./img/mobile/cakes/cheese.webp",
-    color: "#453628",
+    color: "#E7BF7B",
   },
   {
     id: 8,
-    name: "Шоколадный",
+    name: "Солёная карамель",
     price: 50,
-    image: "./img/mobile/cakes/chocolate.webp",
-    color: "#453628",
+    image: "./img/mobile/cakes/salt-caramel.webp",
+    color: "#9A4A00",
   },
 ];
 
@@ -118,13 +137,27 @@ const medovikiList = new Element(
 medoviki.forEach((item) => {
   const itemHTML = `
     <img src="${item.image}" alt="${item.name}">
-    <h3>${item.name}</h3>
-    <p>${item.price} byn</p>.
+    <div class="medovik_info">
+      <div>
+        <p>${item.name}</p>
+        <p>${item.price} byn</p>
+      </div>
+    </div>
   `;
+  const heartButton = new Element(
+    "button",
+    ["heart_button"],
+    `<img src="./img/mobile/heart.svg">`,
+  );
+  heartButton.element.addEventListener("click", loveCake(item));
+
   const medovik = new Element("div", ["medovik"], itemHTML);
   medovik.element.style.backgroundColor = item.color;
+  medovik.element.dataset.id = item.id;
+  medovik.element.appendChild(heartButton.element);
   medovikiList.element.appendChild(medovik.element);
 });
+
 const home = new Element("div", ["home"], homeHTML);
 const takeOrder = new Element("button", ["button_mobile"], "Оформить заказ");
 takeOrder.element.addEventListener("click", changePage(medovikiList.element));
