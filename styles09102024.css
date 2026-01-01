@@ -170,7 +170,7 @@ body {
     font-weight: 400;
 }
 
-.medoviki_list .medovik img {
+.medoviki_list .medovik > img {
     width: 100%;
     height: auto;
 }
@@ -189,6 +189,16 @@ body {
     right: 8px;
     border: none;
     background-color: transparent;
+}
+.medovik .heart_button img {
+    width: 24px;
+    aspect-ratio: 1 / 1;
+}
+.medovik:not(.liked) .heart_button img:last-child {
+    display: none;
+}
+.medovik.liked .heart_button img:first-child {
+    display: none;
 }
 
 .your_choice {

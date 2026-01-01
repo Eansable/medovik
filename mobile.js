@@ -39,6 +39,11 @@ const homeHTML = `
 </div>`;
 
 const loveCake = (medovik) => (event) => {
+  const cakesElements = document.querySelectorAll(".medovik")
+  let cake;
+  cakesElements.forEach((elem) => {
+    if (+elem.dataset.id === medovik.id) cake = elem
+  })
   const savedMedoviksStr = localStorage.getItem("favoritesCake");
   if (savedMedoviksStr) {
     const savedMedoviks = JSON.parse(savedMedoviksStr);
@@ -47,12 +52,24 @@ const loveCake = (medovik) => (event) => {
         "favoritesCake",
         JSON.stringify(savedMedoviks.filter((item) => item.id !== medovik.id)),
       );
+      cake.classList.remove("liked")
     } else {
       savedMedoviks.push(medovik);
       localStorage.setItem("favoritesCake", JSON.stringify(savedMedoviks));
+      cake.classList.add("liked")
     }
   } else {
     localStorage.setItem("favoritesCake", JSON.stringify([medovik]));
+    cake.classList.add("liked")
+  }
+  
+};
+
+const hasLikedMedovik = (medovikId) => {
+  const savedMedoviksStr = localStorage.getItem("favoritesCake");
+  if (savedMedoviksStr) {
+    const savedMedoviks = JSON.parse(savedMedoviksStr);
+    return savedMedoviks.some((item) => item.id === medovikId);
   }
 };
 
@@ -147,7 +164,7 @@ medoviki.forEach((item) => {
   const heartButton = new Element(
     "button",
     ["heart_button"],
-    `<img src="./img/mobile/heart.svg">`,
+    `<img src="./img/mobile/heart.svg"><img src="./img/mobile/yellowHeart.svg">`,
   );
   heartButton.element.addEventListener("click", loveCake(item));
 
@@ -156,6 +173,9 @@ medoviki.forEach((item) => {
   medovik.element.dataset.id = item.id;
   medovik.element.appendChild(heartButton.element);
   medovikiList.element.appendChild(medovik.element);
+  if (hasLikedMedovik(item.id)) {
+    medovik.element.classList.add("liked");
+  }
 });
 
 const home = new Element("div", ["home"], homeHTML);
@@ -163,7 +183,7 @@ const takeOrder = new Element("button", ["button_mobile"], "Оформить з�
 takeOrder.element.addEventListener("click", changePage(medovikiList.element));
 home.element.appendChild(takeOrder.element);
 
-const yourChoice = new Element("div", ["your_choice"], "<h2>YOU LOVE:<h2>");
+const yourChoice = new Element("div", ["your_choice"], "<h2>YOU<img src='./img/mobile/yellowHeart.svg' alt=''>:<h2>");
 
 const bucket = new Element("div", ["bucket"], "<h2>YOUR CHOICE:<h2>");
 
