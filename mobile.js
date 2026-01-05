@@ -38,12 +38,12 @@ const homeHTML = `
 мы абсолютно уверены в качестве наших десертов</p>
 </div>`;
 
-const loveCake = (medovik) => (event) => {
-  const cakesElements = document.querySelectorAll(".medovik")
+const loveCake = (medovik, likedPage) => (event) => {
+  const cakesElements = document.querySelectorAll(".medovik");
   let cake;
   cakesElements.forEach((elem) => {
-    if (+elem.dataset.id === medovik.id) cake = elem
-  })
+    if (+elem.dataset.id === medovik.id) cake = elem;
+  });
   const savedMedoviksStr = localStorage.getItem("favoritesCake");
   if (savedMedoviksStr) {
     const savedMedoviks = JSON.parse(savedMedoviksStr);
@@ -52,17 +52,19 @@ const loveCake = (medovik) => (event) => {
         "favoritesCake",
         JSON.stringify(savedMedoviks.filter((item) => item.id !== medovik.id)),
       );
-      cake.classList.remove("liked")
+      cake.classList.remove("liked");
     } else {
       savedMedoviks.push(medovik);
       localStorage.setItem("favoritesCake", JSON.stringify(savedMedoviks));
-      cake.classList.add("liked")
+      cake.classList.add("liked");
     }
   } else {
     localStorage.setItem("favoritesCake", JSON.stringify([medovik]));
-    cake.classList.add("liked")
+    cake.classList.add("liked");
   }
-  
+  if (likedPage) {
+    renderYourChoiceCakes(likedPage);
+  }
 };
 
 const hasLikedMedovik = (medovikId) => {
@@ -132,26 +134,28 @@ const medoviki = [
     color: "#9A4A00",
   },
 ];
+let choosedCake;
 
-const content = document.querySelector(".content_mobile");
-
-const menu = new Element("div", ["mobile_menu"]);
-
-const page = new Element("div", ["page"]);
-
-const changePage = (child) => {
-  return () => {
-    page.restoreHTML();
-    page.element.appendChild(child);
-  };
+const renderBucketModalContent = () => {
+  if (!choosedCake) return;
+  bucketModalContent.innerHTML = `<header>
+    ${choosedCake.name}
+    <button class="close-button">
+    <img src="./img/mobile/cross.svg">
+    </button>
+    </header>
+    <div class="bucket_medovik_info">
+      <img src="${choosedCake.image}" alt="${choosedCake.name}">
+      <div class="manage_count"> </div>
+    </div>
+    `;
+  const closeButton = bucketModalContent.querySelector(".close-button");
+  closeButton.addEventListener("click", () => {
+    bucketModal.element.classList.remove("active");
+  });
 };
 
-const medovikiList = new Element(
-  "div",
-  ["medoviki_list"],
-  "<header><h2>MEDOVIKI:</h2></header>",
-);
-medoviki.forEach((item) => {
+const createCakeCard = (item, page, isLikedPage = false) => {
   const itemHTML = `
     <img src="${item.image}" alt="${item.name}">
     <div class="medovik_info">
@@ -166,16 +170,108 @@ medoviki.forEach((item) => {
     ["heart_button"],
     `<img src="./img/mobile/heart.svg"><img src="./img/mobile/yellowHeart.svg">`,
   );
-  heartButton.element.addEventListener("click", loveCake(item));
+  heartButton.element.addEventListener(
+    "click",
+    loveCake(item, isLikedPage ? page : null),
+  );
 
   const medovik = new Element("div", ["medovik"], itemHTML);
+  if (item.isLight) {
+    medovik.element.classList.add("light");
+  }
   medovik.element.style.backgroundColor = item.color;
   medovik.element.dataset.id = item.id;
   medovik.element.appendChild(heartButton.element);
-  medovikiList.element.appendChild(medovik.element);
+  const takeToBucket = new Element("button", ["button_mobile"], "В корзину");
+  takeToBucket.element.addEventListener("click", () => {
+    choosedCake = item;
+    bucketModal.element.classList.add("active");
+    renderBucketModalContent();
+  });
+  medovik.element.appendChild(takeToBucket.element);
+  page.appendChild(medovik.element);
   if (hasLikedMedovik(item.id)) {
     medovik.element.classList.add("liked");
   }
+};
+
+const bucketModal = new Element(
+  "div",
+  ["bucket_modal"],
+  `<div class="bucket_modal_content"></div>`,
+);
+bucketModal.element.addEventListener("click", () => {
+  bucketModal.element.classList.remove("active");
+});
+const bucketModalContent = bucketModal.element.querySelector(
+  ".bucket_modal_content",
+);
+bucketModalContent.addEventListener("click", (event) => {
+  event.stopPropagation();
+});
+
+const content = document.querySelector(".content_mobile");
+
+const menu = new Element("div", ["mobile_menu"]);
+
+const page = new Element("div", ["page"]);
+
+const renderYourChoiceCakes = (child) => {
+  child.innerHTML =
+    "<header><h2>YOU<img src='./img/mobile/yellowHeart.svg' alt=''>:</h2></header>";
+  const savedMedoviksStr = localStorage.getItem("favoritesCake");
+  if (savedMedoviksStr) {
+    const savedMedoviks = JSON.parse(savedMedoviksStr);
+    const cardsElem = new Element("div", ["cards"]);
+    savedMedoviks.forEach((item) => {
+      createCakeCard(item, cardsElem.element, true);
+    });
+    child.appendChild(cardsElem.element);
+  }
+};
+
+const changePage = (child) => {
+  return () => {
+    page.restoreHTML();
+    page.element.appendChild(child);
+  };
+};
+
+const changeYourChoicePage = (child) => {
+  return () => {
+    renderYourChoiceCakes(child);
+    page.restoreHTML();
+    page.element.appendChild(child);
+  };
+};
+
+const changeListPage = (child) => {
+  return () => {
+    const cakesElements = child.querySelectorAll(".medovik");
+    medoviki.forEach((item) => {
+      const elem = Array.from(cakesElements).find(
+        (elem) => +elem.dataset.id === item.id,
+      );
+      if (elem) {
+        if (hasLikedMedovik(item.id)) {
+          elem.classList.add("liked");
+        } else {
+          elem.classList.remove("liked");
+        }
+      }
+    });
+    page.restoreHTML();
+    page.element.appendChild(child);
+  };
+};
+
+const medovikiList = new Element(
+  "div",
+  ["medoviki_list"],
+  "<header><h2>MEDOVIKI:</h2></header>",
+);
+medoviki.forEach((item) => {
+  createCakeCard(item, medovikiList.element);
 });
 
 const home = new Element("div", ["home"], homeHTML);
@@ -183,7 +279,11 @@ const takeOrder = new Element("button", ["button_mobile"], "Оформить з�
 takeOrder.element.addEventListener("click", changePage(medovikiList.element));
 home.element.appendChild(takeOrder.element);
 
-const yourChoice = new Element("div", ["your_choice"], "<h2>YOU<img src='./img/mobile/yellowHeart.svg' alt=''>:<h2>");
+const yourChoice = new Element(
+  "div",
+  ["your_choice"],
+  "<header><h2>YOU<img src='./img/mobile/yellowHeart.svg' alt=''>:</h2></header>",
+);
 
 const bucket = new Element("div", ["bucket"], "<h2>YOUR CHOICE:<h2>");
 
@@ -200,7 +300,7 @@ const menuItems = [
   },
   {
     icon: "./img/mobile/heart.svg",
-    function: changePage(yourChoice.element),
+    function: changeYourChoicePage(yourChoice.element),
   },
   {
     icon: "./img/mobile/shopping-cart.svg",
@@ -208,7 +308,7 @@ const menuItems = [
   },
   {
     icon: "./img/mobile/cake.svg",
-    function: changePage(medovikiList.element),
+    function: changeListPage(medovikiList.element),
   },
   {
     icon: "./img/mobile/marker.svg",
@@ -229,3 +329,4 @@ page.element.appendChild(medovikiList.element);
 
 content.appendChild(menu.element);
 content.appendChild(page.element);
+content.appendChild(bucketModal.element);

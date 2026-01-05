@@ -46,12 +46,62 @@ body {
 
 /*MOBILE STYLES*/
 
+.bucket_modal {
+    background-color: #0c050599;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 100vh;
+    box-sizing: border-box;
+    z-index: 5;
+    display: none;
+}
+.bucket_modal.active {
+    display: block;
+}
+
+.bucket_modal .bucket_modal_content {
+    padding: 16px;
+    background-color: #ffffff;
+    position: fixed;
+    bottom: 96px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.bucket_modal_content header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.bucket_modal_content header .close-button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+.bucket_medovik_info {
+    padding: 8px;
+    background-color: #fa8a0350;
+}
+.bucket_medovik_info img {
+    width: 50px;
+    aspect-ratio: 1 / 1;
+}
+
 .button_mobile {
     background-color: #f9cd00;
     color: #0c0505;
     border: none;
     padding: 18px 30px;
     cursor: pointer;
+}
+.medovik .button_mobile {
+    margin: 8px;
+    width: calc(100% - 16px);
+    padding: 8px 0;
+    font-weight: 500;
 }
 
 .content_mobile {
@@ -140,6 +190,7 @@ body {
     box-sizing: border-box;
     display: grid;
     grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(auto-fill);
     row-gap: 16px;
     column-gap: 8px;
     padding-bottom: 94px;
@@ -158,19 +209,24 @@ body {
     font-weight: 400;
 }
 
-.medoviki_list .medovik p {
+.medovik p {
     margin: 0;
     padding: 0;
 }
-.medoviki_list .medovik {
+.medovik {
     position: relative;
     color: #ffffff;
     font-size: 16px;
     line-height: auto;
     font-weight: 400;
+    height: auto;
 }
 
-.medoviki_list .medovik > img {
+.medovik.light {
+    color: #000000;
+}
+
+.medovik > img {
     width: 100%;
     height: auto;
 }
@@ -179,10 +235,17 @@ body {
     display: grid;
     row-gap: 12px;
 }
-.medovik .medovik_info div {
-    display: flex;
-    justify-content: space-between;
+
+.medovik .medovik_info div p:last-child {
+    text-align: end;
 }
+.medovik .medovik_info div {
+    display: grid;
+    grid-template-columns: 60% 40%;
+    justify-content: space-between;
+    height: 26px;
+}
+
 .medovik .heart_button {
     position: absolute;
     top: 8px;
@@ -206,8 +269,26 @@ body {
     min-height: 100vh;
     padding: 20px;
     box-sizing: border-box;
+    padding-bottom: 94px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
 }
 
+.your_choice .cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
+    grid-auto-rows: auto;
+    row-gap: 16px;
+    column-gap: 8px;
+    align-items: start;
+}
+
+.your_choice header {
+    grid-column-start: 1;
+    grid-column-end: 3;
+}
 .your_choice h2 {
     margin: 0;
     color: #ffffff;
