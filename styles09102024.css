@@ -82,12 +82,48 @@ body {
 }
 
 .bucket_medovik_info {
+    display: flex;
+    gap: 8px;
+    margin-top: 8px;
     padding: 8px;
     background-color: #fa8a0350;
 }
+
 .bucket_medovik_info img {
     width: 50px;
     aspect-ratio: 1 / 1;
+}
+
+.manage_count {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+}
+
+.manage_count button {
+    background-color: #f9cd00;
+    border: none;
+    cursor: pointer;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+}
+
+.min_order {
+    padding: 0 16px;
+    margin-top: 8px;
+    text-align: center;
+}
+
+.add_to_bucket {
+    width: 100%;
+    background-color: #f9cd00;
+    border: none;
+    cursor: pointer;
+    padding: 18px 30px;
+    margin-top: 16px;
 }
 
 .button_mobile {

@@ -12,6 +12,108 @@ class Element {
   }
 }
 
+class BucketElement extends Element {
+  weigth = 1;
+  plusButton;
+  minusButton;
+  addToBucketButton;
+  cake = medoviki[0];
+  constructor() {
+    super("div", ["bucket_modal"]);
+    this.element.innerHTML = `
+      <div class="bucket_modal_content">
+        <header>
+          <span class="modal_name">${this.cake.name}</span>
+          <button class="close-button">
+            <img src="./img/mobile/cross.svg">
+          </button>
+        </header>
+        <div class="bucket_medovik_info">
+          <img class="modal_image" src="${this.cake.image}" alt="${this.cake.name}">
+          <div class="manage_count">
+            <button class="minus-button">-</button>
+            <span class="bucket_weight">${this.weigth}кг</span>
+            <button class="plus-button">+</button>
+            <span class="bucket_price">${this.cake.price * this.weigth}byn</span>
+          </div>
+        </div>
+        <div class="min_order"> Минимальная сумма зазказа 50 руб, или 1 кг торта</div>
+        <button class="add_to_bucket"> В корзину </button>
+      </div>
+
+    `;
+    this.modalName = this.element.querySelector(".modal_name");
+    this.modalImage = this.element.querySelector(".modal_image");
+    this.bucketWeight = this.element.querySelector(".bucket_weight");
+    this.bucketPrice = this.element.querySelector(".bucket_price");
+    this.closeButton = this.element.querySelector(".close-button");
+    this.addToBucketButton = this.element.querySelector(".add_to_bucket");
+    this.plusButton = this.element.querySelector(".plus-button");
+    this.minusButton = this.element.querySelector(".minus-button");
+
+    this.addToBucketButton.addEventListener("click", () => {
+      this.addToBucket();
+    });
+    this.closeButton.addEventListener("click", () => {
+      this.hide();
+    });
+    this.plusButton.addEventListener("click", () => this.addWeight());
+    this.minusButton.addEventListener("click", () => this.minusWeight());
+  }
+  show(cake) {
+    this.changeCake(cake);
+    this.element.classList.add("active");
+  }
+  hide() {
+    this.cake = null;
+    this.element.classList.remove("active");
+  }
+  addWeight() {
+    this.weigth += 0.5;
+    this.bucketWeight.textContent = this.weigth + "кг";
+    this.bucketPrice.textContent = `${this.cake.price * this.weigth}byn`;
+    this.minusButton.disabled = false;
+  }
+  minusWeight() {
+    if (this.weigth > 1) {
+      this.weigth -= 0.5;
+      this.bucketWeight.textContent = this.weigth + "кг";
+      this.bucketPrice.textContent = `${this.cake.price * this.weigth}byn`;
+    }
+    if (this.weigth === 1) {
+      this.minusButton.disabled = true;
+    }
+  }
+  addToBucket() {
+    localStorage.getItem("bucket");
+    let order = JSON.parse(localStorage.getItem("bucket"));
+    if (!order) {
+      order = [];
+    }
+    const item = {
+      cake: this.cake,
+      weight: this.weigth,
+      price: this.cake.price * this.weigth,
+    };
+    if (order.some((i) => i.cake.id === item.cake.id)) {
+      const index = order.findIndex((i) => i.cake.id === item.cake.id);
+      order[index] = item;
+    } else {
+      order.push(item);
+    }
+    localStorage.setItem("bucket", JSON.stringify(order));
+    bucketModal.element.classList.remove("active");
+  }
+  changeCake(newCake) {
+    this.cake = newCake;
+    this.bucketWeight.textContent = this.weigth + "кг";
+    this.bucketPrice.textContent = `${this.cake.price * this.weigth}byn`;
+    this.modalName.textContent = newCake.name;
+    this.modalImage.src = newCake.image;
+    this.modalImage.alt = newCake.name;
+  }
+}
+
 const homeHTML = `
 <header>
   <img src="./img/mobile/logo-with-map.svg" class="logo_mobile">
@@ -134,26 +236,6 @@ const medoviki = [
     color: "#9A4A00",
   },
 ];
-let choosedCake;
-
-const renderBucketModalContent = () => {
-  if (!choosedCake) return;
-  bucketModalContent.innerHTML = `<header>
-    ${choosedCake.name}
-    <button class="close-button">
-    <img src="./img/mobile/cross.svg">
-    </button>
-    </header>
-    <div class="bucket_medovik_info">
-      <img src="${choosedCake.image}" alt="${choosedCake.name}">
-      <div class="manage_count"> </div>
-    </div>
-    `;
-  const closeButton = bucketModalContent.querySelector(".close-button");
-  closeButton.addEventListener("click", () => {
-    bucketModal.element.classList.remove("active");
-  });
-};
 
 const createCakeCard = (item, page, isLikedPage = false) => {
   const itemHTML = `
@@ -184,9 +266,7 @@ const createCakeCard = (item, page, isLikedPage = false) => {
   medovik.element.appendChild(heartButton.element);
   const takeToBucket = new Element("button", ["button_mobile"], "В корзину");
   takeToBucket.element.addEventListener("click", () => {
-    choosedCake = item;
-    bucketModal.element.classList.add("active");
-    renderBucketModalContent();
+    bucketModal.show(item);
   });
   medovik.element.appendChild(takeToBucket.element);
   page.appendChild(medovik.element);
@@ -195,11 +275,7 @@ const createCakeCard = (item, page, isLikedPage = false) => {
   }
 };
 
-const bucketModal = new Element(
-  "div",
-  ["bucket_modal"],
-  `<div class="bucket_modal_content"></div>`,
-);
+const bucketModal = new BucketElement();
 bucketModal.element.addEventListener("click", () => {
   bucketModal.element.classList.remove("active");
 });
