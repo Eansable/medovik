@@ -34,7 +34,18 @@ class BucketElement extends Element {
             <button class="minus-button">-</button>
             <span class="bucket_weight">${this.weigth}кг</span>
             <button class="plus-button">+</button>
-            <span class="bucket_price">${this.cake.price * this.weigth}byn</span>
+            <span class="bucket_price">${this.cake.price} byn</span>
+          </div>
+        </div>
+        <div class="summary">
+          <h3>Итого:</h3>
+          <div class="summary_count">
+            Количество
+            <span>${this.weigth}кг</span>
+          </div>
+          <div class="summary_price">
+            Цена
+            <span class="summary_price">${this.cake.price} byn</span>
           </div>
         </div>
         <div class="min_order"> Минимальная сумма зазказа 50 руб, или 1 кг торта</div>
@@ -66,19 +77,21 @@ class BucketElement extends Element {
   }
   hide() {
     this.cake = null;
+    this.weigth = 1;
+    this.minusButton.disabled = true;
     this.element.classList.remove("active");
   }
   addWeight() {
     this.weigth += 0.5;
     this.bucketWeight.textContent = this.weigth + "кг";
-    this.bucketPrice.textContent = `${this.cake.price * this.weigth}byn`;
+    this.bucketPrice.textContent = `${this.cake.price} byn`;
     this.minusButton.disabled = false;
   }
   minusWeight() {
     if (this.weigth > 1) {
       this.weigth -= 0.5;
       this.bucketWeight.textContent = this.weigth + "кг";
-      this.bucketPrice.textContent = `${this.cake.price * this.weigth}byn`;
+      this.bucketPrice.textContent = `${this.cake.price} byn`;
     }
     if (this.weigth === 1) {
       this.minusButton.disabled = true;
@@ -102,17 +115,26 @@ class BucketElement extends Element {
       order.push(item);
     }
     localStorage.setItem("bucket", JSON.stringify(order));
+    updateMenuItem();
     bucketModal.element.classList.remove("active");
   }
   changeCake(newCake) {
     this.cake = newCake;
     this.bucketWeight.textContent = this.weigth + "кг";
-    this.bucketPrice.textContent = `${this.cake.price * this.weigth}byn`;
+    this.bucketPrice.textContent = `${this.cake.price} byn`;
     this.modalName.textContent = newCake.name;
     this.modalImage.src = newCake.image;
     this.modalImage.alt = newCake.name;
   }
 }
+
+const updateMenuItem = () => {
+  const orderStr = localStorage.getItem("bucket");
+  if (!orderStr) return;
+  const order = JSON.parse(orderStr);
+  const bucketNumber = document.querySelector(".bucket_number");
+  bucketNumber.textContent = order.length;
+};
 
 const homeHTML = `
 <header>
@@ -381,6 +403,7 @@ const menuItems = [
   {
     icon: "./img/mobile/shopping-cart.svg",
     function: changePage(bucket.element),
+    isNumber: true,
   },
   {
     icon: "./img/mobile/cake.svg",
@@ -397,6 +420,16 @@ menuItems.forEach((item) => {
     <img src="${item.icon}" alt="Icon">
   `;
   const menuItem = new Element("button", ["mobile_menu_item"], itemHTML);
+  if (item.isNumber) {
+    const bucketStr = localStorage.getItem("bucket");
+    if (bucketStr) {
+      const bucket = JSON.parse(bucketStr);
+      if (bucket?.length)
+        menuItem.element.appendChild(
+          new Element("span", ["bucket_number"], bucket.length).element,
+        );
+    }
+  }
   menuItem.element.addEventListener("click", item.function);
   menu.element.appendChild(menuItem.element);
 });

@@ -149,6 +149,7 @@ body {
 .mobile_menu {
     display: flex;
     justify-content: space-around;
+    align-items: center;
     height: 64px;
     border-radius: 32px;
     background-color: #000000;
@@ -163,9 +164,23 @@ body {
     border: none;
     background-color: transparent;
     cursor: pointer;
-    padding: 12px;
-    width: 24px;
+    width: 48px;
     aspect-ratio: 1 / 1;
+    position: relative;
+}
+
+.bucket_number {
+    position: absolute;
+    right: 8px;
+    top: 8px;
+    background-color: #63A457;
+    width: 12px;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    font-size: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .home {
