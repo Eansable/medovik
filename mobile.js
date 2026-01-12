@@ -12,6 +12,14 @@ class Element {
   }
 }
 
+const getOrder = () => {
+  const order = localStorage.getItem("bucket");
+  if (!order) {
+    return [];
+  }
+  return JSON.parse(order);
+};
+
 class BucketElement extends Element {
   weigth = 1;
   plusButton;
@@ -34,7 +42,18 @@ class BucketElement extends Element {
             <button class="minus-button">-</button>
             <span class="bucket_weight">${this.weigth}кг</span>
             <button class="plus-button">+</button>
-            <span class="bucket_price">${this.cake.price * this.weigth}byn</span>
+            <span class="bucket_price">${this.cake.price} byn</span>
+          </div>
+        </div>
+        <div class="summary">
+          <h3>Итого:</h3>
+          <div class="summary_count">
+            Количество
+            <span>${this.weigth}кг</span>
+          </div>
+          <div class="summary_price">
+            Цена
+            <span class="summary_price">${this.cake.price} byn</span>
           </div>
         </div>
         <div class="min_order"> Минимальная сумма зазказа 50 руб, или 1 кг торта</div>
@@ -66,30 +85,27 @@ class BucketElement extends Element {
   }
   hide() {
     this.cake = null;
+    this.weigth = 1;
+    this.bucketWeight.textContent = this.weigth + "кг";
+    this.minusButton.disabled = true;
     this.element.classList.remove("active");
   }
   addWeight() {
     this.weigth += 0.5;
     this.bucketWeight.textContent = this.weigth + "кг";
-    this.bucketPrice.textContent = `${this.cake.price * this.weigth}byn`;
     this.minusButton.disabled = false;
   }
   minusWeight() {
     if (this.weigth > 1) {
       this.weigth -= 0.5;
       this.bucketWeight.textContent = this.weigth + "кг";
-      this.bucketPrice.textContent = `${this.cake.price * this.weigth}byn`;
     }
     if (this.weigth === 1) {
       this.minusButton.disabled = true;
     }
   }
   addToBucket() {
-    localStorage.getItem("bucket");
-    let order = JSON.parse(localStorage.getItem("bucket"));
-    if (!order) {
-      order = [];
-    }
+    let order = getOrder();
     const item = {
       cake: this.cake,
       weight: this.weigth,
@@ -102,17 +118,162 @@ class BucketElement extends Element {
       order.push(item);
     }
     localStorage.setItem("bucket", JSON.stringify(order));
+    updateMenuItem();
     bucketModal.element.classList.remove("active");
   }
   changeCake(newCake) {
     this.cake = newCake;
     this.bucketWeight.textContent = this.weigth + "кг";
-    this.bucketPrice.textContent = `${this.cake.price * this.weigth}byn`;
+    this.bucketPrice.textContent = `${this.cake.price} byn`;
     this.modalName.textContent = newCake.name;
     this.modalImage.src = newCake.image;
     this.modalImage.alt = newCake.name;
   }
 }
+
+const input = document.getElementById("phone");
+
+const COUNTRY = "375";
+const OPERATORS = ["29", "44", "33", "25"];
+const MAX_DIGITS = 12;
+
+function getDigits(value) {
+  return value.replace(/\D/g, "");
+}
+
+function formatPhone(digits) {
+  let result = "+375";
+
+  if (digits.length > 3) {
+    result += "(" + digits.slice(3, 5);
+  }
+
+  if (digits.length > 5) {
+    result += ")" + digits.slice(5);
+  }
+
+  return result;
+}
+
+class OrderElement extends Element {
+  name = "";
+  phone = "";
+  deliveryType = "delivery";
+  constructor() {
+    super("div", ["order_modal"]);
+    this.element.innerHTML = `
+      <div class="order_modal_content">
+        <header>
+          <button class="close-button">
+            <img src="./img/mobile/cross.svg">
+          </button>
+        </header>
+        <div class="static_info">
+          <h3>Оформить заказ</h3>
+          <p>Заполните форму и мы вам перезвоним для того, чтобы принять ваш заказ!</p>
+        </div>
+        <form class="order_person_info" id="orderForm">
+          <input name="name" placeholder="Имя" class="order_name" required >
+          <input name="phone" type="tel" placeholder="Телефон" class="order_phone" required>
+        <div class="delivery_type">
+        <label class="radio">
+          <input type="radio" name="delivery" value="delivery" checked>
+          <span class="radio__custom"></span>
+          <span class="radio__text">Доставка</span>
+        </label>
+
+        <label class="radio">
+          <input type="radio" name="delivery" value="pickup">
+          <span class="radio__custom"></span>
+          <span class="radio__text">Самовывоз</span>
+        </label>
+        </div>
+        <div class="pickupBlock hidden">
+          Выбрать пункт самовывоза
+        </div>
+        <button class="order_cakes">Оформить заказ</button>
+        </form>
+      </div>
+    `;
+    this.form = this.element.querySelector(".order_person_info");
+    this.radios = document.querySelectorAll('input[name="deliveryType"]');
+    this.inputName = this.element.querySelector(".order_name");
+    this.inputPhone = this.element.querySelector(".order_phone");
+    this.closeButton = this.element.querySelector(".close-button");
+    this.orderButton = this.element.querySelector(".order_cakes");
+    this.pickupBlock = this.element.querySelector(".pickupBlock");
+
+    this.closeButton.addEventListener("click", () => {
+      this.hide();
+    });
+
+    this.inputPhone.addEventListener("focus", () => {
+      if (!this.inputPhone.value) {
+        this.inputPhone.value = "+375(";
+      }
+    });
+
+    this.inputPhone.addEventListener("input", () => {
+      let digits = getDigits(this.inputPhone.value);
+
+      if (!digits.startsWith(COUNTRY)) {
+        digits = COUNTRY + digits;
+      }
+
+      digits = digits.slice(0, MAX_DIGITS);
+
+      if (digits.length >= 5) {
+        const operator = digits.slice(3, 5);
+        if (!OPERATORS.includes(operator)) {
+          digits = digits.slice(0, 3);
+        }
+      }
+
+      this.inputPhone.value = formatPhone(digits);
+      this.inputPhone.setSelectionRange(
+        this.inputPhone.value.length,
+        this.inputPhone.value.length,
+      );
+    });
+
+    this.inputPhone.addEventListener("blur", () => {
+      const digits = getDigits(this.inputPhone.value);
+
+      if (digits.length !== MAX_DIGITS) {
+        this.inputPhone.value = "";
+      }
+    });
+
+    this.form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      const data = Object.fromEntries(formData.entries());
+      console.log(data);
+    });
+    this.form.addEventListener("change", (e) => {
+      if (e.target.name === "delivery") {
+        const isPickup = e.target.value === "pickup";
+        this.pickupBlock.classList.toggle("hidden", !isPickup);
+      }
+    });
+  }
+  show() {
+    this.element.classList.add("active");
+  }
+  hide() {
+    this.name = "";
+    this.inputName.value = "";
+    this.phone = "";
+    this.inputPhone.value = "";
+    this.element.classList.remove("active");
+  }
+}
+
+const updateMenuItem = () => {
+  const order = getOrder();
+  const bucketNumber = document.querySelector(".bucket_number");
+  bucketNumber.textContent = order.length;
+};
 
 const homeHTML = `
 <header>
@@ -277,7 +438,7 @@ const createCakeCard = (item, page, isLikedPage = false) => {
 
 const bucketModal = new BucketElement();
 bucketModal.element.addEventListener("click", () => {
-  bucketModal.element.classList.remove("active");
+  bucketModal.hide();
 });
 const bucketModalContent = bucketModal.element.querySelector(
   ".bucket_modal_content",
@@ -341,6 +502,40 @@ const changeListPage = (child) => {
   };
 };
 
+const changeBucketPage = (child) => {
+  return () => {
+    const cakesElements = child.querySelectorAll(".medovik");
+    const order = getOrder();
+    order.forEach((item) => {
+      const elem = Array.from(cakesElements).find(
+        (elem) => +elem.dataset.id === item.id,
+      );
+      if (elem) {
+        if (hasLikedMedovik(item.id)) {
+          elem.classList.add("liked");
+        } else {
+          elem.classList.remove("liked");
+        }
+      }
+    });
+    const orderList = child.querySelector(".cards");
+    if (order?.length) {
+      orderList.innerHTML = "";
+      order.forEach((item) => {
+        createCakeCard({ ...item.cake, price: item.price }, orderList);
+      });
+    }
+    const finishOrder = child.querySelector(".bucket_order");
+    finishOrder.innerHTML = `<p>Оформить заказ</p>
+    <span>
+    ${order.map((item) => item.weight).reduce((acc, weight) => acc + weight, 0)}кг,
+    ${order.map((item) => item.price).reduce((acc, price) => acc + price, 0)}byn
+    </span>`;
+    page.restoreHTML();
+    page.element.appendChild(child);
+  };
+};
+
 const medovikiList = new Element(
   "div",
   ["medoviki_list"],
@@ -361,7 +556,39 @@ const yourChoice = new Element(
   "<header><h2>YOU<img src='./img/mobile/yellowHeart.svg' alt=''>:</h2></header>",
 );
 
-const bucket = new Element("div", ["bucket"], "<h2>YOUR CHOICE:<h2>");
+const bucket = new Element(
+  "div",
+  ["bucket"],
+  "<header><h2>YOUR CHOICE:</h2></header>",
+);
+const orderList = new Element("div", ["cards"]);
+bucket.element.appendChild(orderList.element);
+const order = getOrder();
+const finishOrder = new Element(
+  "button",
+  ["bucket_order"],
+  `<p>Оформить заказ</p>
+  <span>
+  ${order.map((item) => item.weight).reduce((acc, weight) => acc + weight, 0)}кг,
+  ${order.map((item) => item.price).reduce((acc, price) => acc + price, 0)}byn
+  </span>`,
+);
+finishOrder.element.addEventListener("click", () => {
+  orderModal.show();
+});
+bucket.element.appendChild(finishOrder.element);
+
+const orderModal = new OrderElement();
+orderModal.element.addEventListener("click", () => {
+  orderModal.hide();
+});
+const orderModalContent = orderModal.element.querySelector(
+  ".order_modal_content",
+);
+orderModalContent.addEventListener("click", (event) => {
+  event.stopPropagation();
+});
+bucket.element.appendChild(orderModal.element);
 
 const contacts = new Element(
   "div",
@@ -380,7 +607,8 @@ const menuItems = [
   },
   {
     icon: "./img/mobile/shopping-cart.svg",
-    function: changePage(bucket.element),
+    function: changeBucketPage(bucket.element),
+    isNumber: true,
   },
   {
     icon: "./img/mobile/cake.svg",
@@ -397,6 +625,13 @@ menuItems.forEach((item) => {
     <img src="${item.icon}" alt="Icon">
   `;
   const menuItem = new Element("button", ["mobile_menu_item"], itemHTML);
+  if (item.isNumber) {
+    const bucket = getOrder();
+    if (bucket?.length)
+      menuItem.element.appendChild(
+        new Element("span", ["bucket_number"], bucket.length).element,
+      );
+  }
   menuItem.element.addEventListener("click", item.function);
   menu.element.appendChild(menuItem.element);
 });
