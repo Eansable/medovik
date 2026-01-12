@@ -12,6 +12,14 @@ class Element {
   }
 }
 
+const getOrder = () => {
+  const order = localStorage.getItem("bucket");
+  if (!order) {
+    return [];
+  }
+  return JSON.parse(order);
+};
+
 class BucketElement extends Element {
   weigth = 1;
   plusButton;
@@ -78,31 +86,26 @@ class BucketElement extends Element {
   hide() {
     this.cake = null;
     this.weigth = 1;
+    this.bucketWeight.textContent = this.weigth + "кг";
     this.minusButton.disabled = true;
     this.element.classList.remove("active");
   }
   addWeight() {
     this.weigth += 0.5;
     this.bucketWeight.textContent = this.weigth + "кг";
-    this.bucketPrice.textContent = `${this.cake.price} byn`;
     this.minusButton.disabled = false;
   }
   minusWeight() {
     if (this.weigth > 1) {
       this.weigth -= 0.5;
       this.bucketWeight.textContent = this.weigth + "кг";
-      this.bucketPrice.textContent = `${this.cake.price} byn`;
     }
     if (this.weigth === 1) {
       this.minusButton.disabled = true;
     }
   }
   addToBucket() {
-    localStorage.getItem("bucket");
-    let order = JSON.parse(localStorage.getItem("bucket"));
-    if (!order) {
-      order = [];
-    }
+    let order = getOrder();
     const item = {
       cake: this.cake,
       weight: this.weigth,
@@ -128,10 +131,59 @@ class BucketElement extends Element {
   }
 }
 
+class OrderElement extends Element {
+  name = "";
+  phone = "";
+  constructor() {
+    super("div", ["order_modal"]);
+    this.element.innerHTML = `
+      <div class="order_modal_content">
+        <header>
+          <button class="close-button">
+            <img src="./img/mobile/cross.svg">
+          </button>
+        </header>
+        <div class="order_person_info">
+          <input placeholder="Имя" class="order_name" >
+          <input placeholder="Телефон" class="order_phone">
+        </div>
+        <button class="order_cakes">Оформить заказ</button>
+      </div>
+
+    `;
+    this.inputName = this.element.querySelector(".order_name");
+    this.inputPhone = this.element.querySelector(".order_phone");
+    this.closeButton = this.element.querySelector(".close-button");
+    this.orderButton = this.element.querySelector(".order_cakes");
+
+    this.closeButton.addEventListener("click", () => {
+      this.hide();
+    });
+
+    this.orderButton.addEventListener("click", () => {
+      console.log(this.name, this.phone);
+    });
+    this.inputName.addEventListener("input", () => {
+      this.name = this.inputName.value;
+    });
+    this.inputPhone.addEventListener("input", () => {
+      this.phone = this.inputPhone.value;
+    });
+  }
+  show() {
+    this.element.classList.add("active");
+  }
+  hide() {
+    this.name = "";
+    this.inputName.value = "";
+    this.phone = "";
+    this.inputPhone.value = "";
+    this.element.classList.remove("active");
+  }
+}
+
 const updateMenuItem = () => {
-  const orderStr = localStorage.getItem("bucket");
-  if (!orderStr) return;
-  const order = JSON.parse(orderStr);
+  const order = getOrder();
   const bucketNumber = document.querySelector(".bucket_number");
   bucketNumber.textContent = order.length;
 };
@@ -299,7 +351,7 @@ const createCakeCard = (item, page, isLikedPage = false) => {
 
 const bucketModal = new BucketElement();
 bucketModal.element.addEventListener("click", () => {
-  bucketModal.element.classList.remove("active");
+  bucketModal.hide();
 });
 const bucketModalContent = bucketModal.element.querySelector(
   ".bucket_modal_content",
@@ -363,6 +415,40 @@ const changeListPage = (child) => {
   };
 };
 
+const changeBucketPage = (child) => {
+  return () => {
+    const cakesElements = child.querySelectorAll(".medovik");
+    const order = getOrder();
+    order.forEach((item) => {
+      const elem = Array.from(cakesElements).find(
+        (elem) => +elem.dataset.id === item.id,
+      );
+      if (elem) {
+        if (hasLikedMedovik(item.id)) {
+          elem.classList.add("liked");
+        } else {
+          elem.classList.remove("liked");
+        }
+      }
+    });
+    const orderList = child.querySelector(".cards");
+    if (order?.length) {
+      orderList.innerHTML = "";
+      order.forEach((item) => {
+        createCakeCard({ ...item.cake, price: item.price }, orderList);
+      });
+    }
+    const finishOrder = child.querySelector(".bucket_order");
+    finishOrder.innerHTML = `<p>Оформить заказ</p>
+    <span>
+    ${order.map((item) => item.weight).reduce((acc, weight) => acc + weight, 0)}кг,
+    ${order.map((item) => item.price).reduce((acc, price) => acc + price, 0)}byn
+    </span>`;
+    page.restoreHTML();
+    page.element.appendChild(child);
+  };
+};
+
 const medovikiList = new Element(
   "div",
   ["medoviki_list"],
@@ -383,7 +469,39 @@ const yourChoice = new Element(
   "<header><h2>YOU<img src='./img/mobile/yellowHeart.svg' alt=''>:</h2></header>",
 );
 
-const bucket = new Element("div", ["bucket"], "<h2>YOUR CHOICE:<h2>");
+const bucket = new Element(
+  "div",
+  ["bucket"],
+  "<header><h2>YOUR CHOICE:</h2></header>",
+);
+const orderList = new Element("div", ["cards"]);
+bucket.element.appendChild(orderList.element);
+const order = getOrder();
+const finishOrder = new Element(
+  "button",
+  ["bucket_order"],
+  `<p>Оформить заказ</p>
+  <span>
+  ${order.map((item) => item.weight).reduce((acc, weight) => acc + weight, 0)}кг,
+  ${order.map((item) => item.price).reduce((acc, price) => acc + price, 0)}byn
+  </span>`,
+);
+finishOrder.element.addEventListener("click", () => {
+  orderModal.show();
+});
+bucket.element.appendChild(finishOrder.element);
+
+const orderModal = new OrderElement();
+orderModal.element.addEventListener("click", () => {
+  orderModal.hide();
+});
+const orderModalContent = orderModal.element.querySelector(
+  ".order_modal_content",
+);
+orderModalContent.addEventListener("click", (event) => {
+  event.stopPropagation();
+});
+bucket.element.appendChild(orderModal.element);
 
 const contacts = new Element(
   "div",
@@ -402,7 +520,7 @@ const menuItems = [
   },
   {
     icon: "./img/mobile/shopping-cart.svg",
-    function: changePage(bucket.element),
+    function: changeBucketPage(bucket.element),
     isNumber: true,
   },
   {
@@ -421,14 +539,11 @@ menuItems.forEach((item) => {
   `;
   const menuItem = new Element("button", ["mobile_menu_item"], itemHTML);
   if (item.isNumber) {
-    const bucketStr = localStorage.getItem("bucket");
-    if (bucketStr) {
-      const bucket = JSON.parse(bucketStr);
-      if (bucket?.length)
-        menuItem.element.appendChild(
-          new Element("span", ["bucket_number"], bucket.length).element,
-        );
-    }
+    const bucket = getOrder();
+    if (bucket?.length)
+      menuItem.element.appendChild(
+        new Element("span", ["bucket_number"], bucket.length).element,
+      );
   }
   menuItem.element.addEventListener("click", item.function);
   menu.element.appendChild(menuItem.element);

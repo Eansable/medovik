@@ -46,6 +46,7 @@ body {
 
 /*MOBILE STYLES*/
 
+.order_modal,
 .bucket_modal {
     background-color: #0c050599;
     position: fixed;
@@ -56,16 +57,20 @@ body {
     z-index: 5;
     display: none;
 }
+
+.order_modal.active,
 .bucket_modal.active {
     display: block;
 }
 
-.bucket_modal .bucket_modal_content {
+.bucket_modal .bucket_modal_content,
+.order_modal .order_modal_content {
     padding: 16px;
     background-color: #ffffff;
     position: fixed;
+    left: 16px;
     bottom: 96px;
-    width: 100%;
+    width: calc(100% - 32px);
     box-sizing: border-box;
 }
 
@@ -75,7 +80,8 @@ body {
     align-items: center;
 }
 
-.bucket_modal_content header .close-button {
+.bucket_modal_content header .close-button,
+.order_modal_content header .close-button {
     background-color: transparent;
     border: none;
     cursor: pointer;
@@ -126,6 +132,15 @@ body {
     margin-top: 16px;
 }
 
+.order_modal .order_person_info {
+    display: grid;
+    gap: 16px;
+}
+.order_modal .order_person_info input {
+    padding: 12px 14px;
+    border: 1px solid #ccc;
+}
+
 .button_mobile {
     background-color: #f9cd00;
     color: #0c0505;
@@ -173,7 +188,7 @@ body {
     position: absolute;
     right: 8px;
     top: 8px;
-    background-color: #63A457;
+    background-color: #63a457;
     width: 12px;
     aspect-ratio: 1 / 1;
     border-radius: 50%;
@@ -326,6 +341,7 @@ body {
     gap: 16px;
 }
 
+.bucket .cards,
 .your_choice .cards {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -336,10 +352,6 @@ body {
     align-items: start;
 }
 
-.your_choice header {
-    grid-column-start: 1;
-    grid-column-end: 3;
-}
 .your_choice h2 {
     margin: 0;
     color: #ffffff;
@@ -353,6 +365,10 @@ body {
     min-height: 100vh;
     padding: 20px;
     box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding-bottom: 94px;
 }
 
 .bucket h2 {
@@ -361,6 +377,28 @@ body {
     font-size: 36px;
     line-height: auto;
     font-weight: 400;
+}
+
+.bucket .bucket_order {
+    background-color: #fa8a03;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 12px;
+    border: none;
+}
+
+.bucket .bucket_order span {
+    margin: 0;
+    font-size: 14px;
+    color: #000000;
+}
+.bucket .bucket_order p {
+    margin: 0;
+    font-size: 16px;
+    line-height: auto;
+    font-weight: 500;
 }
 
 .mobile_contacts {
