@@ -131,9 +131,34 @@ class BucketElement extends Element {
   }
 }
 
+const input = document.getElementById("phone");
+
+const COUNTRY = "375";
+const OPERATORS = ["29", "44", "33", "25"];
+const MAX_DIGITS = 12;
+
+function getDigits(value) {
+  return value.replace(/\D/g, "");
+}
+
+function formatPhone(digits) {
+  let result = "+375";
+
+  if (digits.length > 3) {
+    result += "(" + digits.slice(3, 5);
+  }
+
+  if (digits.length > 5) {
+    result += ")" + digits.slice(5);
+  }
+
+  return result;
+}
+
 class OrderElement extends Element {
   name = "";
   phone = "";
+  deliveryType = "delivery";
   constructor() {
     super("div", ["order_modal"]);
     this.element.innerHTML = `
@@ -143,31 +168,93 @@ class OrderElement extends Element {
             <img src="./img/mobile/cross.svg">
           </button>
         </header>
-        <div class="order_person_info">
-          <input placeholder="Имя" class="order_name" >
-          <input placeholder="Телефон" class="order_phone">
+        <div class="static_info">
+          <h3>Оформить заказ</h3>
+          <p>Заполните форму и мы вам перезвоним для того, чтобы принять ваш заказ!</p>
+        </div>
+        <form class="order_person_info" id="orderForm">
+          <input name="name" placeholder="Имя" class="order_name" required >
+          <input name="phone" type="tel" placeholder="Телефон" class="order_phone" required>
+        <div class="delivery_type">
+        <label class="radio">
+          <input type="radio" name="delivery" value="delivery" checked>
+          <span class="radio__custom"></span>
+          <span class="radio__text">Доставка</span>
+        </label>
+
+        <label class="radio">
+          <input type="radio" name="delivery" value="pickup">
+          <span class="radio__custom"></span>
+          <span class="radio__text">Самовывоз</span>
+        </label>
+        </div>
+        <div class="pickupBlock hidden">
+          Выбрать пункт самовывоза
         </div>
         <button class="order_cakes">Оформить заказ</button>
+        </form>
       </div>
-
     `;
+    this.form = this.element.querySelector(".order_person_info");
+    this.radios = document.querySelectorAll('input[name="deliveryType"]');
     this.inputName = this.element.querySelector(".order_name");
     this.inputPhone = this.element.querySelector(".order_phone");
     this.closeButton = this.element.querySelector(".close-button");
     this.orderButton = this.element.querySelector(".order_cakes");
+    this.pickupBlock = this.element.querySelector(".pickupBlock");
 
     this.closeButton.addEventListener("click", () => {
       this.hide();
     });
 
-    this.orderButton.addEventListener("click", () => {
-      console.log(this.name, this.phone);
+    this.inputPhone.addEventListener("focus", () => {
+      if (!this.inputPhone.value) {
+        this.inputPhone.value = "+375(";
+      }
     });
-    this.inputName.addEventListener("input", () => {
-      this.name = this.inputName.value;
-    });
+
     this.inputPhone.addEventListener("input", () => {
-      this.phone = this.inputPhone.value;
+      let digits = getDigits(this.inputPhone.value);
+
+      if (!digits.startsWith(COUNTRY)) {
+        digits = COUNTRY + digits;
+      }
+
+      digits = digits.slice(0, MAX_DIGITS);
+
+      if (digits.length >= 5) {
+        const operator = digits.slice(3, 5);
+        if (!OPERATORS.includes(operator)) {
+          digits = digits.slice(0, 3);
+        }
+      }
+
+      this.inputPhone.value = formatPhone(digits);
+      this.inputPhone.setSelectionRange(
+        this.inputPhone.value.length,
+        this.inputPhone.value.length,
+      );
+    });
+
+    this.inputPhone.addEventListener("blur", () => {
+      const digits = getDigits(this.inputPhone.value);
+
+      if (digits.length !== MAX_DIGITS) {
+        this.inputPhone.value = "";
+      }
+    });
+
+    this.form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      const data = Object.fromEntries(formData.entries());
+      console.log(data);
+    });
+    this.form.addEventListener("change", (e) => {
+      if (e.target.name === "delivery") {
+        const isPickup = e.target.value === "pickup";
+        this.pickupBlock.classList.toggle("hidden", !isPickup);
+      }
     });
   }
   show() {

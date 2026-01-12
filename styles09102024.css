@@ -45,6 +45,9 @@ body {
 }
 
 /*MOBILE STYLES*/
+.hidden {
+    display: none;
+}
 
 .order_modal,
 .bucket_modal {
@@ -132,6 +135,30 @@ body {
     margin-top: 16px;
 }
 
+.order_modal_content header {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.order_modal_content .static_info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.static_info h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 500;
+}
+.static_info p {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 400;
+}
+
 .order_modal .order_person_info {
     display: grid;
     gap: 16px;
@@ -139,6 +166,57 @@ body {
 .order_modal .order_person_info input {
     padding: 12px 14px;
     border: 1px solid #ccc;
+}
+
+.delivery_type {
+    display: grid;
+    gap: 16px;
+}
+
+.radio {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.radio input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.radio__custom {
+    width: 16px;
+    height: 16px;
+    box-sizing: border-box;
+    border: 2px solid #999;
+    border-radius: 50%;
+    position: relative;
+}
+
+.radio input:checked + .radio__custom {
+    border-color: #f9cd00;
+}
+
+.radio input:checked + .radio__custom::after {
+    content: "";
+    width: 8px;
+    height: 8px;
+    background: #f9cd00;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.order_cakes {
+    padding: 18px;
+    border: none;
+    border-radius: 0;
+    background-color: #fa8a03;
 }
 
 .button_mobile {
