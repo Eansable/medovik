@@ -135,6 +135,24 @@ body {
     margin-top: 16px;
 }
 
+.order_modal_content.message_success form,
+.order_modal_content.message_success .static_info {
+    display: none;
+}
+
+.order_modal_content .order_success {
+    display: none;
+    text-align: center;
+    height: 280px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 24px;
+}
+.order_modal_content.message_success .order_success {
+    display: flex;
+}
+
 .order_modal_content header {
     display: flex;
     justify-content: flex-end;
@@ -146,6 +164,39 @@ body {
     flex-direction: column;
     gap: 8px;
     margin-bottom: 16px;
+}
+
+.pickupBlock > span {
+    color: #1e53da;
+}
+
+.select-cafes.close {
+    margin-bottom: 0;
+}
+
+.select-cafes {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    margin-bottom: 38px;
+    padding-top: 16px;
+}
+
+.select-cafes .cafe {
+    position: relative;
+}
+.select-cafes .cafe:before {
+    content: "";
+    display: block;
+    width: 100px;
+    height: 1px;
+    background-color: #b4b4b4;
+    position: absolute;
+    bottom: -8px;
+    left: calc(50% - 50px);
+}
+.select-cafes.close .cafe {
+    display: none;
 }
 
 .static_info h3 {

@@ -159,6 +159,7 @@ class OrderElement extends Element {
   name = "";
   phone = "";
   deliveryType = "delivery";
+  pickupCafe;
   constructor() {
     super("div", ["order_modal"]);
     this.element.innerHTML = `
@@ -185,23 +186,49 @@ class OrderElement extends Element {
         <label class="radio">
           <input type="radio" name="delivery" value="pickup">
           <span class="radio__custom"></span>
-          <span class="radio__text">Самовывоз</span>
+          <span class="radio__text radio__text--pickup">Самовывоз</span>
         </label>
         </div>
         <div class="pickupBlock hidden">
-          Выбрать пункт самовывоза
+          <span>Выбрать пункт самовывоза</span> <img src="img/mobile/blueArrow.svg" alt="">
+          <div class="select-cafes close">
+
+          </div>
         </div>
         <button class="order_cakes">Оформить заказ</button>
+
         </form>
+        <div class="order_success">
+          <span>Ваш заказ оформлен, скоро вам перезвонит наш специалист.</span> <span>Хорошего дня!</span>
+        </div>
       </div>
     `;
     this.form = this.element.querySelector(".order_person_info");
     this.radios = document.querySelectorAll('input[name="deliveryType"]');
+    this.radioPickupText = this.element.querySelector(".radio__text--pickup");
     this.inputName = this.element.querySelector(".order_name");
     this.inputPhone = this.element.querySelector(".order_phone");
     this.closeButton = this.element.querySelector(".close-button");
     this.orderButton = this.element.querySelector(".order_cakes");
     this.pickupBlock = this.element.querySelector(".pickupBlock");
+
+    this.selectCafes = this.element.querySelector(".select-cafes");
+
+    this.pickupBlock.addEventListener("click", (event) => {
+      event.stopPropagation();
+      this.selectCafes.classList.toggle("close");
+    });
+
+    cafes.forEach((cafe) => {
+      const cafeElement = document.createElement("div");
+      cafeElement.classList.add("cafe");
+      cafeElement.textContent = cafe.name;
+      cafeElement.addEventListener("click", (event) => {
+        event.stopPropagation();
+        this.selectPickupCafe(cafe);
+      });
+      this.selectCafes.appendChild(cafeElement);
+    });
 
     this.closeButton.addEventListener("click", () => {
       this.hide();
@@ -251,10 +278,9 @@ class OrderElement extends Element {
       console.log(data);
     });
     this.form.addEventListener("change", (e) => {
-      if (e.target.name === "delivery") {
-        const isPickup = e.target.value === "pickup";
-        this.pickupBlock.classList.toggle("hidden", !isPickup);
-      }
+      const isPickup = e.target.value === "pickup";
+      this.pickupBlock.classList.toggle("hidden", !isPickup);
+      this.selectCafes.classList.toggle("close", !isPickup);
     });
   }
   show() {
@@ -266,6 +292,19 @@ class OrderElement extends Element {
     this.phone = "";
     this.inputPhone.value = "";
     this.element.classList.remove("active");
+    this.element
+      .querySelector(".order_modal_content")
+      .classList.remove("message_success");
+  }
+  selectPickupCafe(cafe) {
+    this.pickupCafe = cafe;
+    this.selectCafes.classList.add("close");
+    this.radioPickupText.innerText = `Самовывоз(${cafe.shortName})`;
+  }
+  orderSuccess() {
+    this.element
+      .querySelector(".order_modal_content")
+      .classList.add("message_success");
   }
 }
 
@@ -337,6 +376,29 @@ const hasLikedMedovik = (medovikId) => {
     return savedMedoviks.some((item) => item.id === medovikId);
   }
 };
+
+const cafes = [
+  {
+    id: 1,
+    name: "Ложинская 22-2 (Отдельный вход, здание Дмитриева Кирмаша)",
+    shortName: "Ложинская 22-2",
+  },
+  {
+    id: 2,
+    name: "Якуба Коласа 25/1",
+    shortName: "Якуба Коласа 25/1",
+  },
+  {
+    id: 3,
+    name: "Пр. Независимости 92 (Вход общий с OZ.by)",
+    shortName: "Пр. Независимости 92",
+  },
+  {
+    id: 4,
+    name: "Уманская 54 ТЦ Глобо (Главный вход)",
+    shortName: "Уманская 54 ТЦ Глобо",
+  },
+];
 
 const medoviki = [
   {
