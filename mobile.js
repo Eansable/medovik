@@ -275,6 +275,7 @@ class OrderElement extends Element {
       e.preventDefault();
       const formData = new FormData(e.target);
       const data = Object.fromEntries(formData.entries());
+      data.pickupPlace = this.pickupPlace;
       console.log(data);
     });
     this.form.addEventListener("change", (e) => {
