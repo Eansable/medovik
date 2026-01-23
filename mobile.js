@@ -662,23 +662,28 @@ const contacts = new Element(
 const menuItems = [
   {
     icon: "./img/mobile/home.svg",
+    activeIcon: "./img/mobile/yellowHome.svg",
     function: changePage(home.element),
   },
   {
     icon: "./img/mobile/heart.svg",
+    activeIcon: "./img/mobile/yellowHeart.svg",
     function: changeYourChoicePage(yourChoice.element),
   },
   {
     icon: "./img/mobile/shopping-cart.svg",
+    activeIcon: "./img/mobile/yellowShoppingCart.svg",
     function: changeBucketPage(bucket.element),
     isNumber: true,
   },
   {
     icon: "./img/mobile/cake.svg",
+    activeIcon: "./img/mobile/yellowCake.svg",
     function: changeListPage(medovikiList.element),
   },
   {
     icon: "./img/mobile/marker.svg",
+    activeIcon: "./img/mobile/yellowMarker.svg",
     function: changePage(contacts.element),
   },
 ];
@@ -686,6 +691,7 @@ const menuItems = [
 menuItems.forEach((item) => {
   const itemHTML = `
     <img src="${item.icon}" alt="Icon">
+    <img src="${item.activeIcon}" class="icon-active" alt="Icon">
   `;
   const menuItem = new Element("button", ["mobile_menu_item"], itemHTML);
   if (item.isNumber) {
@@ -695,7 +701,12 @@ menuItems.forEach((item) => {
         new Element("span", ["bucket_number"], bucket.length).element,
       );
   }
-  menuItem.element.addEventListener("click", item.function);
+  menuItem.element.addEventListener("click", () => {
+    const allMenuItems = menu.element.querySelectorAll(".mobile_menu_item");
+    allMenuItems.forEach((button) => button.classList.remove("active"));
+    menuItem.element.classList.add("active");
+    item.function();
+  });
   menu.element.appendChild(menuItem.element);
 });
 

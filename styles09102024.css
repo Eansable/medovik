@@ -311,6 +311,20 @@ body {
     width: 48px;
     aspect-ratio: 1 / 1;
     position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.mobile_menu_item .icon-active {
+    display: none;
+}
+.mobile_menu_item.active img {
+    display: none;
+    width: 24px;
+    aspect-ratio: 1 / 1;
+}
+.mobile_menu_item.active .icon-active {
+    display: block;
 }
 
 .bucket_number {
