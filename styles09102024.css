@@ -108,7 +108,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 4px;
+    gap: 8px;
 }
 
 .manage_count button {
@@ -118,12 +118,51 @@ body {
     border-radius: 50%;
     width: 24px;
     height: 24px;
+    font-family: "TTNorms", sans-serif;
+    font-weight: 500;
+}
+.manage_count button:disabled {
+    background-color: #f9cd0080;
+    cursor: default;
+}
+
+.bucket_weight,
+.bucket_price {
+    font-weight: 500;
+}
+
+.summary {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 25px;
+}
+
+.summary h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.summary div {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.summary_count {
+    border-bottom: 1px solid #fa8a03;
+}
+
+.summary div span {
+    font-weight: 500;
 }
 
 .min_order {
     padding: 0 16px;
-    margin-top: 8px;
+    margin-top: 16px;
     text-align: center;
+    font-weight: 500;
 }
 
 .add_to_bucket {
@@ -276,6 +315,8 @@ body {
     border: none;
     padding: 18px 30px;
     cursor: pointer;
+    font-weight: 500;
+    font-family: "TTNorms", sans-serif;
 }
 .medovik .button_mobile {
     margin: 8px;
@@ -530,6 +571,7 @@ body {
     align-items: center;
     padding: 12px;
     border: none;
+    font-family: "TTNorms", sans-serif;
 }
 
 .bucket .bucket_order span {
