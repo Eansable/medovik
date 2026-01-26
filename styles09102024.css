@@ -601,6 +601,54 @@ body {
     font-weight: 400;
 }
 
+.contacts_tabs {
+    margin-top: 16px;
+}
+
+.contacts_tabs header {
+    display: flex;
+    align-items: center;
+    gap: 26px;
+}
+
+.contacts_tabs header button.active {
+    color: #f9cd00;
+}
+
+.contacts_tabs header button {
+    background-color: transparent;
+    color: #ffffff;
+    border: none;
+    padding: 8px;
+    font-size: 16px;
+    font-family: "TTNorms", sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.contacts_content .contacts_list {
+    color: #ffffff;
+}
+.contacts_content .contacts_list {
+    display: grid;
+    column-gap: 32px;
+    row-gap: 16px;
+    grid-template-columns: 1fr 1fr;
+}
+.contacts_content .contacts_list .title {
+    font-weight: 500;
+    grid-column-start: 1;
+    grid-column-end: 3;
+}
+.contacts_list .contacts_work_time {
+    grid-column-start: 1;
+    grid-column-end: 3;
+}
+.contacts_content .contacts_list p {
+    margin: 0;
+}
+
 /* HEADER */
 
 .header {

@@ -309,6 +309,83 @@ class OrderElement extends Element {
   }
 }
 
+class TabsElement extends Element {
+  constructor() {
+    super(
+      "div",
+      ["contacts_tabs"],
+      `
+      <header>
+        <button class="on_map active">На карте</button>
+        <button class="list">Список</button>
+        </header>
+        <div class="contacts_content">
+          <div class="mobile_contacts_map"></div>
+          <div class="contacts_list hidden">
+            <div class="places_list">
+              ${this.renderPlaces()}
+            </div>
+            <p class="title">График работы</p>
+            <div class="contacts_work_time">
+              <div class="days">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span class="half"></span>
+              </div>
+            </div>
+            <p>Пн-Сб 9:00-21:00</p>
+            <p>Вс 11:00-20:00</p>
+          </div>
+        </div>
+        </div>
+    `,
+    );
+    this.mapContent = this.element.querySelector(".mobile_contacts_map");
+    this.listContent = this.element.querySelector(".contacts_list");
+    this.onMapButton = this.element.querySelector(".on_map");
+    this.listButton = this.element.querySelector(".list");
+    this.onMapButton.addEventListener("click", this.showMap.bind(this));
+    this.listButton.addEventListener("click", this.showList.bind(this));
+  }
+  showMap() {
+    this.onMapButton.classList.add("active");
+    this.listButton.classList.remove("active");
+    this.mapContent.classList.remove("hidden");
+    this.listContent.classList.add("hidden");
+  }
+  showList() {
+    this.listContent.classList.remove("hidden");
+    this.mapContent.classList.add("hidden");
+    this.listButton.classList.add("active");
+    this.onMapButton.classList.remove("active");
+  }
+  initMap() {
+    const map = new ymaps.Map("mobile_contacts_map", {
+      center: [53.923118, 27.589986],
+      zoom: 16,
+    });
+    cafes.forEach((cafe) => {
+      const marker = new ymaps.Placemark(cafe.coords, {}, markerSetting);
+      map.geoObjects.add(marker);
+    });
+  }
+  renderPlaces() {
+    let placesHtml = "";
+    cafes.forEach((cafe) => {
+      placesHtml += `
+        <div class="place">
+          <img src="./img/mobile/yellowMarker.png" alt="">
+            <p>${cafe.name}</h3>
+        </div>
+      `;
+    });
+  }
+}
+
 const updateMenuItem = () => {
   const order = getOrder();
   const bucketNumber = document.querySelector(".bucket_number");
@@ -378,26 +455,35 @@ const hasLikedMedovik = (medovikId) => {
   }
 };
 
+const markerSetting = {
+  iconLayout: "default#image",
+  iconImageHref: "./img/marker.png",
+};
+
 const cafes = [
   {
     id: 1,
     name: "Ложинская 22-2 (Отдельный вход, здание Дмитриева Кирмаша)",
     shortName: "Ложинская 22-2",
+    coords: [53.951694, 27.682236],
   },
   {
     id: 2,
     name: "Якуба Коласа 25/1",
     shortName: "Якуба Коласа 25/1",
+    coords: [53.923118, 27.589986],
   },
   {
     id: 3,
     name: "Пр. Независимости 92 (Вход общий с OZ.by)",
     shortName: "Пр. Независимости 92",
+    coords: [53.927709, 27.629284],
   },
   {
     id: 4,
     name: "Уманская 54 ТЦ Глобо (Главный вход)",
     shortName: "Уманская 54 ТЦ Глобо",
+    coords: [53.875219, 27.498267],
   },
 ];
 
@@ -658,6 +744,9 @@ const contacts = new Element(
   ["mobile_contacts"],
   "<h2>WE ARE HERE:<h2>",
 );
+const contactsTabs = new TabsElement();
+contacts.element.appendChild(contactsTabs.element);
+await ymaps.ready(contactsTabs.initMap);
 
 const menuItems = [
   {
