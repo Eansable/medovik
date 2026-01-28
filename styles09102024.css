@@ -636,6 +636,11 @@ body {
     row-gap: 16px;
     grid-template-columns: 1fr 1fr;
 }
+.contacts_content .contacts_list.hidden,
+.contacts_content .mobile_contacts_map.hidden {
+    display: none;
+}
+
 .contacts_content .contacts_list .title {
     font-weight: 500;
     grid-column-start: 1;
@@ -647,6 +652,41 @@ body {
 }
 .contacts_content .contacts_list p {
     margin: 0;
+}
+
+.places_list {
+    grid-column-start: 1;
+    grid-column-end: 3;
+    display: grid;
+    gap: 24px;
+}
+
+.places_list .place {
+    width: 100%;
+    display: flex;
+    gap: 8px;
+}
+.places_list .place img {
+    width: 19px;
+}
+
+.photo_gallery {
+    grid-column-start: 1;
+    grid-column-end: 3;
+    display: grid;
+    gap: 20px;
+    padding-bottom: 86px;
+}
+.photo_gallery img {
+    width: 100%;
+}
+
+.contacts_links {
+    display: flex;
+    gap: 8px;
+}
+.contacts_links a {
+    text-decoration: none;
 }
 
 /* HEADER */

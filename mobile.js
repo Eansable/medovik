@@ -322,9 +322,7 @@ class TabsElement extends Element {
         <div class="contacts_content">
           <div class="mobile_contacts_map"></div>
           <div class="contacts_list hidden">
-            <div class="places_list">
-              ${this.renderPlaces()}
-            </div>
+            <div class="places_list"></div>
             <p class="title">График работы</p>
             <div class="contacts_work_time">
               <div class="days">
@@ -339,11 +337,29 @@ class TabsElement extends Element {
             </div>
             <p>Пн-Сб 9:00-21:00</p>
             <p>Вс 11:00-20:00</p>
+            <div class="contacts_links">
+              <a href="#" target="_blank">
+                <img src="./img/mobile/instagramm.svg">
+              </a>
+              <a href="#" target="_blank">
+                <img src="./img/mobile/tiktok.svg">
+              </a>
+              <a href="#" target="_blank">
+                <img src="./img/mobile/email.svg">
+              </a>
+              <a href="#" target="_blank">
+                <img src="./img/mobile/yandex.svg">
+              </a>
+            </div>
+            <div class="photo_gallery"></div>
           </div>
         </div>
         </div>
     `,
     );
+    this.element.querySelector(".places_list").innerHTML = this.renderPlaces();
+    this.element.querySelector(".photo_gallery").innerHTML =
+      this.renderGallery();
     this.mapContent = this.element.querySelector(".mobile_contacts_map");
     this.listContent = this.element.querySelector(".contacts_list");
     this.onMapButton = this.element.querySelector(".on_map");
@@ -378,11 +394,21 @@ class TabsElement extends Element {
     cafes.forEach((cafe) => {
       placesHtml += `
         <div class="place">
-          <img src="./img/mobile/yellowMarker.png" alt="">
+          <img src="./img/mobile/yellowMarker.svg" alt="">
             <p>${cafe.name}</h3>
         </div>
       `;
     });
+    return placesHtml;
+  }
+  renderGallery() {
+    let galleryHtml = "";
+    cafes.forEach((cafe) => {
+      galleryHtml += `
+          <img src="${cafe.imgUrl}" alt="${cafe.shortName}">
+      `;
+    });
+    return galleryHtml;
   }
 }
 
@@ -466,24 +492,28 @@ const cafes = [
     name: "Ложинская 22-2 (Отдельный вход, здание Дмитриева Кирмаша)",
     shortName: "Ложинская 22-2",
     coords: [53.951694, 27.682236],
+    imgUrl: "./img/mobile/contacts/lojinskaya.jpg",
   },
   {
     id: 2,
     name: "Якуба Коласа 25/1",
     shortName: "Якуба Коласа 25/1",
     coords: [53.923118, 27.589986],
+    imgUrl: "./img/mobile/contacts/kolas.jpg",
   },
   {
     id: 3,
     name: "Пр. Независимости 92 (Вход общий с OZ.by)",
     shortName: "Пр. Независимости 92",
     coords: [53.927709, 27.629284],
+    imgUrl: "./img/mobile/contacts/independed.jpg",
   },
   {
     id: 4,
     name: "Уманская 54 ТЦ Глобо (Главный вход)",
     shortName: "Уманская 54 ТЦ Глобо",
     coords: [53.875219, 27.498267],
+    imgUrl: "./img/mobile/contacts/globo.jpg",
   },
 ];
 
