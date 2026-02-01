@@ -49,7 +49,7 @@ class BucketElement extends Element {
           <h3>Итого:</h3>
           <div class="summary_count">
             Количество
-            <span>${this.weigth}кг</span>
+            <span>${this.cake.availableWeight[0]}кг</span>
           </div>
           <div class="summary_price">
             Цена
@@ -524,6 +524,8 @@ const medoviki = [
     price: 50,
     image: "./img/mobile/cakes/coffee.webp",
     color: "#453628",
+    maxWeight: 2,
+    availableWeight: [1, 1.5, 2],
   },
   {
     id: 12,
@@ -531,6 +533,7 @@ const medoviki = [
     price: 50,
     image: "./img/mobile/cakes/caramel.webp",
     color: "#A85101",
+    availableWeight: [1, 1.5, 2],
   },
   {
     id: 3,
@@ -538,6 +541,7 @@ const medoviki = [
     price: 50,
     image: "./img/mobile/cakes/blueberry.webp",
     color: "#3F4974",
+    availableWeight: [1, 1.5, 2],
   },
   {
     id: 4,
@@ -546,6 +550,7 @@ const medoviki = [
     image: "./img/mobile/cakes/coconut.webp",
     color: "#F6F2DA",
     isLight: true,
+    availableWeight: [1, 1.5, 2],
   },
   {
     id: 5,
@@ -553,6 +558,7 @@ const medoviki = [
     price: 50,
     image: "./img/mobile/cakes/raspberry.webp",
     color: "#ED6698",
+    availableWeight: [1, 1.5, 2],
   },
   {
     id: 6,
@@ -560,6 +566,7 @@ const medoviki = [
     price: 50,
     image: "./img/mobile/cakes/cherry.webp",
     color: "#7F092E",
+    availableWeight: [1, 1.5, 2],
   },
   {
     id: 7,
@@ -567,6 +574,7 @@ const medoviki = [
     price: 50,
     image: "./img/mobile/cakes/cheese.webp",
     color: "#E7BF7B",
+    availableWeight: [1, 1.5, 2],
   },
   {
     id: 8,
@@ -574,10 +582,49 @@ const medoviki = [
     price: 50,
     image: "./img/mobile/cakes/salt-caramel.webp",
     color: "#9A4A00",
+    availableWeight: [1, 1.5, 2],
+  },
+  {
+    id: 9,
+    name: "Наполеон",
+    price: 50,
+    image: "./img/mobile/cakes/napoleon.webp",
+    color: "#DE9F65",
+    availableWeight: [1, 1.5, 2],
+  },
+  {
+    id: 10,
+    name: "Ассорти",
+    price: 50,
+    image: "./img/mobile/cakes/assortment.webp",
+    color: "#BD8899",
+    availableWeight: [0.5],
   },
 ];
 
-const createCakeCard = (item, page, isLikedPage = false) => {
+const removeCakeForOrder = (itemId) => {
+  const order = getOrder();
+  const updatedOrder = order.filter(
+    (orderItem) => orderItem.cake.id !== itemId,
+  );
+  const orderList = document.querySelector(".cards");
+  orderList.innerHTML = "";
+  updatedOrder.forEach((item) => {
+    createCakeCard({ ...item.cake, price: item.price }, orderList, {
+      isBucketPage: true,
+    });
+  });
+  const finishOrder = document.querySelector(".bucket_order");
+  finishOrder.innerHTML = `<p>Оформить заказ</p>
+  <span>
+  ${updatedOrder.map((item) => item.weight).reduce((acc, weight) => acc + weight, 0)}кг,
+  ${updatedOrder.map((item) => item.price).reduce((acc, price) => acc + price, 0)}byn
+  </span>`;
+  localStorage.setItem("bucket", JSON.stringify(updatedOrder));
+  updateMenuItem();
+};
+
+const createCakeCard = (item, page, settings = {}) => {
   const itemHTML = `
     <img src="${item.image}" alt="${item.name}">
     <div class="medovik_info">
@@ -594,7 +641,7 @@ const createCakeCard = (item, page, isLikedPage = false) => {
   );
   heartButton.element.addEventListener(
     "click",
-    loveCake(item, isLikedPage ? page : null),
+    loveCake(item, settings.isLikedPage ? page : null),
   );
 
   const medovik = new Element("div", ["medovik"], itemHTML);
@@ -604,9 +651,17 @@ const createCakeCard = (item, page, isLikedPage = false) => {
   medovik.element.style.backgroundColor = item.color;
   medovik.element.dataset.id = item.id;
   medovik.element.appendChild(heartButton.element);
-  const takeToBucket = new Element("button", ["button_mobile"], "В корзину");
+  const takeToBucket = new Element(
+    "button",
+    ["button_mobile"],
+    settings.isBucketPage ? "Удалить" : "В корзину",
+  );
   takeToBucket.element.addEventListener("click", () => {
-    bucketModal.show(item);
+    if (settings.isBucketPage) {
+      removeCakeForOrder(item.id);
+    } else {
+      bucketModal.show(item);
+    }
   });
   medovik.element.appendChild(takeToBucket.element);
   page.appendChild(medovik.element);
@@ -640,7 +695,7 @@ const renderYourChoiceCakes = (child) => {
     const savedMedoviks = JSON.parse(savedMedoviksStr);
     const cardsElem = new Element("div", ["cards"]);
     savedMedoviks.forEach((item) => {
-      createCakeCard(item, cardsElem.element, true);
+      createCakeCard(item, cardsElem.element, { isLikedPage: true });
     });
     child.appendChild(cardsElem.element);
   }
@@ -701,7 +756,9 @@ const changeBucketPage = (child) => {
     if (order?.length) {
       orderList.innerHTML = "";
       order.forEach((item) => {
-        createCakeCard({ ...item.cake, price: item.price }, orderList);
+        createCakeCard({ ...item.cake, price: item.price }, orderList, {
+          isBucketPage: true,
+        });
       });
     }
     const finishOrder = child.querySelector(".bucket_order");
