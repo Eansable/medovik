@@ -49,7 +49,7 @@ class BucketElement extends Element {
           <h3>Итого:</h3>
           <div class="summary_count">
             Количество
-            <span>${this.weigth}кг</span>
+            <span>${this.cake.availableWeight[0]}кг</span>
           </div>
           <div class="summary_price">
             Цена
@@ -159,6 +159,7 @@ class OrderElement extends Element {
   name = "";
   phone = "";
   deliveryType = "delivery";
+  pickupCafe;
   constructor() {
     super("div", ["order_modal"]);
     this.element.innerHTML = `
@@ -185,23 +186,49 @@ class OrderElement extends Element {
         <label class="radio">
           <input type="radio" name="delivery" value="pickup">
           <span class="radio__custom"></span>
-          <span class="radio__text">Самовывоз</span>
+          <span class="radio__text radio__text--pickup">Самовывоз</span>
         </label>
         </div>
         <div class="pickupBlock hidden">
-          Выбрать пункт самовывоза
+          <span>Выбрать пункт самовывоза</span> <img src="img/mobile/blueArrow.svg" alt="">
+          <div class="select-cafes close">
+
+          </div>
         </div>
         <button class="order_cakes">Оформить заказ</button>
+
         </form>
+        <div class="order_success">
+          <span>Ваш заказ оформлен, скоро вам перезвонит наш специалист.</span> <span>Хорошего дня!</span>
+        </div>
       </div>
     `;
     this.form = this.element.querySelector(".order_person_info");
     this.radios = document.querySelectorAll('input[name="deliveryType"]');
+    this.radioPickupText = this.element.querySelector(".radio__text--pickup");
     this.inputName = this.element.querySelector(".order_name");
     this.inputPhone = this.element.querySelector(".order_phone");
     this.closeButton = this.element.querySelector(".close-button");
     this.orderButton = this.element.querySelector(".order_cakes");
     this.pickupBlock = this.element.querySelector(".pickupBlock");
+
+    this.selectCafes = this.element.querySelector(".select-cafes");
+
+    this.pickupBlock.addEventListener("click", (event) => {
+      event.stopPropagation();
+      this.selectCafes.classList.toggle("close");
+    });
+
+    cafes.forEach((cafe) => {
+      const cafeElement = document.createElement("div");
+      cafeElement.classList.add("cafe");
+      cafeElement.textContent = cafe.name;
+      cafeElement.addEventListener("click", (event) => {
+        event.stopPropagation();
+        this.selectPickupCafe(cafe);
+      });
+      this.selectCafes.appendChild(cafeElement);
+    });
 
     this.closeButton.addEventListener("click", () => {
       this.hide();
@@ -248,13 +275,13 @@ class OrderElement extends Element {
       e.preventDefault();
       const formData = new FormData(e.target);
       const data = Object.fromEntries(formData.entries());
+      data.pickupPlace = this.pickupPlace;
       console.log(data);
     });
     this.form.addEventListener("change", (e) => {
-      if (e.target.name === "delivery") {
-        const isPickup = e.target.value === "pickup";
-        this.pickupBlock.classList.toggle("hidden", !isPickup);
-      }
+      const isPickup = e.target.value === "pickup";
+      this.pickupBlock.classList.toggle("hidden", !isPickup);
+      this.selectCafes.classList.toggle("close", !isPickup);
     });
   }
   show() {
@@ -266,6 +293,122 @@ class OrderElement extends Element {
     this.phone = "";
     this.inputPhone.value = "";
     this.element.classList.remove("active");
+    this.element
+      .querySelector(".order_modal_content")
+      .classList.remove("message_success");
+  }
+  selectPickupCafe(cafe) {
+    this.pickupCafe = cafe;
+    this.selectCafes.classList.add("close");
+    this.radioPickupText.innerText = `Самовывоз(${cafe.shortName})`;
+  }
+  orderSuccess() {
+    this.element
+      .querySelector(".order_modal_content")
+      .classList.add("message_success");
+  }
+}
+
+class TabsElement extends Element {
+  constructor() {
+    super(
+      "div",
+      ["contacts_tabs"],
+      `
+      <header>
+        <button class="on_map active">На карте</button>
+        <button class="list">Список</button>
+        </header>
+        <div class="contacts_content">
+          <div class="mobile_contacts_map"></div>
+          <div class="contacts_list hidden">
+            <div class="places_list"></div>
+            <p class="title">График работы</p>
+            <div class="contacts_work_time">
+              <div class="days">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span class="half"></span>
+              </div>
+            </div>
+            <p>Пн-Сб 9:00-21:00</p>
+            <p>Вс 11:00-20:00</p>
+            <div class="contacts_links">
+              <a href="#" target="_blank">
+                <img src="./img/mobile/instagramm.svg">
+              </a>
+              <a href="#" target="_blank">
+                <img src="./img/mobile/tiktok.svg">
+              </a>
+              <a href="#" target="_blank">
+                <img src="./img/mobile/email.svg">
+              </a>
+              <a href="#" target="_blank">
+                <img src="./img/mobile/yandex.svg">
+              </a>
+            </div>
+            <div class="photo_gallery"></div>
+          </div>
+        </div>
+        </div>
+    `,
+    );
+    this.element.querySelector(".places_list").innerHTML = this.renderPlaces();
+    this.element.querySelector(".photo_gallery").innerHTML =
+      this.renderGallery();
+    this.mapContent = this.element.querySelector(".mobile_contacts_map");
+    this.listContent = this.element.querySelector(".contacts_list");
+    this.onMapButton = this.element.querySelector(".on_map");
+    this.listButton = this.element.querySelector(".list");
+    this.onMapButton.addEventListener("click", this.showMap.bind(this));
+    this.listButton.addEventListener("click", this.showList.bind(this));
+  }
+  showMap() {
+    this.onMapButton.classList.add("active");
+    this.listButton.classList.remove("active");
+    this.mapContent.classList.remove("hidden");
+    this.listContent.classList.add("hidden");
+  }
+  showList() {
+    this.listContent.classList.remove("hidden");
+    this.mapContent.classList.add("hidden");
+    this.listButton.classList.add("active");
+    this.onMapButton.classList.remove("active");
+  }
+  initMap() {
+    const map = new ymaps.Map("mobile_contacts_map", {
+      center: [53.923118, 27.589986],
+      zoom: 16,
+    });
+    cafes.forEach((cafe) => {
+      const marker = new ymaps.Placemark(cafe.coords, {}, markerSetting);
+      map.geoObjects.add(marker);
+    });
+  }
+  renderPlaces() {
+    let placesHtml = "";
+    cafes.forEach((cafe) => {
+      placesHtml += `
+        <div class="place">
+          <img src="./img/mobile/yellowMarker.svg" alt="">
+            <p>${cafe.name}</h3>
+        </div>
+      `;
+    });
+    return placesHtml;
+  }
+  renderGallery() {
+    let galleryHtml = "";
+    cafes.forEach((cafe) => {
+      galleryHtml += `
+          <img src="${cafe.imgUrl}" alt="${cafe.shortName}">
+      `;
+    });
+    return galleryHtml;
   }
 }
 
@@ -338,6 +481,42 @@ const hasLikedMedovik = (medovikId) => {
   }
 };
 
+const markerSetting = {
+  iconLayout: "default#image",
+  iconImageHref: "./img/marker.png",
+};
+
+const cafes = [
+  {
+    id: 1,
+    name: "Ложинская 22-2 (Отдельный вход, здание Дмитриева Кирмаша)",
+    shortName: "Ложинская 22-2",
+    coords: [53.951694, 27.682236],
+    imgUrl: "./img/mobile/contacts/lojinskaya.jpg",
+  },
+  {
+    id: 2,
+    name: "Якуба Коласа 25/1",
+    shortName: "Якуба Коласа 25/1",
+    coords: [53.923118, 27.589986],
+    imgUrl: "./img/mobile/contacts/kolas.jpg",
+  },
+  {
+    id: 3,
+    name: "Пр. Независимости 92 (Вход общий с OZ.by)",
+    shortName: "Пр. Независимости 92",
+    coords: [53.927709, 27.629284],
+    imgUrl: "./img/mobile/contacts/independed.jpg",
+  },
+  {
+    id: 4,
+    name: "Уманская 54 ТЦ Глобо (Главный вход)",
+    shortName: "Уманская 54 ТЦ Глобо",
+    coords: [53.875219, 27.498267],
+    imgUrl: "./img/mobile/contacts/globo.jpg",
+  },
+];
+
 const medoviki = [
   {
     id: 1,
@@ -345,6 +524,8 @@ const medoviki = [
     price: 50,
     image: "./img/mobile/cakes/coffee.webp",
     color: "#453628",
+    maxWeight: 2,
+    availableWeight: [1, 1.5, 2],
   },
   {
     id: 12,
@@ -352,6 +533,7 @@ const medoviki = [
     price: 50,
     image: "./img/mobile/cakes/caramel.webp",
     color: "#A85101",
+    availableWeight: [1, 1.5, 2],
   },
   {
     id: 3,
@@ -359,6 +541,7 @@ const medoviki = [
     price: 50,
     image: "./img/mobile/cakes/blueberry.webp",
     color: "#3F4974",
+    availableWeight: [1, 1.5, 2],
   },
   {
     id: 4,
@@ -367,6 +550,7 @@ const medoviki = [
     image: "./img/mobile/cakes/coconut.webp",
     color: "#F6F2DA",
     isLight: true,
+    availableWeight: [1, 1.5, 2],
   },
   {
     id: 5,
@@ -374,6 +558,7 @@ const medoviki = [
     price: 50,
     image: "./img/mobile/cakes/raspberry.webp",
     color: "#ED6698",
+    availableWeight: [1, 1.5, 2],
   },
   {
     id: 6,
@@ -381,6 +566,7 @@ const medoviki = [
     price: 50,
     image: "./img/mobile/cakes/cherry.webp",
     color: "#7F092E",
+    availableWeight: [1, 1.5, 2],
   },
   {
     id: 7,
@@ -388,6 +574,7 @@ const medoviki = [
     price: 50,
     image: "./img/mobile/cakes/cheese.webp",
     color: "#E7BF7B",
+    availableWeight: [1, 1.5, 2],
   },
   {
     id: 8,
@@ -395,10 +582,49 @@ const medoviki = [
     price: 50,
     image: "./img/mobile/cakes/salt-caramel.webp",
     color: "#9A4A00",
+    availableWeight: [1, 1.5, 2],
+  },
+  {
+    id: 9,
+    name: "Наполеон",
+    price: 50,
+    image: "./img/mobile/cakes/napoleon.webp",
+    color: "#DE9F65",
+    availableWeight: [1, 1.5, 2],
+  },
+  {
+    id: 10,
+    name: "Ассорти",
+    price: 50,
+    image: "./img/mobile/cakes/assortment.webp",
+    color: "#BD8899",
+    availableWeight: [0.5],
   },
 ];
 
-const createCakeCard = (item, page, isLikedPage = false) => {
+const removeCakeForOrder = (itemId) => {
+  const order = getOrder();
+  const updatedOrder = order.filter(
+    (orderItem) => orderItem.cake.id !== itemId,
+  );
+  const orderList = document.querySelector(".cards");
+  orderList.innerHTML = "";
+  updatedOrder.forEach((item) => {
+    createCakeCard({ ...item.cake, price: item.price }, orderList, {
+      isBucketPage: true,
+    });
+  });
+  const finishOrder = document.querySelector(".bucket_order");
+  finishOrder.innerHTML = `<p>Оформить заказ</p>
+  <span>
+  ${updatedOrder.map((item) => item.weight).reduce((acc, weight) => acc + weight, 0)}кг,
+  ${updatedOrder.map((item) => item.price).reduce((acc, price) => acc + price, 0)}byn
+  </span>`;
+  localStorage.setItem("bucket", JSON.stringify(updatedOrder));
+  updateMenuItem();
+};
+
+const createCakeCard = (item, page, settings = {}) => {
   const itemHTML = `
     <img src="${item.image}" alt="${item.name}">
     <div class="medovik_info">
@@ -415,7 +641,7 @@ const createCakeCard = (item, page, isLikedPage = false) => {
   );
   heartButton.element.addEventListener(
     "click",
-    loveCake(item, isLikedPage ? page : null),
+    loveCake(item, settings.isLikedPage ? page : null),
   );
 
   const medovik = new Element("div", ["medovik"], itemHTML);
@@ -425,9 +651,17 @@ const createCakeCard = (item, page, isLikedPage = false) => {
   medovik.element.style.backgroundColor = item.color;
   medovik.element.dataset.id = item.id;
   medovik.element.appendChild(heartButton.element);
-  const takeToBucket = new Element("button", ["button_mobile"], "В корзину");
+  const takeToBucket = new Element(
+    "button",
+    ["button_mobile"],
+    settings.isBucketPage ? "Удалить" : "В корзину",
+  );
   takeToBucket.element.addEventListener("click", () => {
-    bucketModal.show(item);
+    if (settings.isBucketPage) {
+      removeCakeForOrder(item.id);
+    } else {
+      bucketModal.show(item);
+    }
   });
   medovik.element.appendChild(takeToBucket.element);
   page.appendChild(medovik.element);
@@ -461,7 +695,7 @@ const renderYourChoiceCakes = (child) => {
     const savedMedoviks = JSON.parse(savedMedoviksStr);
     const cardsElem = new Element("div", ["cards"]);
     savedMedoviks.forEach((item) => {
-      createCakeCard(item, cardsElem.element, true);
+      createCakeCard(item, cardsElem.element, { isLikedPage: true });
     });
     child.appendChild(cardsElem.element);
   }
@@ -522,7 +756,9 @@ const changeBucketPage = (child) => {
     if (order?.length) {
       orderList.innerHTML = "";
       order.forEach((item) => {
-        createCakeCard({ ...item.cake, price: item.price }, orderList);
+        createCakeCard({ ...item.cake, price: item.price }, orderList, {
+          isBucketPage: true,
+        });
       });
     }
     const finishOrder = child.querySelector(".bucket_order");
@@ -595,27 +831,35 @@ const contacts = new Element(
   ["mobile_contacts"],
   "<h2>WE ARE HERE:<h2>",
 );
+const contactsTabs = new TabsElement();
+contacts.element.appendChild(contactsTabs.element);
+await ymaps.ready(contactsTabs.initMap);
 
 const menuItems = [
   {
     icon: "./img/mobile/home.svg",
+    activeIcon: "./img/mobile/yellowHome.svg",
     function: changePage(home.element),
   },
   {
     icon: "./img/mobile/heart.svg",
+    activeIcon: "./img/mobile/yellowHeart.svg",
     function: changeYourChoicePage(yourChoice.element),
   },
   {
     icon: "./img/mobile/shopping-cart.svg",
+    activeIcon: "./img/mobile/yellowShoppingCart.svg",
     function: changeBucketPage(bucket.element),
     isNumber: true,
   },
   {
     icon: "./img/mobile/cake.svg",
+    activeIcon: "./img/mobile/yellowCake.svg",
     function: changeListPage(medovikiList.element),
   },
   {
     icon: "./img/mobile/marker.svg",
+    activeIcon: "./img/mobile/yellowMarker.svg",
     function: changePage(contacts.element),
   },
 ];
@@ -623,6 +867,7 @@ const menuItems = [
 menuItems.forEach((item) => {
   const itemHTML = `
     <img src="${item.icon}" alt="Icon">
+    <img src="${item.activeIcon}" class="icon-active" alt="Icon">
   `;
   const menuItem = new Element("button", ["mobile_menu_item"], itemHTML);
   if (item.isNumber) {
@@ -632,7 +877,12 @@ menuItems.forEach((item) => {
         new Element("span", ["bucket_number"], bucket.length).element,
       );
   }
-  menuItem.element.addEventListener("click", item.function);
+  menuItem.element.addEventListener("click", () => {
+    const allMenuItems = menu.element.querySelectorAll(".mobile_menu_item");
+    allMenuItems.forEach((button) => button.classList.remove("active"));
+    menuItem.element.classList.add("active");
+    item.function();
+  });
   menu.element.appendChild(menuItem.element);
 });
 
