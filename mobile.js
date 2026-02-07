@@ -323,20 +323,7 @@ class TabsElement extends Element {
           <div class="mobile_contacts_map"></div>
           <div class="contacts_list hidden">
             <div class="places_list"></div>
-            <p class="title">График работы</p>
-            <div class="contacts_work_time">
-              <div class="days">
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-                <span class="half"></span>
-              </div>
-            </div>
-            <p>Пн-Сб 9:00-21:00</p>
-            <p>Вс 11:00-20:00</p>
+            
             <div class="contacts_links">
               <a href="#" target="_blank">
                 <img src="./img/mobile/instagramm.svg">
@@ -380,7 +367,9 @@ class TabsElement extends Element {
     this.onMapButton.classList.remove("active");
   }
   initMap() {
-    const map = new ymaps.Map("mobile_contacts_map", {
+    const container = document.querySelector(".mobile_contacts_map")
+    container.innerHTML = ""
+    const map = new ymaps.Map(container, {
       center: [53.923118, 27.589986],
       zoom: 16,
     });
@@ -395,7 +384,10 @@ class TabsElement extends Element {
       placesHtml += `
         <div class="place">
           <img src="./img/mobile/yellowMarker.svg" alt="">
+          <div>
             <p>${cafe.name}</h3>
+            <div>${cafe.workTime}</div>
+          </div>
         </div>
       `;
     });
@@ -404,7 +396,7 @@ class TabsElement extends Element {
   renderGallery() {
     let galleryHtml = "";
     cafes.forEach((cafe) => {
-      galleryHtml += `
+      if (cafe.imgUrl) galleryHtml += `
           <img src="${cafe.imgUrl}" alt="${cafe.shortName}">
       `;
     });
@@ -493,6 +485,8 @@ const cafes = [
     shortName: "Ложинская 22-2",
     coords: [53.951694, 27.682236],
     imgUrl: "./img/mobile/contacts/lojinskaya.jpg",
+    workTime: `<p>Пн-Сб 9:00-21:00</p>
+            <p>Вс 10:00-21:00</p>`
   },
   {
     id: 2,
@@ -500,6 +494,8 @@ const cafes = [
     shortName: "Якуба Коласа 25/1",
     coords: [53.923118, 27.589986],
     imgUrl: "./img/mobile/contacts/kolas.jpg",
+    workTime: `<p>Пн-Сб 9:00-21:00</p>
+            <p>Вс 10:00-21:00</p>`
   },
   {
     id: 3,
@@ -507,6 +503,8 @@ const cafes = [
     shortName: "Пр. Независимости 92",
     coords: [53.927709, 27.629284],
     imgUrl: "./img/mobile/contacts/independed.jpg",
+    workTime: `<p>Пн-Сб 9:00-21:00</p>
+            <p>Вс 10:00-21:00</p>`
   },
   {
     id: 4,
@@ -514,6 +512,16 @@ const cafes = [
     shortName: "Уманская 54 ТЦ Глобо",
     coords: [53.875219, 27.498267],
     imgUrl: "./img/mobile/contacts/globo.jpg",
+    workTime: `<p>Пн-Сб 9:00-21:00</p>
+            <p>Вс 10:00-21:00</p>`
+  },
+  {
+    id: 5,
+    name: "Московская 22",
+    shortName: "Московская 22",
+    coords: [53.886444, 27.537115],
+    imgUrl: "",
+    workTime: `<p>Пн-Bc 10:00-21:00</p>`
   },
 ];
 
@@ -772,6 +780,14 @@ const changeBucketPage = (child) => {
   };
 };
 
+const changeMapPage = (child, initMap) => {
+  return () => {
+    ymaps.ready(initMap.initMap)
+    page.restoreHTML();
+    page.element.appendChild(child);
+  }
+}
+
 const medovikiList = new Element(
   "div",
   ["medoviki_list"],
@@ -833,7 +849,6 @@ const contacts = new Element(
 );
 const contactsTabs = new TabsElement();
 contacts.element.appendChild(contactsTabs.element);
-await ymaps.ready(contactsTabs.initMap);
 
 const menuItems = [
   {
@@ -860,7 +875,7 @@ const menuItems = [
   {
     icon: "./img/mobile/marker.svg",
     activeIcon: "./img/mobile/yellowMarker.svg",
-    function: changePage(contacts.element),
+    function: changeMapPage(contacts.element, contactsTabs),
   },
 ];
 

@@ -26,6 +26,7 @@ const initMap = () => {
     let lojin = new ymaps.Placemark([53.951694, 27.682236], {}, markerSetting)
     let globo = new ymaps.Placemark([53.875219, 27.498267], {}, markerSetting)
     let independent = new ymaps.Placemark([53.927709, 27.629284], {}, markerSetting)
+    let moskovskaya = new ymaps.Placemark([53.886444, 27.537115], {}, markerSetting)
     map.controls.remove('geolocationControl'); // удаляем геолокацию
     map.controls.remove('searchControl'); // удаляем поиск
     map.controls.remove('trafficControl'); // удаляем контроль трафика
@@ -38,6 +39,7 @@ const initMap = () => {
     map.geoObjects.add(lojin)
     map.geoObjects.add(globo)
     map.geoObjects.add(independent)
+    map.geoObjects.add(moskovskaya)
 }
 
 ymaps.ready(initMap)
@@ -129,11 +131,20 @@ modalButton.addEventListener("click", sendForm)
 
 
 const hamburger = document.querySelector(".hamburger_menu")
+const menu = document.querySelector(".menu")
 
 hamburger.addEventListener("click", () => {
     hamburger.classList.toggle("open")
-    const menu = document.querySelector(".menu")
     menu.classList.toggle("open")
+})
+
+const menuLinks = document.querySelectorAll(".hamburger_menu_link")
+
+menuLinks.forEach(link => {
+    link.addEventListener("click", () => {
+        hamburger.classList.remove("open")
+        menu.classList.remove("open")
+    })
 })
 
 // MENU
