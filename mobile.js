@@ -49,7 +49,7 @@ class BucketElement extends Element {
           <h3>Итого:</h3>
           <div class="summary_count">
             Количество
-            <span>${this.cake.availableWeight[0]}кг</span>
+            <span>${this.cake.minWeight}кг</span>
           </div>
           <div class="summary_price">
             Цена
@@ -93,15 +93,23 @@ class BucketElement extends Element {
   addWeight() {
     this.weigth += 0.5;
     this.bucketWeight.textContent = this.weigth + "кг";
-    this.minusButton.disabled = false;
+    this.checkWeight();
   }
   minusWeight() {
-    if (this.weigth > 1) {
-      this.weigth -= 0.5;
-      this.bucketWeight.textContent = this.weigth + "кг";
+    this.weigth -= 0.5;
+    this.bucketWeight.textContent = this.weigth + "кг";
+    this.checkWeight();
+  }
+  checkWeight() {
+    if (this.weigth >= this.cake.maxWeight) {
+      this.plusButton.disabled = true;
+    } else {
+      this.plusButton.disabled = false;
     }
-    if (this.weigth === 1) {
+    if (this.weigth <= this.cake.minWeight) {
       this.minusButton.disabled = true;
+    } else {
+      this.minusButton.disabled = false;
     }
   }
   addToBucket() {
@@ -123,11 +131,13 @@ class BucketElement extends Element {
   }
   changeCake(newCake) {
     this.cake = newCake;
+    this.weigth = this.cake.minWeight;
     this.bucketWeight.textContent = this.weigth + "кг";
     this.bucketPrice.textContent = `${this.cake.price} byn`;
     this.modalName.textContent = newCake.name;
     this.modalImage.src = newCake.image;
     this.modalImage.alt = newCake.name;
+    this.checkWeight();
   }
 }
 
@@ -323,7 +333,7 @@ class TabsElement extends Element {
           <div class="mobile_contacts_map"></div>
           <div class="contacts_list hidden">
             <div class="places_list"></div>
-            
+
             <div class="contacts_links">
               <a href="#" target="_blank">
                 <img src="./img/mobile/instagramm.svg">
@@ -367,12 +377,19 @@ class TabsElement extends Element {
     this.onMapButton.classList.remove("active");
   }
   initMap() {
-    const container = document.querySelector(".mobile_contacts_map")
-    container.innerHTML = ""
+    const container = document.querySelector(".mobile_contacts_map");
+    container.innerHTML = "";
     const map = new ymaps.Map(container, {
       center: [53.923118, 27.589986],
       zoom: 16,
     });
+    map.controls.remove("geolocationControl"); // удаляем геолокацию
+    map.controls.remove("searchControl"); // удаляем поиск
+    map.controls.remove("trafficControl"); // удаляем контроль трафика
+    map.controls.remove("typeSelector"); // удаляем тип
+    map.controls.remove("fullscreenControl"); // удаляем кнопку перехода в полноэкранный режим
+    map.controls.remove("zoomControl"); // удаляем контрол зуммирования
+    map.controls.remove("rulerControl"); // удаляем контрол правил
     cafes.forEach((cafe) => {
       const marker = new ymaps.Placemark(cafe.coords, {}, markerSetting);
       map.geoObjects.add(marker);
@@ -396,7 +413,8 @@ class TabsElement extends Element {
   renderGallery() {
     let galleryHtml = "";
     cafes.forEach((cafe) => {
-      if (cafe.imgUrl) galleryHtml += `
+      if (cafe.imgUrl)
+        galleryHtml += `
           <img src="${cafe.imgUrl}" alt="${cafe.shortName}">
       `;
     });
@@ -486,7 +504,7 @@ const cafes = [
     coords: [53.951694, 27.682236],
     imgUrl: "./img/mobile/contacts/lojinskaya.jpg",
     workTime: `<p>Пн-Сб 9:00-21:00</p>
-            <p>Вс 10:00-21:00</p>`
+            <p>Вс 10:00-21:00</p>`,
   },
   {
     id: 2,
@@ -495,7 +513,7 @@ const cafes = [
     coords: [53.923118, 27.589986],
     imgUrl: "./img/mobile/contacts/kolas.jpg",
     workTime: `<p>Пн-Сб 9:00-21:00</p>
-            <p>Вс 10:00-21:00</p>`
+            <p>Вс 10:00-21:00</p>`,
   },
   {
     id: 3,
@@ -504,7 +522,7 @@ const cafes = [
     coords: [53.927709, 27.629284],
     imgUrl: "./img/mobile/contacts/independed.jpg",
     workTime: `<p>Пн-Сб 9:00-21:00</p>
-            <p>Вс 10:00-21:00</p>`
+            <p>Вс 10:00-21:00</p>`,
   },
   {
     id: 4,
@@ -513,15 +531,15 @@ const cafes = [
     coords: [53.875219, 27.498267],
     imgUrl: "./img/mobile/contacts/globo.jpg",
     workTime: `<p>Пн-Сб 9:00-21:00</p>
-            <p>Вс 10:00-21:00</p>`
+            <p>Вс 10:00-21:00</p>`,
   },
   {
     id: 5,
     name: "Московская 22",
     shortName: "Московская 22",
-    coords: [53.886444, 27.537115],
+    coords: [53.886493, 27.537121],
     imgUrl: "",
-    workTime: `<p>Пн-Bc 10:00-21:00</p>`
+    workTime: `<p>Пн-Bc 10:00-21:00</p>`,
   },
 ];
 
@@ -532,8 +550,8 @@ const medoviki = [
     price: 50,
     image: "./img/mobile/cakes/coffee.webp",
     color: "#453628",
-    maxWeight: 2,
-    availableWeight: [1, 1.5, 2],
+    maxWeight: 3,
+    minWeight: 1,
   },
   {
     id: 12,
@@ -541,7 +559,8 @@ const medoviki = [
     price: 50,
     image: "./img/mobile/cakes/caramel.webp",
     color: "#A85101",
-    availableWeight: [1, 1.5, 2],
+    maxWeight: 3,
+    minWeight: 1,
   },
   {
     id: 3,
@@ -549,16 +568,18 @@ const medoviki = [
     price: 50,
     image: "./img/mobile/cakes/blueberry.webp",
     color: "#3F4974",
-    availableWeight: [1, 1.5, 2],
+    maxWeight: 3,
+    minWeight: 1,
   },
   {
     id: 4,
-    name: "Кокос",
+    name: "Рафаэлло",
     price: 50,
     image: "./img/mobile/cakes/coconut.webp",
     color: "#F6F2DA",
     isLight: true,
-    availableWeight: [1, 1.5, 2],
+    maxWeight: 3,
+    minWeight: 1,
   },
   {
     id: 5,
@@ -566,15 +587,17 @@ const medoviki = [
     price: 50,
     image: "./img/mobile/cakes/raspberry.webp",
     color: "#ED6698",
-    availableWeight: [1, 1.5, 2],
+    maxWeight: 2,
+    minWeight: 1,
   },
   {
     id: 6,
-    name: "Вишнёвый",
+    name: "Двойная вишня",
     price: 50,
     image: "./img/mobile/cakes/cherry.webp",
     color: "#7F092E",
-    availableWeight: [1, 1.5, 2],
+    maxWeight: 2,
+    minWeight: 1,
   },
   {
     id: 7,
@@ -582,15 +605,17 @@ const medoviki = [
     price: 50,
     image: "./img/mobile/cakes/cheese.webp",
     color: "#E7BF7B",
-    availableWeight: [1, 1.5, 2],
+    maxWeight: 2,
+    minWeight: 1,
   },
   {
     id: 8,
-    name: "Солёная карамель",
+    name: "Наполеон СК",
     price: 50,
     image: "./img/mobile/cakes/salt-caramel.webp",
     color: "#9A4A00",
-    availableWeight: [1, 1.5, 2],
+    maxWeight: 2,
+    minWeight: 1,
   },
   {
     id: 9,
@@ -598,7 +623,8 @@ const medoviki = [
     price: 50,
     image: "./img/mobile/cakes/napoleon.webp",
     color: "#DE9F65",
-    availableWeight: [1, 1.5, 2],
+    maxWeight: 2,
+    minWeight: 1,
   },
   {
     id: 10,
@@ -606,7 +632,8 @@ const medoviki = [
     price: 50,
     image: "./img/mobile/cakes/assortment.webp",
     color: "#BD8899",
-    availableWeight: [0.5],
+    maxWeight: 0.5,
+    minWeight: 0.5,
   },
 ];
 
@@ -642,6 +669,13 @@ const createCakeCard = (item, page, settings = {}) => {
       </div>
     </div>
   `;
+  // <div class="card_weight">
+  //   <p>Масса</p>
+  //   <div>
+  //   <p>${item.minWeight} кг</p>
+  //   <div class="triangle"></div>
+  //   </div>
+  // </div>
   const heartButton = new Element(
     "button",
     ["heart_button"],
@@ -653,6 +687,10 @@ const createCakeCard = (item, page, settings = {}) => {
   );
 
   const medovik = new Element("div", ["medovik"], itemHTML);
+  // const weightSelect = medovik.element.querySelector(".card_weight");
+  // weightSelect.addEventListener("click", () => {
+  //   weightSelect.classList.toggle("open");
+  // });
   if (item.isLight) {
     medovik.element.classList.add("light");
   }
@@ -782,11 +820,11 @@ const changeBucketPage = (child) => {
 
 const changeMapPage = (child, initMap) => {
   return () => {
-    ymaps.ready(initMap.initMap)
+    ymaps.ready(initMap.initMap);
     page.restoreHTML();
     page.element.appendChild(child);
-  }
-}
+  };
+};
 
 const medovikiList = new Element(
   "div",
@@ -901,7 +939,7 @@ menuItems.forEach((item) => {
   menu.element.appendChild(menuItem.element);
 });
 
-page.element.appendChild(medovikiList.element);
+page.element.appendChild(home.element);
 
 content.appendChild(menu.element);
 content.appendChild(page.element);
