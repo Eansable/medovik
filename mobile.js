@@ -304,7 +304,7 @@ class OrderElement extends Element {
 Телефон: ${data.phone}
 Тип доставки: ${data.delivery === "delivery" ? "Доставка" : "Самовывоз"}
 ${data.delivery === "pickup" ? `Место самовывоза: ${data.pickupPlace.shortName}` : ""}
-${order.map((item, index) => `${index + 1}: ${item.cake.name}, Цена: ${item.price}, Количество: ${item.weight}кг`).join("\n")}
+${order.map((item, index) => `${index + 1}: ${item.cake.name}, Цена: ${data.delivery === "delivery" ? item.price : item.price * 0.8}, Количество: ${item.weight}кг`).join("\n")}
 Сумма: ${data.delivery === "delivery" ? price : price * 0.8}
 `;
       const response = await fetch(this.api, {
