@@ -124,12 +124,7 @@ class BucketElement extends Element {
       weight: this.weigth,
       price: this.cake.prices[this.weigth],
     };
-    if (order.some((i) => i.cake.id === item.cake.id)) {
-      const index = order.findIndex((i) => i.cake.id === item.cake.id);
-      order[index] = item;
-    } else {
-      order.push(item);
-    }
+    order.push(item);
     localStorage.setItem("bucket", JSON.stringify(order));
     updateMenuItem();
     bucketModal.element.classList.remove("active");
@@ -494,7 +489,7 @@ const homeHTML = `
 </a>
 </aside>
 <p>Мы — команда ценителей настоящих домашних десертов.<br>
-Наша цель — подарить каждому клиенту незабываемый вкус и радость от каждого кусочка наших медовиков.</p>
+Наша цель — подарить каждому гостю незабываемый вкус и радость от каждого кусочка наших медовиков.</p>
 <div>
 <img src="./img/mobile/eco.svg" class="eco">
 <p class="eco_text">Благодаря использованию исключительно натуральных ингредиентов,
@@ -592,6 +587,70 @@ const cafes = [
 
 const medoviki = [
   {
+    id: 10,
+    name: "Классический",
+    price: 50,
+    prices: {
+      1: 52,
+      1.5: 75,
+      2: 96,
+      2.5: 122,
+      3: 148,
+    },
+    image: "./img/mobile/cakes/classic.jpg",
+    color: "#AF7330",
+    maxWeight: 3,
+    minWeight: 1,
+  },
+  {
+    id: 5,
+    name: "Малиновый",
+    price: 50,
+    prices: {
+      1: 52,
+      1.5: 75,
+      2: 96,
+      2.5: 122,
+      3: 148,
+    },
+    image: "./img/mobile/cakes/raspberry.webp",
+    color: "#ED6698",
+    maxWeight: 3,
+    minWeight: 1,
+  },
+  {
+    id: 11,
+    name: "Лимонный",
+    price: 50,
+    prices: {
+      1: 52,
+      1.5: 75,
+      2: 96,
+      2.5: 122,
+      3: 148,
+    },
+    image: "./img/mobile/cakes/lemon.jpg",
+    color: "#DBD228",
+    maxWeight: 3,
+    minWeight: 1,
+  },
+  {
+    id: 3,
+    name: "Черничный",
+    price: 50,
+    prices: {
+      1: 52,
+      1.5: 75,
+      2: 96,
+      2.5: 122,
+      3: 148,
+    },
+    image: "./img/mobile/cakes/blueberry.webp",
+    color: "#3F4974",
+    maxWeight: 3,
+    minWeight: 1,
+  },
+  {
     id: 1,
     name: "Кофейный",
     price: 50,
@@ -624,18 +683,18 @@ const medoviki = [
     minWeight: 1,
   },
   {
-    id: 3,
-    name: "Черничный",
+    id: 6,
+    name: "Двойная вишня",
     price: 50,
     prices: {
-      1: 52,
-      1.5: 75,
-      2: 96,
-      2.5: 122,
-      3: 148,
+      1: 58,
+      1.5: 88,
+      2: 110,
+      2.5: 139,
+      3: 168,
     },
-    image: "./img/mobile/cakes/blueberry.webp",
-    color: "#3F4974",
+    image: "./img/mobile/cakes/cherry.webp",
+    color: "#7F092E",
     maxWeight: 3,
     minWeight: 1,
   },
@@ -657,24 +716,8 @@ const medoviki = [
     minWeight: 1,
   },
   {
-    id: 5,
-    name: "Малиновый",
-    price: 50,
-    prices: {
-      1: 52,
-      1.5: 75,
-      2: 96,
-      2.5: 122,
-      3: 148,
-    },
-    image: "./img/mobile/cakes/raspberry.webp",
-    color: "#ED6698",
-    maxWeight: 3,
-    minWeight: 1,
-  },
-  {
-    id: 6,
-    name: "Двойная вишня",
+    id: 13,
+    name: "Нутелла",
     price: 50,
     prices: {
       1: 58,
@@ -683,37 +726,8 @@ const medoviki = [
       2.5: 139,
       3: 168,
     },
-    image: "./img/mobile/cakes/cherry.webp",
-    color: "#7F092E",
-    maxWeight: 3,
-    minWeight: 1,
-  },
-  {
-    id: 7,
-    name: "Чизкейк",
-    price: 50,
-    prices: {
-      1: 69,
-      1.5: 102,
-    },
-    image: "./img/mobile/cakes/cheese.webp",
-    color: "#E7BF7B",
-    maxWeight: 1.5,
-    minWeight: 1,
-  },
-  {
-    id: 8,
-    name: "Наполеон СК",
-    price: 50,
-    prices: {
-      1: 55,
-      1.5: 77,
-      2: 93,
-      2.5: 122,
-      3: 151,
-    },
-    image: "./img/mobile/cakes/salt-caramel.webp",
-    color: "#9A4A00",
+    image: "./img/mobile/cakes/nutella.jpg",
+    color: "#572912",
     maxWeight: 3,
     minWeight: 1,
   },
@@ -734,51 +748,32 @@ const medoviki = [
     minWeight: 1,
   },
   {
-    id: 10,
-    name: "Классика",
+    id: 8,
+    name: "Наполеон солёная карамель",
     price: 50,
     prices: {
-      1: 52,
-      1.5: 75,
-      2: 96,
+      1: 55,
+      1.5: 77,
+      2: 93,
       2.5: 122,
-      3: 148,
+      3: 151,
     },
-    image: "./img/mobile/cakes/classic.jpg",
-    color: "#AF7330",
+    image: "./img/mobile/cakes/salt-caramel.webp",
+    color: "#9A4A00",
     maxWeight: 3,
     minWeight: 1,
   },
   {
-    id: 11,
-    name: "Лимон",
+    id: 7,
+    name: "Чизкейк",
     price: 50,
     prices: {
-      1: 52,
-      1.5: 75,
-      2: 96,
-      2.5: 122,
-      3: 148,
+      1: 69,
+      1.5: 102,
     },
-    image: "./img/mobile/cakes/lemon.jpg",
-    color: "#DBD228",
-    maxWeight: 3,
-    minWeight: 1,
-  },
-  {
-    id: 13,
-    name: "Нутелла",
-    price: 50,
-    prices: {
-      1: 58,
-      1.5: 88,
-      2: 110,
-      2.5: 139,
-      3: 168,
-    },
-    image: "./img/mobile/cakes/nutella.jpg",
-    color: "#572912",
-    maxWeight: 3,
+    image: "./img/mobile/cakes/cheese.webp",
+    color: "#E7BF7B",
+    maxWeight: 1.5,
     minWeight: 1,
   },
 ];
@@ -811,7 +806,7 @@ const createCakeCard = (item, page, settings = {}) => {
     <div class="medovik_info">
       <div>
         <p>${item.name}</p>
-        <p>${item.prices[1]} byn</p>
+        <p>${settings.isBucketPage ? item.price : item.prices[1]} byn</p>
       </div>
       ${
         settings.isBucketPage
