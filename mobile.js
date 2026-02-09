@@ -42,18 +42,18 @@ class BucketElement extends Element {
             <button class="minus-button">-</button>
             <span class="bucket_weight">${this.weigth}кг</span>
             <button class="plus-button">+</button>
-            <span class="bucket_price">${this.cake.price} byn</span>
+            <span class="bucket_price">${this.cake.prices[this.weigth]} byn</span>
           </div>
         </div>
         <div class="summary">
           <h3>Итого:</h3>
           <div class="summary_count">
             Количество
-            <span>${this.cake.minWeight}кг</span>
+            <span class="span_summary_weight">${this.cake.minWeight}кг</span>
           </div>
           <div class="summary_price">
             Цена
-            <span class="summary_price">${this.cake.price} byn</span>
+            <span class="summary_price span_summary_price">${this.cake.prices[this.weigth]} byn</span>
           </div>
         </div>
         <div class="min_order"> Минимальная сумма зазказа 50 руб, или 1 кг торта</div>
@@ -69,6 +69,8 @@ class BucketElement extends Element {
     this.addToBucketButton = this.element.querySelector(".add_to_bucket");
     this.plusButton = this.element.querySelector(".plus-button");
     this.minusButton = this.element.querySelector(".minus-button");
+    this.summaryPrice = this.element.querySelector(".span_summary_price");
+    this.summaryWeight = this.element.querySelector(".span_summary_weight");
 
     this.addToBucketButton.addEventListener("click", () => {
       this.addToBucket();
@@ -111,13 +113,16 @@ class BucketElement extends Element {
     } else {
       this.minusButton.disabled = false;
     }
+    this.summaryPrice.textContent = `${this.cake.prices[this.weigth]} byn`;
+    this.bucketPrice.textContent = `${this.cake.prices[this.weigth]} byn`;
+    this.summaryWeight.textContent = `${this.weigth}кг`;
   }
   addToBucket() {
     let order = getOrder();
     const item = {
       cake: this.cake,
       weight: this.weigth,
-      price: this.cake.price * this.weigth,
+      price: this.cake.prices[this.weigth],
     };
     if (order.some((i) => i.cake.id === item.cake.id)) {
       const index = order.findIndex((i) => i.cake.id === item.cake.id);
@@ -133,7 +138,7 @@ class BucketElement extends Element {
     this.cake = newCake;
     this.weigth = this.cake.minWeight;
     this.bucketWeight.textContent = this.weigth + "кг";
-    this.bucketPrice.textContent = `${this.cake.price} byn`;
+    this.bucketPrice.textContent = `${this.cake.prices[this.weigth]} byn`;
     this.modalName.textContent = newCake.name;
     this.modalImage.src = newCake.image;
     this.modalImage.alt = newCake.name;
@@ -166,6 +171,9 @@ function formatPhone(digits) {
 }
 
 class OrderElement extends Element {
+  token = "7402101933:AAG8R-TlNh9UvQiMCm0S97m5CQ_-5nvQsDI";
+  chatId = "-1002231985778";
+  api = `https://api.telegram.org/bot${this.token}/sendMessage`;
   name = "";
   phone = "";
   deliveryType = "delivery";
@@ -281,12 +289,46 @@ class OrderElement extends Element {
       }
     });
 
-    this.form.addEventListener("submit", (e) => {
+    this.form.addEventListener("submit", async (e) => {
       e.preventDefault();
       const formData = new FormData(e.target);
       const data = Object.fromEntries(formData.entries());
-      data.pickupPlace = this.pickupPlace;
-      console.log(data);
+      data.pickupPlace = this.pickupCafe;
+      const order = getOrder();
+      const price = order
+        .map((item) => item.price)
+        .reduce((acc, price) => acc + price, 0);
+      const text = `Заказ с мобильной версии.
+Тестовый заказ перезванивать не надо!!!
+Имя: ${data.name}
+Телефон: ${data.phone}
+Тип доставки: ${data.delivery === "delivery" ? "Доставка" : "Самовывоз"}
+${data.delivery === "pickup" ? `Место самовывоза: ${data.pickupPlace.shortName}` : ""}
+${order.map((item, index) => `${index + 1}: ${item.cake.name}, Цена: ${item.price}, Количество: ${item.weight}кг`).join("\n")}
+Сумма: ${data.delivery === "delivery" ? price : price * 0.8}
+`;
+      const response = await fetch(this.api, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          chat_id: this.chatId,
+          text: text,
+        }),
+      });
+      if (response.ok) {
+        this.orderSuccess();
+        localStorage.setItem("bucket", JSON.stringify([]));
+        const historyOrder = localStorage.getItem("historyOrder");
+        if (!historyOrder) {
+          localStorage.setItem("historyOrder", JSON.stringify([order]));
+        } else {
+          const history = JSON.parse(historyOrder);
+          history.push(order);
+          localStorage.setItem("historyOrder", JSON.stringify(history));
+        }
+      }
     });
     this.form.addEventListener("change", (e) => {
       const isPickup = e.target.value === "pickup";
@@ -426,6 +468,11 @@ const updateMenuItem = () => {
   const order = getOrder();
   const bucketNumber = document.querySelector(".bucket_number");
   bucketNumber.textContent = order.length;
+  if (!order.length) {
+    bucketNumber.classList.add("hidden");
+  } else {
+    bucketNumber.classList.remove("hidden");
+  }
 };
 
 const homeHTML = `
@@ -548,6 +595,13 @@ const medoviki = [
     id: 1,
     name: "Кофейный",
     price: 50,
+    prices: {
+      1: 52,
+      1.5: 75,
+      2: 96,
+      2.5: 122,
+      3: 148,
+    },
     image: "./img/mobile/cakes/coffee.webp",
     color: "#453628",
     maxWeight: 3,
@@ -555,8 +609,15 @@ const medoviki = [
   },
   {
     id: 12,
-    name: "Карамель",
+    name: "Солёная карамель",
     price: 50,
+    prices: {
+      1: 58,
+      1.5: 88,
+      2: 110,
+      2.5: 139,
+      3: 168,
+    },
     image: "./img/mobile/cakes/caramel.webp",
     color: "#A85101",
     maxWeight: 3,
@@ -566,6 +627,13 @@ const medoviki = [
     id: 3,
     name: "Черничный",
     price: 50,
+    prices: {
+      1: 52,
+      1.5: 75,
+      2: 96,
+      2.5: 122,
+      3: 148,
+    },
     image: "./img/mobile/cakes/blueberry.webp",
     color: "#3F4974",
     maxWeight: 3,
@@ -575,6 +643,13 @@ const medoviki = [
     id: 4,
     name: "Рафаэлло",
     price: 50,
+    prices: {
+      1: 58,
+      1.5: 88,
+      2: 110,
+      2.5: 139,
+      3: 168,
+    },
     image: "./img/mobile/cakes/coconut.webp",
     color: "#F6F2DA",
     isLight: true,
@@ -585,55 +660,126 @@ const medoviki = [
     id: 5,
     name: "Малиновый",
     price: 50,
+    prices: {
+      1: 52,
+      1.5: 75,
+      2: 96,
+      2.5: 122,
+      3: 148,
+    },
     image: "./img/mobile/cakes/raspberry.webp",
     color: "#ED6698",
-    maxWeight: 2,
+    maxWeight: 3,
     minWeight: 1,
   },
   {
     id: 6,
     name: "Двойная вишня",
     price: 50,
+    prices: {
+      1: 58,
+      1.5: 88,
+      2: 110,
+      2.5: 139,
+      3: 168,
+    },
     image: "./img/mobile/cakes/cherry.webp",
     color: "#7F092E",
-    maxWeight: 2,
+    maxWeight: 3,
     minWeight: 1,
   },
   {
     id: 7,
     name: "Чизкейк",
     price: 50,
+    prices: {
+      1: 69,
+      1.5: 102,
+    },
     image: "./img/mobile/cakes/cheese.webp",
     color: "#E7BF7B",
-    maxWeight: 2,
+    maxWeight: 1.5,
     minWeight: 1,
   },
   {
     id: 8,
     name: "Наполеон СК",
     price: 50,
+    prices: {
+      1: 55,
+      1.5: 77,
+      2: 93,
+      2.5: 122,
+      3: 151,
+    },
     image: "./img/mobile/cakes/salt-caramel.webp",
     color: "#9A4A00",
-    maxWeight: 2,
+    maxWeight: 3,
     minWeight: 1,
   },
   {
     id: 9,
     name: "Наполеон",
     price: 50,
+    prices: {
+      1: 50,
+      1.5: 71,
+      2: 87,
+      2.5: 113,
+      3: 139,
+    },
     image: "./img/mobile/cakes/napoleon.webp",
     color: "#DE9F65",
-    maxWeight: 2,
+    maxWeight: 3,
     minWeight: 1,
   },
   {
     id: 10,
-    name: "Ассорти",
+    name: "Классика",
     price: 50,
-    image: "./img/mobile/cakes/assortment.webp",
-    color: "#BD8899",
-    maxWeight: 0.5,
-    minWeight: 0.5,
+    prices: {
+      1: 52,
+      1.5: 75,
+      2: 96,
+      2.5: 122,
+      3: 148,
+    },
+    image: "./img/mobile/cakes/classic.jpg",
+    color: "#AF7330",
+    maxWeight: 3,
+    minWeight: 1,
+  },
+  {
+    id: 11,
+    name: "Лимон",
+    price: 50,
+    prices: {
+      1: 52,
+      1.5: 75,
+      2: 96,
+      2.5: 122,
+      3: 148,
+    },
+    image: "./img/mobile/cakes/lemon.jpg",
+    color: "#DBD228",
+    maxWeight: 3,
+    minWeight: 1,
+  },
+  {
+    id: 13,
+    name: "Нутелла",
+    price: 50,
+    prices: {
+      1: 58,
+      1.5: 88,
+      2: 110,
+      2.5: 139,
+      3: 168,
+    },
+    image: "./img/mobile/cakes/nutella.jpg",
+    color: "#572912",
+    maxWeight: 3,
+    minWeight: 1,
   },
 ];
 
@@ -665,17 +811,18 @@ const createCakeCard = (item, page, settings = {}) => {
     <div class="medovik_info">
       <div>
         <p>${item.name}</p>
-        <p>${item.price} byn</p>
+        <p>${item.prices[1]} byn</p>
       </div>
+      ${
+        settings.isBucketPage
+          ? `<div class="card_weight">
+        <p>Масса</p>
+        <p>${item.weight} кг</p>
+        </div>`
+          : ""
+      }
     </div>
   `;
-  // <div class="card_weight">
-  //   <p>Масса</p>
-  //   <div>
-  //   <p>${item.minWeight} кг</p>
-  //   <div class="triangle"></div>
-  //   </div>
-  // </div>
   const heartButton = new Element(
     "button",
     ["heart_button"],
@@ -802,9 +949,13 @@ const changeBucketPage = (child) => {
     if (order?.length) {
       orderList.innerHTML = "";
       order.forEach((item) => {
-        createCakeCard({ ...item.cake, price: item.price }, orderList, {
-          isBucketPage: true,
-        });
+        createCakeCard(
+          { ...item.cake, price: item.price, weight: item.weight },
+          orderList,
+          {
+            isBucketPage: true,
+          },
+        );
       });
     }
     const finishOrder = child.querySelector(".bucket_order");
@@ -925,10 +1076,11 @@ menuItems.forEach((item) => {
   const menuItem = new Element("button", ["mobile_menu_item"], itemHTML);
   if (item.isNumber) {
     const bucket = getOrder();
-    if (bucket?.length)
-      menuItem.element.appendChild(
-        new Element("span", ["bucket_number"], bucket.length).element,
-      );
+    const bucketNumber = new Element("span", ["bucket_number"], bucket.length);
+    menuItem.element.appendChild(bucketNumber.element);
+    if (!bucket.length) {
+      bucketNumber.element.classList.add("hidden");
+    }
   }
   menuItem.element.addEventListener("click", () => {
     const allMenuItems = menu.element.querySelectorAll(".mobile_menu_item");

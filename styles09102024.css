@@ -393,6 +393,10 @@ body {
     justify-content: center;
 }
 
+.bucket_number.hidden {
+    display: none;
+}
+
 .home {
     padding: 20px;
     box-sizing: border-box;
