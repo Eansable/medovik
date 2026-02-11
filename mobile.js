@@ -292,14 +292,14 @@ class OrderElement extends Element {
       const order = getOrder();
       const price = order
         .map((item) => item.price)
-        .reduce((acc, price) => acc + price, 0);
+        .reduce((acc, price) => acc + price, 0)
+        .toFixed(2);
       const text = `Заказ с мобильной версии.
-Тестовый заказ перезванивать не надо!!!
 Имя: ${data.name}
 Телефон: ${data.phone}
 Тип доставки: ${data.delivery === "delivery" ? "Доставка" : "Самовывоз"}
 ${data.delivery === "pickup" ? `Место самовывоза: ${data.pickupPlace.shortName}` : ""}
-${order.map((item, index) => `${index + 1}: ${item.cake.name}, Цена: ${data.delivery === "delivery" ? item.price : item.price * 0.8}, Количество: ${item.weight}кг`).join("\n")}
+${order.map((item, index) => `${index + 1}: ${item.cake.name}, Цена: ${data.delivery === "delivery" ? item.price : Math.round(item.price * 0.8 * 100) / 100}, Количество: ${item.weight}кг`).join("\n")}
 Сумма: ${data.delivery === "delivery" ? price : price * 0.8}
 `;
       const response = await fetch(this.api, {
