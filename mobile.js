@@ -193,13 +193,13 @@ class OrderElement extends Element {
         <label class="radio">
           <input type="radio" name="delivery" value="delivery" checked>
           <span class="radio__custom"></span>
-          <span class="radio__text">Доставка</span>
+          <span class="radio__text">Доставка (стоимость доставки 5 BYN)</span>
         </label>
 
         <label class="radio">
           <input type="radio" name="delivery" value="pickup">
           <span class="radio__custom"></span>
-          <span class="radio__text radio__text--pickup">Самовывоз</span>
+          <span class="radio__text radio__text--pickup">Самовывоз (<span class="font-bold">скидка 20%</span>)</span>
         </label>
         </div>
         <div class="pickupBlock hidden">
@@ -521,7 +521,7 @@ const loveCake = (medovik, likedPage) => (event) => {
     cake.classList.add("liked");
   }
   if (likedPage) {
-    renderYourChoiceCakes(likedPage);
+    renderYourChoiceCakes(yourChoice.element);
   }
 };
 
@@ -786,9 +786,13 @@ const removeCakeForOrder = (itemId) => {
   const orderList = document.querySelector(".cards");
   orderList.innerHTML = "";
   updatedOrder.forEach((item) => {
-    createCakeCard({ ...item.cake, price: item.price }, orderList, {
-      isBucketPage: true,
-    });
+    createCakeCard(
+      { ...item.cake, price: item.price, weight: item.weight },
+      orderList,
+      {
+        isBucketPage: true,
+      },
+    );
   });
   const finishOrder = document.querySelector(".bucket_order");
   finishOrder.innerHTML = `<p>Оформить заказ</p>
@@ -875,7 +879,7 @@ const menu = new Element("div", ["mobile_menu"]);
 
 const page = new Element("div", ["page"]);
 
-const renderYourChoiceCakes = (child) => {
+const renderYourChoiceCakes = (child, isUpdateCakes) => {
   child.innerHTML =
     "<header><h2>YOU<img src='./img/mobile/yellowHeart.svg' alt=''>:</h2></header>";
   const savedMedoviksStr = localStorage.getItem("favoritesCake");
@@ -975,7 +979,7 @@ const changeMapPage = (child, initMap) => {
 const medovikiList = new Element(
   "div",
   ["medoviki_list"],
-  "<header><h2>MEDOVIKI:</h2></header>",
+  "<header><h2>МЕДОВИКИ:</h2></header>",
 );
 medoviki.forEach((item) => {
   createCakeCard(item, medovikiList.element);
@@ -995,7 +999,7 @@ const yourChoice = new Element(
 const bucket = new Element(
   "div",
   ["bucket"],
-  "<header><h2>YOUR CHOICE:</h2></header>",
+  "<header><h2>ВАШ ВЫБОР:</h2></header>",
 );
 const orderList = new Element("div", ["cards"]);
 bucket.element.appendChild(orderList.element);

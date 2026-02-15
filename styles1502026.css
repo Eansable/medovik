@@ -45,6 +45,10 @@ body {
     display: none !important;
 }
 
+.font-bold {
+    font-weight: 500;
+}
+
 /*MOBILE STYLES*/
 .hidden {
     display: none;
