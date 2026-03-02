@@ -294,7 +294,6 @@ class OrderElement extends Element {
         .map((item) => item.price)
         .reduce((acc, price) => acc + price, 0);
       const text = `Заказ с мобильной версии.
-Тестовый заказ перезванивать не надо!!!
 Имя: ${data.name}
 Телефон: ${data.phone}
 Тип доставки: ${data.delivery === "delivery" ? "Доставка" : "Самовывоз"}
@@ -372,16 +371,16 @@ class TabsElement extends Element {
             <div class="places_list"></div>
 
             <div class="contacts_links">
-              <a href="#" target="_blank">
+              <a href="https://www.instagram.com/super_medovik" target="_blank">
                 <img src="./img/mobile/instagramm.svg">
               </a>
-              <a href="#" target="_blank">
+              <a href="https://www.tiktok.com/@supermedoviki" target="_blank">
                 <img src="./img/mobile/tiktok.svg">
               </a>
-              <a href="#" target="_blank">
+              <a href="mailto:supermedovik2022@gmail.com" target="_blank">
                 <img src="./img/mobile/email.svg">
               </a>
-              <a href="#" target="_blank">
+              <a href="https://eda.yandex.by/r/super_medoviki" target="_blank">
                 <img src="./img/mobile/yandex.svg">
               </a>
             </div>
@@ -478,13 +477,13 @@ const homeHTML = `
   </div>
 </header>
 <aside>
-<a href="#" target="_blank">
+<a href="https://www.instagram.com/super_medovik" target="_blank">
 <img src="./img/mobile/instagramm.svg">
 </a>
-<a href="#" target="_blank">
+<a href="https://www.tiktok.com/@supermedoviki" target="_blank">
 <img src="./img/mobile/tiktok.svg">
 </a>
-<a href="#" target="_blank">
+<a href="mailto:supermedovik2022@gmail.com" target="_blank">
 <img src="./img/mobile/email.svg">
 </a>
 </aside>
@@ -976,6 +975,46 @@ const changeMapPage = (child, initMap) => {
   };
 };
 
+const menuWrapper = new Element("div", ["mobile_menu_wrapper"], "");
+const menuInfo = new Element(
+  "div",
+  ["mobile_menu_info"],
+  `<div class="places_list"></div>
+
+<div class="contacts_links">
+  <a href="https://www.instagram.com/super_medovik" target="_blank">
+    <img src="./img/mobile/instagramm.svg">
+  </a>
+  <a href="https://www.tiktok.com/@supermedoviki" target="_blank">
+    <img src="./img/mobile/tiktok.svg">
+  </a>
+  <a href="mailto:supermedovik2022@gmail.com" target="_blank">
+    <img src="./img/mobile/email.svg">
+  </a>
+  <a href="https://eda.yandex.by/r/super_medoviki" target="_blank">
+    <img src="./img/mobile/yandex.svg">
+  </a>
+</div>`,
+);
+
+const renderPlaces = () => {
+  let placesHtml = "";
+  cafes.forEach((cafe) => {
+    placesHtml += `
+      <div class="place">
+        <img src="./img/mobile/yellowMarker.svg" alt="">
+        <div>
+          <p>${cafe.name}</h3>
+          <div>${cafe.workTime}</div>
+        </div>
+      </div>
+    `;
+  });
+  return placesHtml;
+};
+
+menuInfo.element.querySelector(".places_list").innerHTML = renderPlaces();
+
 const medovikiList = new Element(
   "div",
   ["medoviki_list"],
@@ -984,6 +1023,8 @@ const medovikiList = new Element(
 medoviki.forEach((item) => {
   createCakeCard(item, medovikiList.element);
 });
+menuWrapper.element.appendChild(medovikiList.element);
+menuWrapper.element.appendChild(menuInfo.element);
 
 const home = new Element("div", ["home"], homeHTML);
 const takeOrder = new Element("button", ["button_mobile"], "Оформить заказ");
@@ -1058,7 +1099,7 @@ const menuItems = [
   {
     icon: "./img/mobile/cake.svg",
     activeIcon: "./img/mobile/yellowCake.svg",
-    function: changeListPage(medovikiList.element),
+    function: changeListPage(menuWrapper.element),
   },
   {
     icon: "./img/mobile/marker.svg",

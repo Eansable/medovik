@@ -466,7 +466,6 @@ body {
     grid-template-rows: repeat(auto-fill);
     row-gap: 16px;
     column-gap: 8px;
-    padding-bottom: 94px;
 }
 
 .medoviki_list header {
@@ -560,6 +559,19 @@ body {
 
 .medovik.liked .heart_button img:first-child {
     display: none;
+}
+
+.mobile_menu_info {
+    padding: 24px 20px;
+    background-color: #1c1f22;
+    padding-bottom: 96px;
+    color: #ffffff;
+    display: grid;
+    gap: 24px;
+}
+
+.mobile_menu_info p {
+    margin: 0;
 }
 
 .your_choice {
@@ -678,9 +690,6 @@ body {
 
 .contacts_content .contacts_list {
     color: #ffffff;
-}
-
-.contacts_content .contacts_list {
     display: grid;
     column-gap: 32px;
     row-gap: 16px;
@@ -715,7 +724,7 @@ body {
     grid-column-start: 1;
     grid-column-end: 3;
     display: grid;
-    gap: 24px;
+    gap: 14px;
 }
 
 .places_list .place {
