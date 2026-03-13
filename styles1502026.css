@@ -125,6 +125,7 @@ body {
     height: 24px;
     font-family: "TTNorms", sans-serif;
     font-weight: 500;
+    color: #0c0505;
 }
 
 .manage_count button:disabled {
@@ -178,6 +179,7 @@ body {
     cursor: pointer;
     padding: 18px 30px;
     margin-top: 16px;
+    color: #0c0505;
 }
 
 .order_modal_content.message_success form,
@@ -318,6 +320,7 @@ body {
     border: none;
     border-radius: 0;
     background-color: #fa8a03;
+    color: #0c0505;
 }
 
 .button_mobile {
@@ -352,7 +355,7 @@ body {
     background-color: #000000;
     width: calc(100% - 40px);
     position: fixed;
-    top: calc(100vh - 84px);
+    bottom: 20px;
     left: 20px;
     z-index: 10;
 }
@@ -523,8 +526,49 @@ body {
     transition: transform 0.3s ease;
 }*/
 
+.text-right {
+    text-align: right;
+}
+
 .medovik .medovik_info div p:last-child {
     text-align: end;
+}
+
+.mobile_menu_info h2 {
+    margin: 0;
+    font-weight: 400;
+    font-size: 26px;
+}
+
+.medoviks_article {
+    grid-column-start: 1;
+    grid-column-end: 3;
+    display: grid;
+    gap: 24px;
+    padding: 0 46px;
+    margin: 0 auto;
+}
+
+.medoviks_article_text {
+    display: grid;
+    gap: 20px;
+}
+
+.medoviks_article_title {
+    font-weight: 500;
+}
+
+.medoviks_article_wrapper {
+    display: grid;
+    gap: 40px;
+}
+
+.medoviks_article header,
+.medoviks_article footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
 }
 
 .medovik .medovik_info div {
@@ -632,6 +676,7 @@ body {
     padding: 12px;
     border: none;
     font-family: "TTNorms", sans-serif;
+    color: #0c0505;
 }
 
 .bucket .bucket_order span {

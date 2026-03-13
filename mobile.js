@@ -979,7 +979,40 @@ const menuWrapper = new Element("div", ["mobile_menu_wrapper"], "");
 const menuInfo = new Element(
   "div",
   ["mobile_menu_info"],
-  `<div class="places_list"></div>
+  `
+  <div class="medoviks_article">
+    <header>
+      <img src="./img/mobile/brand-cake.svg" alt="">
+      <img src="./img/mobile/tdesign_cake.svg" alt="">
+      <img src="./img/mobile/cake-piece.svg" alt="">
+    </header>
+      <h2>Главные ингридиенты наших дессертов:</h2>
+    <div class="medoviks_article_wrapper">
+      <div class="medoviks_article_text text-right">
+        <p class="medoviks_article_title">Качество:</p>
+        <p>
+        Мы используем только натуральные ингридиенты,
+        чтобы каждый медовик был настоящим произведением искусства</p>
+      </div>
+      <div class="medoviks_article_text">
+        <p class="medoviks_article_title">Любовь и забота:</p>
+        <p>
+        Мы готовим каждый медовик с любовью и заботой, как для своих близких.</p>
+      </div>
+      <div class="medoviks_article_text text-right">
+        <p class="medoviks_article_title">Наш опыт:</p>
+        <p>
+        С 2020 года мы совершенствуем наш рецепт и готовим вкуснейшие напитки.</p>
+      </div>
+    </div>
+    <footer>
+    <img src="./img/mobile/brand-cake.svg" alt="">
+    <img src="./img/mobile/tdesign_cake.svg" alt="">
+    <img src="./img/mobile/cake-piece.svg" alt="">
+    </footer>
+  </div>
+  <h2>Наши адреса:</h2>
+  <div class="places_list"></div>
 
 <div class="contacts_links">
   <a href="https://www.instagram.com/super_medovik" target="_blank">
