@@ -20,6 +20,46 @@ const getOrder = () => {
   return JSON.parse(order);
 };
 
+const months = [
+  "Январь",
+  "Февраль",
+  "Март",
+  "Апрель",
+  "Май",
+  "Июнь",
+  "Июль",
+  "Август",
+  "Сентябрь",
+  "Октябрь",
+  "Ноябрь",
+  "Декабрь",
+];
+const daysShort = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
+
+class CalendarElement extends Element {
+  dateString = "";
+  constructor() {
+    super("div", ["calendar_element"], `<div class='calendar_wrapper'> </div>`);
+    this.calendar = this.element.querySelector(".calendar_wrapper");
+    this.updateDate();
+  }
+  updateDate(date) {
+    this.dateString = this.formatStringDate(new Date());
+    this.calendar.innerHTML = this.dateString;
+  }
+  format(date) {
+    const day = `${date.getDate()}`.padStart(2, "0");
+    const month = `${date.getMonth() + 1}`.padStart(2, "0");
+    return `${day}.${month}.${date.getFullYear()}`;
+  }
+  formatMonth(date) {
+    return `${months[date.getMonth()]} ${date.getFullYear()}`;
+  }
+  formatStringDate(date) {
+    return `${daysShort[date.getDay() - 1]}, ${months[date.getMonth()]} ${date.getFullYear()}`;
+  }
+}
+
 class BucketElement extends Element {
   weigth = 1;
   plusButton;
@@ -1056,8 +1096,10 @@ const medovikiList = new Element(
 medoviki.forEach((item) => {
   createCakeCard(item, medovikiList.element);
 });
+const calendar = new CalendarElement();
 menuWrapper.element.appendChild(medovikiList.element);
 menuWrapper.element.appendChild(menuInfo.element);
+menuWrapper.element.appendChild(calendar.element);
 
 const home = new Element("div", ["home"], homeHTML);
 const takeOrder = new Element("button", ["button_mobile"], "Оформить заказ");
