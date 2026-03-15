@@ -511,9 +511,15 @@ body {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
 }
-.calendar_picker header span {
+.calendar_picker header span,
+.calendar_days span {
     text-align: center;
     padding: 8px 0;
+}
+
+.calendar_days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
 }
 
 .medoviki_list {

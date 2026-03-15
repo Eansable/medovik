@@ -69,6 +69,7 @@ class CalendarElement extends Element {
     this.monthCurrent = this.element.querySelector(".month_current");
     this.monthPrev = this.element.querySelector(".month_prev");
     this.monthNext = this.element.querySelector(".month_next");
+    this.calendarDays = this.element.querySelector(".calendar_days");
     this.monthNext.addEventListener("click", () => {
       this.changeCurrentMonth(this.currentMonth + 1);
     });
@@ -94,6 +95,23 @@ class CalendarElement extends Element {
     today.setDate(1);
     today.setMonth(this.currentMonth);
     this.monthCurrent.innerHTML = this.formatMonth(today);
+    this.renderDays();
+  }
+  renderDays() {
+    const dayCount = new Date(
+      new Date().getFullYear(),
+      this.currentMonth + 1,
+      0,
+    ).getDate();
+    const days = new Array(dayCount).fill(0).map((_, i) => i + 1);
+    this.calendarDays.innerHTML = days
+      .map((day) => {
+        const date = new Date();
+        date.setDate(day);
+        date.setMonth(this.currentMonth);
+        return `<span style="grid-column-start: ${(date.getDay() % 7) + 1}">${day}</span>`;
+      })
+      .join("");
   }
   format(date) {
     const day = `${date.getDate()}`.padStart(2, "0");
