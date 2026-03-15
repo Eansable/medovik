@@ -459,6 +459,63 @@ body {
     margin-bottom: 20px;
 }
 
+.calendar_element {
+    position: fixed;
+    bottom: calc(96px + 20px);
+    z-index: 10;
+    background-color: #ffffff;
+    width: 90vw;
+    left: 20px;
+    padding: 16px;
+    box-sizing: border-box;
+}
+
+.calendar_element p {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.choose_date_string {
+    margin-top: 36px;
+    font-size: 32px;
+}
+
+.choose_month {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.month_prev,
+.month_next {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    padding: 14px 16px;
+}
+
+.month_prev:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+.month_prev {
+    margin-right: 8px;
+}
+.month_prev img {
+    transform: rotate(180deg);
+}
+
+.calendar_picker header {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+}
+.calendar_picker header span {
+    text-align: center;
+    padding: 8px 0;
+}
+
 .medoviki_list {
     background-image: url(./img/mobile/medovikiBackground.webp);
     min-height: 100vh;

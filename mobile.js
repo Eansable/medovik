@@ -34,18 +34,66 @@ const months = [
   "Ноябрь",
   "Декабрь",
 ];
-const daysShort = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"];
+const daysShort = ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"];
 
 class CalendarElement extends Element {
   dateString = "";
+  currentMonth = new Date().getMonth();
   constructor() {
-    super("div", ["calendar_element"], `<div class='calendar_wrapper'> </div>`);
-    this.calendar = this.element.querySelector(".calendar_wrapper");
+    super(
+      "div",
+      ["calendar_element"],
+      `
+      <p>Выберите дату</p>
+      <div class='choose_date_string'>
+      </div>
+      <div class='choose_month'>
+        <div class='month_current'></div>
+        <div>
+        <button class='month_prev'>
+          <img src='./img/mobile/arrow.svg' alt='prev'>
+        </button>
+        <button class='month_next'>
+          <img src='./img/mobile/arrow.svg' alt='next'>
+        </button>
+        </div>
+
+      </div>
+      <div class='calendar_picker'>
+        <header>${daysShort.map((day) => `<span>${day}</span>`).join("")}</header>
+        <div class='calendar_days'></div>
+      </div>
+      `,
+    );
+    this.chooseDateString = this.element.querySelector(".choose_date_string");
+    this.monthCurrent = this.element.querySelector(".month_current");
+    this.monthPrev = this.element.querySelector(".month_prev");
+    this.monthNext = this.element.querySelector(".month_next");
+    this.monthNext.addEventListener("click", () => {
+      this.changeCurrentMonth(this.currentMonth + 1);
+    });
+    this.monthPrev.addEventListener("click", () => {
+      this.changeCurrentMonth(this.currentMonth - 1);
+    });
     this.updateDate();
   }
   updateDate(date) {
-    this.dateString = this.formatStringDate(new Date());
-    this.calendar.innerHTML = this.dateString;
+    const today = new Date();
+    this.dateString = this.formatStringDate(today);
+    this.chooseDateString.innerHTML = this.dateString;
+    this.changeCurrentMonth(today.getMonth());
+  }
+  changeCurrentMonth(month) {
+    this.currentMonth = month;
+    if (month <= new Date().getMonth()) {
+      this.monthPrev.disabled = true;
+    } else {
+      this.monthPrev.disabled = false;
+    }
+    const today = new Date();
+    today.setDate(1);
+    today.setMonth(this.currentMonth);
+    this.monthCurrent.innerHTML = this.formatMonth(today);
   }
   format(date) {
     const day = `${date.getDate()}`.padStart(2, "0");
@@ -56,7 +104,7 @@ class CalendarElement extends Element {
     return `${months[date.getMonth()]} ${date.getFullYear()}`;
   }
   formatStringDate(date) {
-    return `${daysShort[date.getDay() - 1]}, ${months[date.getMonth()]} ${date.getFullYear()}`;
+    return `${daysShort[date.getDay()]}, ${months[date.getMonth()]} ${date.getDate()}`;
   }
 }
 
