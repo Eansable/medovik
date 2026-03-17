@@ -45,6 +45,10 @@ body {
     display: none !important;
 }
 
+.font-bold {
+    font-weight: 500;
+}
+
 /*MOBILE STYLES*/
 .hidden {
     display: none;
@@ -121,6 +125,7 @@ body {
     height: 24px;
     font-family: "TTNorms", sans-serif;
     font-weight: 500;
+    color: #0c0505;
 }
 
 .manage_count button:disabled {
@@ -174,6 +179,7 @@ body {
     cursor: pointer;
     padding: 18px 30px;
     margin-top: 16px;
+    color: #0c0505;
 }
 
 .order_modal_content.message_success form,
@@ -262,7 +268,7 @@ body {
 
 .order_modal .order_person_info input {
     padding: 12px 14px;
-    border: 1px solid #ccc;
+    border: 1px solid #acacac;
 }
 
 .delivery_type {
@@ -314,6 +320,7 @@ body {
     border: none;
     border-radius: 0;
     background-color: #fa8a03;
+    color: #0c0505;
 }
 
 .button_mobile {
@@ -348,7 +355,7 @@ body {
     background-color: #000000;
     width: calc(100% - 40px);
     position: fixed;
-    top: calc(100vh - 84px);
+    bottom: 20px;
     left: 20px;
     z-index: 10;
 }
@@ -452,6 +459,107 @@ body {
     margin-bottom: 20px;
 }
 
+.calendar_element {
+    position: fixed;
+    bottom: calc(96px + 20px);
+    z-index: 10;
+    background-color: #ffffff;
+    width: 90vw;
+    left: 20px;
+    padding: 16px;
+    box-sizing: border-box;
+}
+
+.calendar_element p {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.choose_date_string {
+    margin-top: 36px;
+    font-size: 32px;
+}
+
+.choose_month {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.month_prev,
+.month_next {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    padding: 14px 16px;
+}
+
+.month_prev:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+.month_prev {
+    margin-right: 8px;
+}
+.month_prev img {
+    transform: rotate(180deg);
+}
+
+.calendar_picker header {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+}
+.calendar_picker header span,
+.calendar_days span {
+    text-align: center;
+    width: 40px;
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.calendar_days span {
+    cursor: pointer;
+}
+.calendar_days span.early {
+    opacity: 0.6;
+    cursor: default;
+}
+.calendar_days span.today {
+    border: 1px solid #fa8a03;
+    color: #fa8a03;
+    border-radius: 50%;
+}
+.calendar_days span.selected {
+    border: 1px solid #fa8a03;
+    color: #ffffff;
+    background-color: #fa8a03;
+    border-radius: 50%;
+}
+
+.order_name,
+.order_phone {
+    border-color: #acacac;
+}
+
+.date_picker {
+    position: relative;
+    background-color: transparent;
+    border: 1px solid #acacac;
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    color: #0c0505;
+}
+
+.calendar_days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+}
+
 .medoviki_list {
     background-image: url(./img/mobile/medovikiBackground.webp);
     min-height: 100vh;
@@ -462,7 +570,6 @@ body {
     grid-template-rows: repeat(auto-fill);
     row-gap: 16px;
     column-gap: 8px;
-    padding-bottom: 94px;
 }
 
 .medoviki_list header {
@@ -520,8 +627,49 @@ body {
     transition: transform 0.3s ease;
 }*/
 
+.text-right {
+    text-align: right;
+}
+
 .medovik .medovik_info div p:last-child {
     text-align: end;
+}
+
+.mobile_menu_info h2 {
+    margin: 0;
+    font-weight: 400;
+    font-size: 26px;
+}
+
+.medoviks_article {
+    grid-column-start: 1;
+    grid-column-end: 3;
+    display: grid;
+    gap: 24px;
+    padding: 0 46px;
+    margin: 0 auto;
+}
+
+.medoviks_article_text {
+    display: grid;
+    gap: 20px;
+}
+
+.medoviks_article_title {
+    font-weight: 500;
+}
+
+.medoviks_article_wrapper {
+    display: grid;
+    gap: 40px;
+}
+
+.medoviks_article header,
+.medoviks_article footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
 }
 
 .medovik .medovik_info div {
@@ -556,6 +704,19 @@ body {
 
 .medovik.liked .heart_button img:first-child {
     display: none;
+}
+
+.mobile_menu_info {
+    padding: 24px 20px;
+    background-color: #1c1f22;
+    padding-bottom: 96px;
+    color: #ffffff;
+    display: grid;
+    gap: 24px;
+}
+
+.mobile_menu_info p {
+    margin: 0;
 }
 
 .your_choice {
@@ -616,6 +777,7 @@ body {
     padding: 12px;
     border: none;
     font-family: "TTNorms", sans-serif;
+    color: #0c0505;
 }
 
 .bucket .bucket_order span {
@@ -674,9 +836,6 @@ body {
 
 .contacts_content .contacts_list {
     color: #ffffff;
-}
-
-.contacts_content .contacts_list {
     display: grid;
     column-gap: 32px;
     row-gap: 16px;
@@ -711,7 +870,7 @@ body {
     grid-column-start: 1;
     grid-column-end: 3;
     display: grid;
-    gap: 24px;
+    gap: 14px;
 }
 
 .places_list .place {
