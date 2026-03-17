@@ -268,7 +268,7 @@ body {
 
 .order_modal .order_person_info input {
     padding: 12px 14px;
-    border: 1px solid #ccc;
+    border: 1px solid #acacac;
 }
 
 .delivery_type {
@@ -514,7 +514,45 @@ body {
 .calendar_picker header span,
 .calendar_days span {
     text-align: center;
-    padding: 8px 0;
+    width: 40px;
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.calendar_days span {
+    cursor: pointer;
+}
+.calendar_days span.early {
+    opacity: 0.6;
+    cursor: default;
+}
+.calendar_days span.today {
+    border: 1px solid #fa8a03;
+    color: #fa8a03;
+    border-radius: 50%;
+}
+.calendar_days span.selected {
+    border: 1px solid #fa8a03;
+    color: #ffffff;
+    background-color: #fa8a03;
+    border-radius: 50%;
+}
+
+.order_name,
+.order_phone {
+    border-color: #acacac;
+}
+
+.date_picker {
+    position: relative;
+    background-color: transparent;
+    border: 1px solid #acacac;
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    color: #0c0505;
 }
 
 .calendar_days {

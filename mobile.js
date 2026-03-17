@@ -20,6 +20,10 @@ const getOrder = () => {
   return JSON.parse(order);
 };
 
+const formatDate = (date) => {
+  return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+};
+
 const months = [
   "Январь",
   "Февраль",
@@ -39,6 +43,7 @@ const daysShort = ["Вс", "Пн", "Вт", "Ср", "Чт", "Пт", "Сб"];
 class CalendarElement extends Element {
   dateString = "";
   currentMonth = new Date().getMonth();
+  selectedDate = new Date();
   constructor() {
     super(
       "div",
@@ -65,6 +70,7 @@ class CalendarElement extends Element {
       </div>
       `,
     );
+    this.element.style.display = "none";
     this.chooseDateString = this.element.querySelector(".choose_date_string");
     this.monthCurrent = this.element.querySelector(".month_current");
     this.monthPrev = this.element.querySelector(".month_prev");
@@ -78,11 +84,13 @@ class CalendarElement extends Element {
     });
     this.updateDate();
   }
-  updateDate(date) {
-    const today = new Date();
-    this.dateString = this.formatStringDate(today);
+  updateDate(date = new Date()) {
+    this.dateString = this.formatStringDate(date);
     this.chooseDateString.innerHTML = this.dateString;
-    this.changeCurrentMonth(today.getMonth());
+    this.changeCurrentMonth(date.getMonth());
+    this.selectedDate = date;
+    if (this.button) this.button.innerHTML = this.format(date);
+    this.renderDays();
   }
   changeCurrentMonth(month) {
     this.currentMonth = month;
@@ -104,14 +112,33 @@ class CalendarElement extends Element {
       0,
     ).getDate();
     const days = new Array(dayCount).fill(0).map((_, i) => i + 1);
-    this.calendarDays.innerHTML = days
-      .map((day) => {
-        const date = new Date();
-        date.setDate(day);
-        date.setMonth(this.currentMonth);
-        return `<span style="grid-column-start: ${(date.getDay() % 7) + 1}">${day}</span>`;
-      })
-      .join("");
+    this.calendarDays.innerHTML = "";
+    days.forEach((day) => {
+      const date = new Date();
+      date.setDate(day);
+      date.setMonth(this.currentMonth);
+      const isToday = formatDate(date) === formatDate(new Date());
+      const isEarly = date < new Date();
+      const isSelected = formatDate(date) === formatDate(this.selectedDate);
+      const dayElement = document.createElement("span");
+      dayElement.textContent = day;
+      if (isToday) {
+        dayElement.classList.add("today");
+      }
+      if (isEarly) {
+        dayElement.classList.add("early");
+      }
+      if (isSelected) {
+        dayElement.classList.add("selected");
+      }
+      dayElement.style.gridColumnStart = (date.getDay() % 7) + 1;
+      dayElement.addEventListener("click", (event) => {
+        event.stopPropagation();
+        this.updateDate(date);
+        this.hide();
+      });
+      this.calendarDays.appendChild(dayElement);
+    });
   }
   format(date) {
     const day = `${date.getDate()}`.padStart(2, "0");
@@ -123,6 +150,13 @@ class CalendarElement extends Element {
   }
   formatStringDate(date) {
     return `${daysShort[date.getDay()]}, ${months[date.getMonth()]} ${date.getDate()}`;
+  }
+  hide() {
+    this.element.style.display = "none";
+  }
+  show(button) {
+    this.button = button;
+    this.element.style.display = "block";
   }
 }
 
@@ -295,6 +329,8 @@ class OrderElement extends Element {
         <form class="order_person_info" id="orderForm">
           <input name="name" placeholder="Имя" class="order_name" required >
           <input name="phone" type="tel" placeholder="Телефон" class="order_phone" required>
+          <button type="button" class="date_picker">Дата доставки</button>
+        </form>
         <div class="delivery_type">
         <label class="radio">
           <input type="radio" name="delivery" value="delivery" checked>
@@ -330,6 +366,12 @@ class OrderElement extends Element {
     this.closeButton = this.element.querySelector(".close-button");
     this.orderButton = this.element.querySelector(".order_cakes");
     this.pickupBlock = this.element.querySelector(".pickupBlock");
+    this.picker = new CalendarElement();
+    this.element.appendChild(this.picker.element);
+    this.datePicker = this.element.querySelector(".date_picker");
+    this.datePicker.addEventListener("click", () => {
+      this.picker.show(this.datePicker);
+    });
 
     this.selectCafes = this.element.querySelector(".select-cafes");
 
@@ -1162,10 +1204,8 @@ const medovikiList = new Element(
 medoviki.forEach((item) => {
   createCakeCard(item, medovikiList.element);
 });
-const calendar = new CalendarElement();
 menuWrapper.element.appendChild(medovikiList.element);
 menuWrapper.element.appendChild(menuInfo.element);
-menuWrapper.element.appendChild(calendar.element);
 
 const home = new Element("div", ["home"], homeHTML);
 const takeOrder = new Element("button", ["button_mobile"], "Оформить заказ");
