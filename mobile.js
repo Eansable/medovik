@@ -132,15 +132,16 @@ class CalendarElement extends Element {
         dayElement.classList.add("selected");
       }
       dayElement.style.gridColumnStart = (date.getDay() % 7) + 1;
-      dayElement.addEventListener("click", (event) => {
-        event.stopPropagation();
-        this.updateDate(date);
-        this.hide();
-      });
+      if (!isEarly)
+        dayElement.addEventListener("click", (event) => {
+          event.stopPropagation();
+          this.updateDate(date);
+          this.hide();
+        });
       this.calendarDays.appendChild(dayElement);
     });
   }
-  format(date) {
+  format(date = this.selectedDate) {
     const day = `${date.getDate()}`.padStart(2, "0");
     const month = `${date.getMonth() + 1}`.padStart(2, "0");
     return `${day}.${month}.${date.getFullYear()}`;
@@ -329,14 +330,14 @@ class OrderElement extends Element {
         <form class="order_person_info" id="orderForm">
           <input name="name" placeholder="Имя" class="order_name" required >
           <input name="phone" type="tel" placeholder="Телефон" class="order_phone" required>
-          <button type="button" class="date_picker">Дата доставки</button>
-        </form>
+          <button type="button" class="date_picker">Дата доставки <img src="./img/mobile/calendar.svg" alt=""></button>
         <div class="delivery_type">
         <label class="radio">
           <input type="radio" name="delivery" value="delivery" checked>
           <span class="radio__custom"></span>
           <span class="radio__text">Доставка (стоимость доставки 5 BYN)</span>
         </label>
+          <input name="address" placeholder="Адрес" class="order_address" >
 
         <label class="radio">
           <input type="radio" name="delivery" value="pickup">
@@ -363,11 +364,13 @@ class OrderElement extends Element {
     this.radioPickupText = this.element.querySelector(".radio__text--pickup");
     this.inputName = this.element.querySelector(".order_name");
     this.inputPhone = this.element.querySelector(".order_phone");
+    this.inputAddress = this.element.querySelector(".order_address");
     this.closeButton = this.element.querySelector(".close-button");
     this.orderButton = this.element.querySelector(".order_cakes");
     this.pickupBlock = this.element.querySelector(".pickupBlock");
+    this.orderModalContent = this.element.querySelector(".order_modal_content");
     this.picker = new CalendarElement();
-    this.element.appendChild(this.picker.element);
+    this.orderModalContent.appendChild(this.picker.element);
     this.datePicker = this.element.querySelector(".date_picker");
     this.datePicker.addEventListener("click", () => {
       this.picker.show(this.datePicker);
@@ -438,6 +441,7 @@ class OrderElement extends Element {
       const data = Object.fromEntries(formData.entries());
       data.pickupPlace = this.pickupCafe;
       const order = getOrder();
+      const date = this.picker.format();
       const price = order
         .map((item) => item.price)
         .reduce((acc, price) => acc + price, 0);
@@ -445,9 +449,10 @@ class OrderElement extends Element {
 Имя: ${data.name}
 Телефон: ${data.phone}
 Тип доставки: ${data.delivery === "delivery" ? "Доставка" : "Самовывоз"}
-${data.delivery === "pickup" ? `Место самовывоза: ${data.pickupPlace.shortName}` : ""}
-${order.map((item, index) => `${index + 1}: ${item.cake.name}, Цена: ${data.delivery === "delivery" ? item.price : item.price * 0.8}, Количество: ${item.weight}кг`).join("\n")}
-Сумма: ${data.delivery === "delivery" ? price : price * 0.8}
+${data.delivery === "pickup" ? `Место самовывоза: ${data.pickupPlace.shortName}` : `Адрес: ${data.address}`}
+Заказ на дату: ${date}
+${order.map((item, index) => `${index + 1}: ${item.cake.name}, Цена: ${data.delivery === "delivery" ? item.price : Math.round(item.price * 0.8 * 100) / 100}, Количество: ${item.weight}кг`).join("\n")}
+Сумма: ${data.delivery === "delivery" ? price : Math.round(price * 0.8 * 100) / 100}
 `;
       const response = await fetch(this.api, {
         method: "POST",
@@ -474,6 +479,8 @@ ${order.map((item, index) => `${index + 1}: ${item.cake.name}, Цена: ${data.
     });
     this.form.addEventListener("change", (e) => {
       const isPickup = e.target.value === "pickup";
+
+      this.inputAddress.classList.toggle("hidden", isPickup);
       this.pickupBlock.classList.toggle("hidden", !isPickup);
       this.selectCafes.classList.toggle("close", !isPickup);
     });
@@ -487,9 +494,7 @@ ${order.map((item, index) => `${index + 1}: ${item.cake.name}, Цена: ${data.
     this.phone = "";
     this.inputPhone.value = "";
     this.element.classList.remove("active");
-    this.element
-      .querySelector(".order_modal_content")
-      .classList.remove("message_success");
+    this.orderModalContent.classList.remove("message_success");
   }
   selectPickupCafe(cafe) {
     this.pickupCafe = cafe;
@@ -497,9 +502,7 @@ ${order.map((item, index) => `${index + 1}: ${item.cake.name}, Цена: ${data.
     this.radioPickupText.innerText = `Самовывоз(${cafe.shortName})`;
   }
   orderSuccess() {
-    this.element
-      .querySelector(".order_modal_content")
-      .classList.add("message_success");
+    this.orderModalContent.classList.add("message_success");
   }
 }
 
