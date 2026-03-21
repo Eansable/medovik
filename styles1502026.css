@@ -217,23 +217,23 @@ body {
 .pickupBlock > span {
     color: #1e53da;
 }
-
+/*
 .select-cafes.close {
     margin-bottom: 0;
-}
-
+}*/
+/*
 .select-cafes {
     display: flex;
     flex-direction: column;
     gap: 24px;
     margin-bottom: 38px;
     padding-top: 16px;
-}
-
+}*/
+/*
 .select-cafes .cafe {
     position: relative;
-}
-
+}*/
+/*
 .select-cafes .cafe:before {
     content: "";
     display: block;
@@ -243,11 +243,11 @@ body {
     position: absolute;
     bottom: -8px;
     left: calc(50% - 50px);
-}
+}*/
 
-.select-cafes.close .cafe {
+/*.select-cafes.close .cafe {
     display: none;
-}
+}*/
 
 .static_info h3 {
     margin: 0;
@@ -269,6 +269,54 @@ body {
 .order_modal .order_person_info input {
     padding: 12px 14px;
     border: 1px solid #acacac;
+}
+
+.custom-select,
+.custom-select-pickup {
+    position: relative;
+    width: 100%;
+    font-family: sans-serif;
+}
+
+.select-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid #acacac;
+    cursor: pointer;
+    background: #fff;
+}
+
+.select-body,
+.select-cafes {
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    right: 0;
+    border: 1px solid #acacac;
+    border-top: none;
+    background: #fff;
+    display: none;
+    z-index: 10;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.custom-select.open .select-body,
+.custom-select-pickup.open .select-cafes {
+    display: block;
+}
+
+.select-item,
+.select-item-cafe {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.select-item:hover,
+.select-item-cafe:hover {
+    background-color: #d0d0d0;
 }
 
 .delivery_type {
