@@ -338,6 +338,8 @@ body {
     width: calc(100% - 16px);
     padding: 8px 0;
     font-weight: 500;
+    position: absolute;
+    bottom: 0px;
 }
 
 .content_mobile {
@@ -551,7 +553,7 @@ body {
     padding: 12px 14px;
     display: flex;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: space-between;
     color: #0c0505;
 }
 
@@ -597,6 +599,7 @@ body {
     line-height: auto;
     font-weight: 400;
     height: auto;
+    padding-bottom: 46px;
 }
 
 .medovik.light {
@@ -673,6 +676,10 @@ body {
 }
 
 .medovik .medovik_info div {
+    display: grid;
+    align-items: center;
+}
+.medovik .medovik_info .card_weight {
     display: grid;
     grid-template-columns: 60% 40%;
     justify-content: space-between;
