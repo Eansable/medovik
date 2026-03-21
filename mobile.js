@@ -314,6 +314,7 @@ class OrderElement extends Element {
   phone = "";
   deliveryType = "delivery";
   pickupCafe;
+  time = "не указано";
   constructor() {
     super("div", ["order_modal"]);
     this.element.innerHTML = `
@@ -331,6 +332,25 @@ class OrderElement extends Element {
           <input name="name" placeholder="Имя" class="order_name" required >
           <input name="phone" type="tel" placeholder="Телефон" class="order_phone" required>
           <button type="button" class="date_picker">Дата доставки <img src="./img/mobile/calendar.svg" alt=""></button>
+          <div class="custom-select" id="select">
+            <div class="select-header">
+              <span class="select-current">Выберите время</span>
+              <span class="select-arrow">▼</span>
+            </div>
+
+            <div class="select-body">
+              <div class="select-item" data-value="1">10:00 - 11:00</div>
+              <div class="select-item" data-value="2">11:00 - 12:00</div>
+              <div class="select-item" data-value="3">12:00 - 13:00</div>
+              <div class="select-item" data-value="4">13:00 - 14:00</div>
+              <div class="select-item" data-value="5">14:00 - 15:00</div>
+              <div class="select-item" data-value="6">15:00 - 16:00</div>
+              <div class="select-item" data-value="7">16:00 - 17:00</div>
+              <div class="select-item" data-value="8">17:00 - 18:00</div>
+              <div class="select-item" data-value="9">18:00 - 19:00</div>
+              <div class="select-item" data-value="10">19:00 - 20:00</div>
+            </div>
+          </div>
         <div class="delivery_type">
         <label class="radio">
           <input type="radio" name="delivery" value="delivery" checked>
@@ -345,9 +365,14 @@ class OrderElement extends Element {
           <span class="radio__text radio__text--pickup">Самовывоз (<span class="font-bold">скидка 20%</span>)</span>
         </label>
         </div>
-        <div class="pickupBlock hidden">
-          <span>Выбрать пункт самовывоза</span> <img src="img/mobile/blueArrow.svg" alt="">
-          <div class="select-cafes close">
+
+        <div class="custom-select-pickup">
+          <div class="select-header">
+            <span class="select-current">Выберите пункт самовывоза</span>
+            <span class="select-arrow">▼</span>
+          </div>
+
+          <div class="select-cafes">
 
           </div>
         </div>
@@ -367,7 +392,6 @@ class OrderElement extends Element {
     this.inputAddress = this.element.querySelector(".order_address");
     this.closeButton = this.element.querySelector(".close-button");
     this.orderButton = this.element.querySelector(".order_cakes");
-    this.pickupBlock = this.element.querySelector(".pickupBlock");
     this.orderModalContent = this.element.querySelector(".order_modal_content");
     this.picker = new CalendarElement();
     this.orderModalContent.appendChild(this.picker.element);
@@ -376,22 +400,55 @@ class OrderElement extends Element {
       this.picker.show(this.datePicker);
     });
 
-    this.selectCafes = this.element.querySelector(".select-cafes");
+    this.select = this.element.querySelector(".custom-select");
+    this.header = this.select.querySelector(".select-header");
+    this.items = this.select.querySelectorAll(".select-item");
+    this.current = this.select.querySelector(".select-current");
 
-    this.pickupBlock.addEventListener("click", (event) => {
-      event.stopPropagation();
-      this.selectCafes.classList.toggle("close");
-    });
+    this.selectPickup = this.element.querySelector(".custom-select-pickup");
+    this.selectCafes = this.element.querySelector(".select-cafes");
 
     cafes.forEach((cafe) => {
       const cafeElement = document.createElement("div");
-      cafeElement.classList.add("cafe");
+      cafeElement.classList.add("select-item-cafe");
       cafeElement.textContent = cafe.name;
+      cafeElement.dataset.value = cafe.id;
       cafeElement.addEventListener("click", (event) => {
         event.stopPropagation();
-        this.selectPickupCafe(cafe);
+        this.currentPickup.textContent = cafe.name;
+        this.pickupCafe = cafe.name;
+        this.selectPickup.dataset.value = cafe.id;
+        this.selectPickup.classList.remove("open");
       });
       this.selectCafes.appendChild(cafeElement);
+    });
+    this.headerPickup = this.selectPickup.querySelector(".select-header");
+    this.itemsPickup = this.selectPickup.querySelectorAll(".select-item-cafe");
+    this.currentPickup = this.selectPickup.querySelector(".select-current");
+
+    this.header.addEventListener("click", () => {
+      this.select.classList.toggle("open");
+    });
+    this.headerPickup.addEventListener("click", () => {
+      this.selectPickup.classList.toggle("open");
+    });
+
+    this.items.forEach((item) => {
+      item.addEventListener("click", () => {
+        this.current.textContent = item.textContent;
+        this.time = item.textContent;
+        this.select.dataset.value = item.dataset.value;
+        this.select.classList.remove("open");
+      });
+    });
+
+    this.element.addEventListener("click", (e) => {
+      if (!this.select.contains(e.target)) {
+        this.select.classList.remove("open");
+      }
+      if (!this.selectPickup.contains(e.target)) {
+        this.selectPickup.classList.remove("open");
+      }
     });
 
     this.closeButton.addEventListener("click", () => {
@@ -449,8 +506,8 @@ class OrderElement extends Element {
 Имя: ${data.name}
 Телефон: ${data.phone}
 Тип доставки: ${data.delivery === "delivery" ? "Доставка" : "Самовывоз"}
-${data.delivery === "pickup" ? `Место самовывоза: ${data.pickupPlace.shortName}` : `Адрес: ${data.address}`}
-Заказ на дату: ${date}
+${data.delivery === "pickup" ? `Место самовывоза: ${data.pickupPlace}` : `Адрес: ${data.address}`}
+Заказ на дату: ${date} время: ${this.time}
 ${order.map((item, index) => `${index + 1}: ${item.cake.name}, Цена: ${data.delivery === "delivery" ? item.price : Math.round(item.price * 0.8 * 100) / 100}, Количество: ${item.weight}кг`).join("\n")}
 Сумма: ${data.delivery === "delivery" ? price : Math.round(price * 0.8 * 100) / 100}
 `;
@@ -481,7 +538,7 @@ ${order.map((item, index) => `${index + 1}: ${item.cake.name}, Цена: ${data.
       const isPickup = e.target.value === "pickup";
 
       this.inputAddress.classList.toggle("hidden", isPickup);
-      this.pickupBlock.classList.toggle("hidden", !isPickup);
+      this.selectPickup.classList.toggle("hidden", !isPickup);
       this.selectCafes.classList.toggle("close", !isPickup);
     });
   }
@@ -495,11 +552,6 @@ ${order.map((item, index) => `${index + 1}: ${item.cake.name}, Цена: ${data.
     this.inputPhone.value = "";
     this.element.classList.remove("active");
     this.orderModalContent.classList.remove("message_success");
-  }
-  selectPickupCafe(cafe) {
-    this.pickupCafe = cafe;
-    this.selectCafes.classList.add("close");
-    this.radioPickupText.innerText = `Самовывоз(${cafe.shortName})`;
   }
   orderSuccess() {
     this.orderModalContent.classList.add("message_success");
@@ -1030,8 +1082,7 @@ const menu = new Element("div", ["mobile_menu"]);
 const page = new Element("div", ["page"]);
 
 const renderYourChoiceCakes = (child, isUpdateCakes) => {
-  child.innerHTML =
-    "<header><h2>YOU<img src='./img/mobile/yellowHeart.svg' alt=''>:</h2></header>";
+  child.innerHTML = "<header><h2>Избранное</h2></header>";
   const savedMedoviksStr = localStorage.getItem("favoritesCake");
   if (savedMedoviksStr) {
     const savedMedoviks = JSON.parse(savedMedoviksStr);
@@ -1218,7 +1269,7 @@ home.element.appendChild(takeOrder.element);
 const yourChoice = new Element(
   "div",
   ["your_choice"],
-  "<header><h2>YOU<img src='./img/mobile/yellowHeart.svg' alt=''>:</h2></header>",
+  "<header><h2>Избранное</h2></header>",
 );
 
 const bucket = new Element(
@@ -1258,7 +1309,7 @@ bucket.element.appendChild(orderModal.element);
 const contacts = new Element(
   "div",
   ["mobile_contacts"],
-  "<h2>WE ARE HERE:<h2>",
+  "<h2>Где нас найти:<h2>",
 );
 const contactsTabs = new TabsElement();
 contacts.element.appendChild(contactsTabs.element);
