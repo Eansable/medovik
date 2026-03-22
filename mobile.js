@@ -366,7 +366,7 @@ class OrderElement extends Element {
         </label>
         </div>
 
-        <div class="custom-select-pickup">
+        <div class="custom-select-pickup hidden">
           <div class="select-header">
             <span class="select-current">Выберите пункт самовывоза</span>
             <span class="select-arrow">▼</span>
