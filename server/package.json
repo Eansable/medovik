@@ -1,0 +1,21 @@
+{
+  "name": "sm.by",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "type": "module",
+  "scripts": {
+    "dev": "node --import=tsx --watch --env-file=.env src/index.ts",
+    "build": "tsc"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "@types/express": "github:types/express",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.2"
+  }
+}
