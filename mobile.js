@@ -47,8 +47,12 @@ class CalendarElement extends Element {
   constructor() {
     super(
       "div",
-      ["calendar_element"],
+      ["picker_overlay"],
       `
+      <div class="calendar_element">
+      <button class="close-button close-picker-button">
+        <img src="./img/mobile/cross.svg">
+      </button>
       <p>Выберите дату</p>
       <div class='choose_date_string'>
       </div>
@@ -68,6 +72,7 @@ class CalendarElement extends Element {
         <header>${daysShort.map((day) => `<span>${day}</span>`).join("")}</header>
         <div class='calendar_days'></div>
       </div>
+      </div>
       `,
     );
     this.element.style.display = "none";
@@ -76,6 +81,10 @@ class CalendarElement extends Element {
     this.monthPrev = this.element.querySelector(".month_prev");
     this.monthNext = this.element.querySelector(".month_next");
     this.calendarDays = this.element.querySelector(".calendar_days");
+    this.closeButton = this.element.querySelector(".close-picker-button");
+    this.closeButton.addEventListener("click", () => {
+      this.hide();
+    });
     this.monthNext.addEventListener("click", () => {
       this.changeCurrentMonth(this.currentMonth + 1);
     });
@@ -1263,8 +1272,13 @@ menuWrapper.element.appendChild(menuInfo.element);
 
 const home = new Element("div", ["home"], homeHTML);
 const takeOrder = new Element("button", ["button_mobile"], "Оформить заказ");
+const callUs = document.createElement("a");
+callUs.href = "tel:+375339929998";
+callUs.classList.add("call_us");
+callUs.innerText = "Связаться с нами";
 takeOrder.element.addEventListener("click", changePage(medovikiList.element));
 home.element.appendChild(takeOrder.element);
+home.element.appendChild(callUs);
 
 const yourChoice = new Element(
   "div",
