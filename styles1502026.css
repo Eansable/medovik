@@ -59,6 +59,7 @@ body {
     background-color: #0c050599;
     position: fixed;
     top: 0;
+    left: 0;
     width: 100%;
     height: 100vh;
     box-sizing: border-box;
@@ -89,7 +90,8 @@ body {
 }
 
 .bucket_modal_content header .close-button,
-.order_modal_content header .close-button {
+.order_modal_content header .close-button,
+.calendar_element .close-button {
     background-color: transparent;
     border: none;
     cursor: pointer;
@@ -149,6 +151,11 @@ body {
     margin: 0;
     font-size: 16px;
     font-weight: 500;
+}
+
+.call_us {
+    color: #fff;
+    margin-left: 18px;
 }
 
 .summary div {
@@ -520,10 +527,24 @@ body {
     box-sizing: border-box;
 }
 
+.calendar_element .close-button {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+}
+
 .calendar_element p {
     margin: 0;
     font-size: 16px;
     font-weight: 500;
+}
+.picker_overlay {
+    height: 100vh;
+    width: 100vw;
+    background-color: #0c050599;
+    position: absolute;
+    top: 0;
+    left: -16px;
 }
 
 .choose_date_string {
