@@ -155,9 +155,15 @@ body {
 
 .call_us {
     color: #fff;
-    margin-left: 18px;
+    margin-left: 4px;
+    display: flex;
+    gap: 4px;
+    align-items: center;
 }
 
+.call_us img {
+    width: 16px;
+}
 .summary div {
     width: 100%;
     display: flex;
@@ -613,6 +619,15 @@ body {
 .order_name,
 .order_phone {
     border-color: #acacac;
+}
+.order_phone {
+    width: 100%;
+}
+
+.order_phone_container {
+    display: flex;
+    align-items: center;
+    gap: 4px;
 }
 
 .date_picker {

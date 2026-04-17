@@ -293,26 +293,11 @@ class BucketElement extends Element {
 
 const input = document.getElementById("phone");
 
-const COUNTRY = "375";
 const OPERATORS = ["29", "44", "33", "25"];
-const MAX_DIGITS = 12;
+const MAX_DIGITS = 9;
 
 function getDigits(value) {
   return value.replace(/\D/g, "");
-}
-
-function formatPhone(digits) {
-  let result = "+375";
-
-  if (digits.length > 3) {
-    result += "(" + digits.slice(3, 5);
-  }
-
-  if (digits.length > 5) {
-    result += ")" + digits.slice(5);
-  }
-
-  return result;
 }
 
 class OrderElement extends Element {
@@ -339,7 +324,7 @@ class OrderElement extends Element {
         </div>
         <form class="order_person_info" id="orderForm">
           <input name="name" placeholder="Имя" class="order_name" required >
-          <input name="phone" type="tel" placeholder="Телефон" class="order_phone" required>
+          <div class="order_phone_container">+375 <input name="phone" type="tel" placeholder="Телефон" class="order_phone" required></div>
           <button type="button" class="date_picker">Дата доставки <img src="./img/mobile/calendar.svg" alt=""></button>
           <div class="custom-select" id="select">
             <div class="select-header">
@@ -464,29 +449,19 @@ class OrderElement extends Element {
       this.hide();
     });
 
-    this.inputPhone.addEventListener("focus", () => {
-      if (!this.inputPhone.value) {
-        this.inputPhone.value = "+375(";
-      }
-    });
-
     this.inputPhone.addEventListener("input", () => {
       let digits = getDigits(this.inputPhone.value);
 
-      if (!digits.startsWith(COUNTRY)) {
-        digits = COUNTRY + digits;
-      }
-
       digits = digits.slice(0, MAX_DIGITS);
 
-      if (digits.length >= 5) {
-        const operator = digits.slice(3, 5);
+      if (digits.length >= 2) {
+        const operator = digits.slice(0, 2);
         if (!OPERATORS.includes(operator)) {
-          digits = digits.slice(0, 3);
+          digits = digits.slice(0, 2);
         }
       }
 
-      this.inputPhone.value = formatPhone(digits);
+      this.inputPhone.value = digits;
       this.inputPhone.setSelectionRange(
         this.inputPhone.value.length,
         this.inputPhone.value.length,
@@ -513,7 +488,7 @@ class OrderElement extends Element {
         .reduce((acc, price) => acc + price, 0);
       const text = `Заказ с мобильной версии.
 Имя: ${data.name}
-Телефон: ${data.phone}
+Телефон: +375${data.phone}
 Тип доставки: ${data.delivery === "delivery" ? "Доставка" : "Самовывоз"}
 ${data.delivery === "pickup" ? `Место самовывоза: ${data.pickupPlace}` : `Адрес: ${data.address}`}
 Заказ на дату: ${date} время: ${this.time}
@@ -545,7 +520,7 @@ ${order.map((item, index) => `${index + 1}: ${item.cake.name}, Цена: ${data.
     });
     this.form.addEventListener("change", (e) => {
       const isPickup = e.target.value === "pickup";
-
+      console.log(e.target.value);
       this.inputAddress.classList.toggle("hidden", isPickup);
       this.selectPickup.classList.toggle("hidden", !isPickup);
       this.selectCafes.classList.toggle("close", !isPickup);
@@ -1275,7 +1250,8 @@ const takeOrder = new Element("button", ["button_mobile"], "Оформить з�
 const callUs = document.createElement("a");
 callUs.href = "tel:+375339929998";
 callUs.classList.add("call_us");
-callUs.innerText = "Связаться с нами";
+callUs.innerHTML =
+  "<img src='./img/mobile/phone.svg' /><p>Связаться с нами</p> ";
 takeOrder.element.addEventListener("click", changePage(medovikiList.element));
 home.element.appendChild(takeOrder.element);
 home.element.appendChild(callUs);
