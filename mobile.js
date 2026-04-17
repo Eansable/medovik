@@ -520,7 +520,6 @@ ${order.map((item, index) => `${index + 1}: ${item.cake.name}, Цена: ${data.
     });
     this.form.addEventListener("change", (e) => {
       const isPickup = e.target.value === "pickup";
-      console.log(e.target.value);
       this.inputAddress.classList.toggle("hidden", isPickup);
       this.selectPickup.classList.toggle("hidden", !isPickup);
       this.selectCafes.classList.toggle("close", !isPickup);
