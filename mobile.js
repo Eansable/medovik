@@ -657,9 +657,9 @@ const updateMenuItem = () => {
 
 const homeHTML = `
 <header>
-  <img src="./img/mobile/logo-with-map.jpg" class="logo_mobile">
+  <img src="./img/mobile/logo-with-map.png" class="logo_mobile">
   <div>
-  <img src="./img/mobile/super-edovik.jpg">
+  <img src="./img/mobile/super-edovik.png">
   </div>
 </header>
 <aside>
