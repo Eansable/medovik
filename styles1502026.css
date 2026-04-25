@@ -45,6 +45,10 @@ body {
     display: none !important;
 }
 
+.font-bold {
+    font-weight: 500;
+}
+
 /*MOBILE STYLES*/
 .hidden {
     display: none;
@@ -55,6 +59,7 @@ body {
     background-color: #0c050599;
     position: fixed;
     top: 0;
+    left: 0;
     width: 100%;
     height: 100vh;
     box-sizing: border-box;
@@ -85,7 +90,8 @@ body {
 }
 
 .bucket_modal_content header .close-button,
-.order_modal_content header .close-button {
+.order_modal_content header .close-button,
+.calendar_element .close-button {
     background-color: transparent;
     border: none;
     cursor: pointer;
@@ -121,6 +127,7 @@ body {
     height: 24px;
     font-family: "TTNorms", sans-serif;
     font-weight: 500;
+    color: #0c0505;
 }
 
 .manage_count button:disabled {
@@ -146,6 +153,17 @@ body {
     font-weight: 500;
 }
 
+.call_us {
+    color: #fff;
+    margin-left: 4px;
+    display: flex;
+    gap: 4px;
+    align-items: center;
+}
+
+.call_us img {
+    width: 16px;
+}
 .summary div {
     width: 100%;
     display: flex;
@@ -174,6 +192,7 @@ body {
     cursor: pointer;
     padding: 18px 30px;
     margin-top: 16px;
+    color: #0c0505;
 }
 
 .order_modal_content.message_success form,
@@ -211,23 +230,23 @@ body {
 .pickupBlock > span {
     color: #1e53da;
 }
-
+/*
 .select-cafes.close {
     margin-bottom: 0;
-}
-
+}*/
+/*
 .select-cafes {
     display: flex;
     flex-direction: column;
     gap: 24px;
     margin-bottom: 38px;
     padding-top: 16px;
-}
-
+}*/
+/*
 .select-cafes .cafe {
     position: relative;
-}
-
+}*/
+/*
 .select-cafes .cafe:before {
     content: "";
     display: block;
@@ -237,11 +256,11 @@ body {
     position: absolute;
     bottom: -8px;
     left: calc(50% - 50px);
-}
+}*/
 
-.select-cafes.close .cafe {
+/*.select-cafes.close .cafe {
     display: none;
-}
+}*/
 
 .static_info h3 {
     margin: 0;
@@ -262,7 +281,55 @@ body {
 
 .order_modal .order_person_info input {
     padding: 12px 14px;
-    border: 1px solid #ccc;
+    border: 1px solid #acacac;
+}
+
+.custom-select,
+.custom-select-pickup {
+    position: relative;
+    width: 100%;
+    font-family: sans-serif;
+}
+
+.select-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    border: 1px solid #acacac;
+    cursor: pointer;
+    background: #fff;
+}
+
+.select-body,
+.select-cafes {
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    right: 0;
+    border: 1px solid #acacac;
+    border-top: none;
+    background: #fff;
+    display: none;
+    z-index: 10;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.custom-select.open .select-body,
+.custom-select-pickup.open .select-cafes {
+    display: block;
+}
+
+.select-item,
+.select-item-cafe {
+    padding: 10px;
+    cursor: pointer;
+}
+
+.select-item:hover,
+.select-item-cafe:hover {
+    background-color: #d0d0d0;
 }
 
 .delivery_type {
@@ -314,6 +381,7 @@ body {
     border: none;
     border-radius: 0;
     background-color: #fa8a03;
+    color: #0c0505;
 }
 
 .button_mobile {
@@ -331,6 +399,8 @@ body {
     width: calc(100% - 16px);
     padding: 8px 0;
     font-weight: 500;
+    position: absolute;
+    bottom: 0px;
 }
 
 .content_mobile {
@@ -348,7 +418,7 @@ body {
     background-color: #000000;
     width: calc(100% - 40px);
     position: fixed;
-    top: calc(100vh - 84px);
+    bottom: 20px;
     left: 20px;
     z-index: 10;
 }
@@ -452,6 +522,130 @@ body {
     margin-bottom: 20px;
 }
 
+.calendar_element {
+    position: fixed;
+    bottom: calc(96px + 20px);
+    z-index: 10;
+    background-color: #ffffff;
+    width: 90vw;
+    left: 20px;
+    padding: 16px;
+    box-sizing: border-box;
+}
+
+.calendar_element .close-button {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+}
+
+.calendar_element p {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 500;
+}
+.picker_overlay {
+    height: 100vh;
+    width: 100vw;
+    background-color: #0c050599;
+    position: absolute;
+    top: 0;
+    left: -16px;
+}
+
+.choose_date_string {
+    margin-top: 36px;
+    font-size: 32px;
+}
+
+.choose_month {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.month_prev,
+.month_next {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    padding: 14px 16px;
+}
+
+.month_prev:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+.month_prev {
+    margin-right: 8px;
+}
+.month_prev img {
+    transform: rotate(180deg);
+}
+
+.calendar_picker header {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+}
+.calendar_picker header span,
+.calendar_days span {
+    text-align: center;
+    width: 40px;
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.calendar_days span {
+    cursor: pointer;
+}
+.calendar_days span.early {
+    opacity: 0.6;
+    cursor: default;
+}
+.calendar_days span.today {
+    border: 1px solid #fa8a03;
+    color: #fa8a03;
+    border-radius: 50%;
+}
+.calendar_days span.selected {
+    border: 1px solid #fa8a03;
+    color: #ffffff;
+    background-color: #fa8a03;
+    border-radius: 50%;
+}
+
+.order_name,
+.order_phone {
+    border-color: #acacac;
+}
+.order_phone {
+    width: 100%;
+}
+
+.order_phone_container {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.date_picker {
+    position: relative;
+    background-color: transparent;
+    border: 1px solid #acacac;
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #0c0505;
+}
+
+.calendar_days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+}
+
 .medoviki_list {
     background-image: url(./img/mobile/medovikiBackground.webp);
     min-height: 100vh;
@@ -462,7 +656,6 @@ body {
     grid-template-rows: repeat(auto-fill);
     row-gap: 16px;
     column-gap: 8px;
-    padding-bottom: 94px;
 }
 
 .medoviki_list header {
@@ -490,6 +683,7 @@ body {
     line-height: auto;
     font-weight: 400;
     height: auto;
+    padding-bottom: 46px;
 }
 
 .medovik.light {
@@ -520,11 +714,56 @@ body {
     transition: transform 0.3s ease;
 }*/
 
+.text-right {
+    text-align: right;
+}
+
 .medovik .medovik_info div p:last-child {
     text-align: end;
 }
 
+.mobile_menu_info h2 {
+    margin: 0;
+    font-weight: 400;
+    font-size: 26px;
+}
+
+.medoviks_article {
+    grid-column-start: 1;
+    grid-column-end: 3;
+    display: grid;
+    gap: 24px;
+    padding: 0 46px;
+    margin: 0 auto;
+}
+
+.medoviks_article_text {
+    display: grid;
+    gap: 20px;
+}
+
+.medoviks_article_title {
+    font-weight: 500;
+}
+
+.medoviks_article_wrapper {
+    display: grid;
+    gap: 40px;
+}
+
+.medoviks_article header,
+.medoviks_article footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
 .medovik .medovik_info div {
+    display: grid;
+    align-items: center;
+}
+.medovik .medovik_info .card_weight {
     display: grid;
     grid-template-columns: 60% 40%;
     justify-content: space-between;
@@ -556,6 +795,19 @@ body {
 
 .medovik.liked .heart_button img:first-child {
     display: none;
+}
+
+.mobile_menu_info {
+    padding: 24px 20px;
+    background-color: #1c1f22;
+    padding-bottom: 96px;
+    color: #ffffff;
+    display: grid;
+    gap: 24px;
+}
+
+.mobile_menu_info p {
+    margin: 0;
 }
 
 .your_choice {
@@ -616,6 +868,7 @@ body {
     padding: 12px;
     border: none;
     font-family: "TTNorms", sans-serif;
+    color: #0c0505;
 }
 
 .bucket .bucket_order span {
@@ -674,9 +927,6 @@ body {
 
 .contacts_content .contacts_list {
     color: #ffffff;
-}
-
-.contacts_content .contacts_list {
     display: grid;
     column-gap: 32px;
     row-gap: 16px;
@@ -711,7 +961,7 @@ body {
     grid-column-start: 1;
     grid-column-end: 3;
     display: grid;
-    gap: 24px;
+    gap: 14px;
 }
 
 .places_list .place {
