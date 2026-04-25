@@ -69,7 +69,7 @@ class CalendarElement extends Element {
 
       </div>
       <div class='calendar_picker'>
-        <header>${daysShort.map((day) => `<span>${day}</span>`).join("")}</header>
+        <header>${[...daysShort.slice(1), daysShort[0]].map((day, i) => `<span>${day}</span>`).join("")}</header>
         <div class='calendar_days'></div>
       </div>
       </div>
@@ -123,9 +123,7 @@ class CalendarElement extends Element {
     const days = new Array(dayCount).fill(0).map((_, i) => i + 1);
     this.calendarDays.innerHTML = "";
     days.forEach((day) => {
-      const date = new Date();
-      date.setDate(day);
-      date.setMonth(this.currentMonth);
+      const date = new Date(new Date().getFullYear(), this.currentMonth, day, 23, 59,59);
       const isToday = formatDate(date) === formatDate(new Date());
       const isEarly = date < new Date();
       const isSelected = formatDate(date) === formatDate(this.selectedDate);
@@ -140,7 +138,7 @@ class CalendarElement extends Element {
       if (isSelected) {
         dayElement.classList.add("selected");
       }
-      dayElement.style.gridColumnStart = (date.getDay() % 7) + 1;
+      dayElement.style.gridColumnStart = ((date.getDay() + 6) % 7) + 1;
       if (!isEarly)
         dayElement.addEventListener("click", (event) => {
           event.stopPropagation();
