@@ -1,0 +1,12 @@
+.users_wrapper {
+  display: grid;
+  gap: 12px;
+}
+
+.users_wrapper .user_item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  background-color: #f5f5f5;
+}

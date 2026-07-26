@@ -123,7 +123,7 @@ class CalendarElement extends Element {
     const days = new Array(dayCount).fill(0).map((_, i) => i + 1);
     this.calendarDays.innerHTML = "";
     days.forEach((day) => {
-      const date = new Date(new Date().getFullYear(), this.currentMonth, day, 23, 59,59);
+      const date = new Date(new Date().getFullYear(), this.currentMonth, day, 23, 59, 59);
       const isToday = formatDate(date) === formatDate(new Date());
       const isEarly = date < new Date();
       const isSelected = formatDate(date) === formatDate(this.selectedDate);
@@ -174,6 +174,15 @@ class BucketElement extends Element {
   minusButton;
   addToBucketButton;
   cake = medoviki[0];
+
+  getMinWeight() {
+    return Math.min(...Object.keys(this.cake.prices).map(Number));
+  }
+
+  getMaxWeight() {
+    return Math.max(...Object.keys(this.cake.prices).map(Number));
+  }
+
   constructor() {
     super("div", ["bucket_modal"]);
     this.element.innerHTML = `
@@ -197,7 +206,7 @@ class BucketElement extends Element {
           <h3>Итого:</h3>
           <div class="summary_count">
             Количество
-            <span class="span_summary_weight">${this.cake.minWeight}кг</span>
+            <span class="span_summary_weight">${this.getMinWeight()}кг</span>
           </div>
           <div class="summary_price">
             Цена
@@ -251,12 +260,15 @@ class BucketElement extends Element {
     this.checkWeight();
   }
   checkWeight() {
-    if (this.weigth >= this.cake.maxWeight) {
+    const minWeight = this.getMinWeight();
+    const maxWeight = this.getMaxWeight();
+
+    if (this.weigth >= maxWeight) {
       this.plusButton.disabled = true;
     } else {
       this.plusButton.disabled = false;
     }
-    if (this.weigth <= this.cake.minWeight) {
+    if (this.weigth <= minWeight) {
       this.minusButton.disabled = true;
     } else {
       this.minusButton.disabled = false;
@@ -279,7 +291,7 @@ class BucketElement extends Element {
   }
   changeCake(newCake) {
     this.cake = newCake;
-    this.weigth = this.cake.minWeight;
+    this.weigth = this.getMinWeight();
     this.bucketWeight.textContent = this.weigth + "кг";
     this.bucketPrice.textContent = `${this.cake.prices[this.weigth]} byn`;
     this.modalName.textContent = newCake.name;
@@ -344,21 +356,16 @@ class OrderElement extends Element {
             </div>
           </div>
         <div class="delivery_type">
-        <label class="radio">
-          <input type="radio" name="delivery" value="delivery" checked>
-          <span class="radio__custom"></span>
-          <span class="radio__text">Доставка (стоимость доставки 5 BYN)</span>
-        </label>
-          <input name="address" placeholder="Адрес" class="order_address" >
+        
 
         <label class="radio">
-          <input type="radio" name="delivery" value="pickup">
+          <input type="radio" name="delivery" value="pickup" checked>
           <span class="radio__custom"></span>
-          <span class="radio__text radio__text--pickup">Самовывоз (<span class="font-bold">скидка 20%</span>)</span>
+          <span class="radio__text radio__text--pickup">Самовывоз</span>
         </label>
         </div>
 
-        <div class="custom-select-pickup hidden">
+        <div class="custom-select-pickup ">
           <div class="select-header">
             <span class="select-current">Выберите пункт самовывоза</span>
             <span class="select-arrow">▼</span>
@@ -368,6 +375,13 @@ class OrderElement extends Element {
 
           </div>
         </div>
+
+        <label class="radio">
+          <input type="radio" name="delivery" value="delivery" >
+          <span class="radio__custom"></span>
+          <span class="radio__text">Доставка +20% (стоимость доставки 5 BYN)</span>
+        </label>
+          <input name="address" placeholder="Адрес" class="order_address hidden" >
         <button class="order_cakes">Оформить заказ</button>
 
         </form>
@@ -491,8 +505,8 @@ class OrderElement extends Element {
 Тип доставки: ${data.delivery === "delivery" ? "Доставка" : "Самовывоз"}
 ${data.delivery === "pickup" ? `Место самовывоза: ${data.pickupPlace}` : `Адрес: ${data.address}`}
 Заказ на дату: ${date} время: ${this.time}
-${order.map((item, index) => `${index + 1}: ${item.cake.name}, Цена: ${data.delivery === "delivery" ? item.price : Math.round(item.price * 0.8 * 100) / 100}, Количество: ${item.weight}кг`).join("\n")}
-Сумма: ${data.delivery === "delivery" ? price : Math.round(price * 0.8 * 100) / 100}
+${order.map((item, index) => `${index + 1}: ${item.cake.name}, Цена: ${data.delivery === "pickup" ? item.price : Math.round(item.price * 1.2 * 100) / 100}, Количество: ${item.weight}кг`).join("\n")}
+Сумма: ${data.delivery === "pickup" ? price : Math.round(price * 1.2 * 100) / 100}
 `;
       const response = await fetch(this.api, {
         method: "POST",
@@ -773,192 +787,155 @@ const medoviki = [
   {
     id: 10,
     name: "Классический",
-    price: 50,
     prices: {
-      1: 52,
-      1.5: 75,
-      2: 96,
-      2.5: 122,
-      3: 148,
+      1: 45,
+      1.5: 65,
+      2: 80,
+      2.5: 105,
+      3: 125,
     },
     image: "./img/mobile/cakes/classic.jpg",
     color: "#AF7330",
-    maxWeight: 3,
-    minWeight: 1,
   },
   {
     id: 5,
     name: "Малиновый",
-    price: 50,
     prices: {
-      1: 52,
-      1.5: 75,
-      2: 96,
-      2.5: 122,
-      3: 148,
+        1: 45,
+      1.5: 65,
+      2: 80,
+      2.5: 105,
+      3: 125,
     },
     image: "./img/mobile/cakes/raspberry.webp",
     color: "#ED6698",
-    maxWeight: 3,
-    minWeight: 1,
   },
   {
     id: 11,
     name: "Лимонный",
-    price: 50,
     prices: {
-      1: 52,
-      1.5: 75,
-      2: 96,
-      2.5: 122,
-      3: 148,
+       1: 45,
+      1.5: 65,
+      2: 80,
+      2.5: 105,
+      3: 125,
     },
     image: "./img/mobile/cakes/lemon.jpg",
     color: "#DBD228",
-    maxWeight: 3,
-    minWeight: 1,
   },
   {
     id: 3,
     name: "Черничный",
-    price: 50,
     prices: {
-      1: 52,
-      1.5: 75,
-      2: 96,
-      2.5: 122,
-      3: 148,
+       1: 45,
+      1.5: 65,
+      2: 80,
+      2.5: 105,
+      3: 125,
     },
     image: "./img/mobile/cakes/blueberry.webp",
     color: "#3F4974",
-    maxWeight: 3,
-    minWeight: 1,
   },
   {
     id: 1,
     name: "Кофейный",
-    price: 50,
     prices: {
-      1: 52,
-      1.5: 75,
-      2: 96,
-      2.5: 122,
-      3: 148,
+       1: 45,
+      1.5: 65,
+      2: 80,
+      2.5: 105,
+      3: 125,
     },
     image: "./img/mobile/cakes/coffee.webp",
     color: "#453628",
-    maxWeight: 3,
-    minWeight: 1,
   },
   {
     id: 12,
     name: "Солёная карамель",
-    price: 50,
     prices: {
-      1: 58,
-      1.5: 88,
-      2: 110,
-      2.5: 139,
-      3: 168,
+      1: 50,
+      1.5: 75,
+      2: 95,
+      2.5: 120,
+      3: 140,
     },
     image: "./img/mobile/cakes/caramel.webp",
     color: "#A85101",
-    maxWeight: 3,
-    minWeight: 1,
   },
   {
     id: 6,
     name: "Двойная вишня",
-    price: 50,
     prices: {
-      1: 58,
-      1.5: 88,
-      2: 110,
-      2.5: 139,
-      3: 168,
+     1: 50,
+      1.5: 75,
+      2: 95,
+      2.5: 120,
+      3: 140,
     },
     image: "./img/mobile/cakes/cherry.webp",
     color: "#7F092E",
-    maxWeight: 3,
-    minWeight: 1,
   },
   {
     id: 4,
     name: "Рафаэлло",
-    price: 50,
     prices: {
-      1: 58,
-      1.5: 88,
-      2: 110,
-      2.5: 139,
-      3: 168,
+      1: 50,
+      1.5: 75,
+      2: 95,
+      2.5: 120,
+      3: 140,
     },
     image: "./img/mobile/cakes/coconut.webp",
     color: "#F6F2DA",
     isLight: true,
-    maxWeight: 3,
-    minWeight: 1,
   },
   {
     id: 13,
     name: "Нутелла",
-    price: 50,
     prices: {
-      1: 58,
-      1.5: 88,
-      2: 110,
-      2.5: 139,
-      3: 168,
+      1: 50,
+      1.5: 75,
+      2: 95,
+      2.5: 120,
+      3: 140,
     },
     image: "./img/mobile/cakes/nutella.jpg",
     color: "#572912",
-    maxWeight: 3,
-    minWeight: 1,
   },
   {
     id: 9,
     name: "Наполеон",
-    price: 50,
     prices: {
-      1: 50,
-      1.5: 71,
-      2: 87,
-      2.5: 113,
-      3: 139,
+      1: 45,
+      1.5: 60,
+      2: 75,
+      2.5: 95,
     },
     image: "./img/mobile/cakes/napoleon.webp",
     color: "#DE9F65",
-    maxWeight: 3,
-    minWeight: 1,
   },
   {
     id: 8,
     name: "Наполеон солёная карамель",
-    price: 50,
     prices: {
-      1: 55,
-      1.5: 77,
-      2: 93,
-      2.5: 122,
-      3: 151,
+      1: 50,
+      1.5: 65,
+      2: 80,
+      2.5: 105,
+      3: 125,
     },
     image: "./img/mobile/cakes/salt-caramel.webp",
     color: "#9A4A00",
-    maxWeight: 3,
-    minWeight: 1,
   },
   {
     id: 7,
     name: "Чизкейк",
-    price: 50,
     prices: {
-      1: 69,
-      1.5: 102,
+      1: 60,
+      1.5: 85,
     },
     image: "./img/mobile/cakes/cheese.webp",
     color: "#E7BF7B",
-    maxWeight: 1.5,
-    minWeight: 1,
   },
 ];
 
@@ -996,14 +973,13 @@ const createCakeCard = (item, page, settings = {}) => {
         <p>${item.name}</p>
         <p>${settings.isBucketPage ? item.price : item.prices[1]} byn</p>
       </div>
-      ${
-        settings.isBucketPage
-          ? `<div class="card_weight">
+      ${settings.isBucketPage
+      ? `<div class="card_weight">
         <p>Масса</p>
         <p>${item.weight} кг</p>
         </div>`
-          : ""
-      }
+      : ""
+    }
     </div>
   `;
   const heartButton = new Element(

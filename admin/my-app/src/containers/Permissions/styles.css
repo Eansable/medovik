@@ -1,0 +1,4 @@
+.permissions_wrapper {
+    display: grid;
+    gap: 16px
+}

@@ -1,0 +1,55 @@
+{
+  "version": "7",
+  "dialect": "mysql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1783256234660,
+      "tag": "0000_romantic_purple_man",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1783855933034,
+      "tag": "0001_melted_penance",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1784191846757,
+      "tag": "0002_careful_angel",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1784219921556,
+      "tag": "0003_fuzzy_hercules",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1784820055885,
+      "tag": "0004_swift_vin_gonzales",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1784821435417,
+      "tag": "0005_lean_enchantress",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1784827937868,
+      "tag": "0006_curvy_rafael_vega",
+      "breakpoints": true
+    }
+  ]
+}
